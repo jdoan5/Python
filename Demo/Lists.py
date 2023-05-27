@@ -19,6 +19,9 @@
 # new_list.pop(-1)
 # print(new_list)
 
+
+
+
 #sort
 new_list = ['a', 'e', 'x', 'b', 'c']
 num_list = [4, 1, 8, 3]
@@ -34,6 +37,9 @@ num_list = [4, 1, 8, 3]
 
 # num_list.reverse()
 # print(num_list)
+
+
+
 
 #dictionaries
 # my_dict = {'key1':'value1','key2':'value2'}
@@ -57,7 +63,61 @@ num_list = [4, 1, 8, 3]
 # print(leter.upper())
 # print(d['key1'][2].upper())
 
-d = {'k1':100, 'k2':200}
-print(d)
-d['k3']=300
-print(d)
+# d = {'k1':100, 'k2':200}
+# print(d)
+# d['k3']=300
+# print(d)
+# d['k1'] = 'NEW VALUE'
+# print(d)
+# print(d.keys())
+# print(d.values())
+# print(d.items())
+
+
+
+#tuples
+# t = (1, 2, 3)
+# mylist = [1, 2, 3]
+# print(type(t))
+# print(type(mylist))
+# print(len(t))
+
+# t = ('one', 2)
+# print(t[0])
+
+# t = ('a', 'a', 'b','c')
+# print(t.count('a'))
+# print(t.index('c'))
+
+# print(mylist)
+# mylist[0] = 'new'
+# print(mylist[0])
+# t[0] = 'NEW'
+
+
+
+#sets
+# myset = set()
+# print(myset)
+# myset.add(1)
+# print(myset)
+# myset.add(2)
+# print(myset)
+
+
+
+#booleans
+# type(False)
+# print(1 > 2)
+# print(1 == 1)
+# b = None
+# print(b)
+
+
+#files
+%%writefile myfile.txt
+Hello this is a text File
+this is the second line 
+this is the third line
+
+myfile = open('myfile.text')
