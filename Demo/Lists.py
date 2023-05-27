@@ -115,9 +115,6 @@ num_list = [4, 1, 8, 3]
 
 
 #files
-%%writefile myfile.txt
-Hello this is a text File
-this is the second line 
-this is the third line
-
-myfile = open('myfile.text')
+x = open('test.txt', 'w')
+x.write('Hi')
+x.close()
