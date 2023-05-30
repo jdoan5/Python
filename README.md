@@ -11,8 +11,6 @@ A sample program in Python with varieties of syntax, on-hand practice examples.
 
 ## Badges
 
-Add badges from somewhere like: [shields.io](https://shields.io/)
-
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 [![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
@@ -22,11 +20,11 @@ Add badges from somewhere like: [shields.io](https://shields.io/)
 
 #### Question 1 
 What's the purpose of this deposition?
-Answer 1: To provide a genereal sample 
+Answer 1: Python source-code project
 
 #### Question 2
-
-Answer 2
+How can I download?
+Answer 2: You can use any IDEs to download those files on your computer
 
 ## Color Reference
 
@@ -36,4 +34,14 @@ Answer 2
 | Example Color | ![#f8f8f8](https://via.placeholder.com/10/f8f8f8?text=+) #f8f8f8 |
 | Example Color | ![#00b48a](https://via.placeholder.com/10/00b48a?text=+) #00b48a |
 | Example Color | ![#00d1a0](https://via.placeholder.com/10/00b48a?text=+) #00d1a0 |
+
+
+## 🔗 Links
+[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://johnvdoan.com)
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/johnvdoan)
+
+
+## Feedback
+
+If you have any feedback, please reach out to me
 
