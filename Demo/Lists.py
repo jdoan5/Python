@@ -115,6 +115,24 @@ num_list = [4, 1, 8, 3]
 
 
 #files
-x = open('test.txt', 'w')
-x.write('Hi')
-x.close()
+# x = open('test.txt', 'w')
+# x.write('Hi')
+# x.close()
+
+# result = int(input('Favorite number:'))
+# print(type(result))
+
+mystring = 'hello'
+mylist = []
+for letter in mystring:
+    mylist.append(letter)
+print(mylist)
+
+mylist = [letter for letter in mystring]
+print(mylist)
+
+mylist = [x for x in 'word']
+print(mylist)
+
+mylist = [x for x in range (0, 100)]
+print(mylist)
