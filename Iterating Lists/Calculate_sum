@@ -1,10 +1,18 @@
+#Example 1
 # The purpose of this code is to print the sum of all numbers in the "values" list 
 # Initialize sum then add  "number" to "sum"
 # The loop finishes, "sum" will print out the total numbers in "values"
 # the result = 10
-
 sum = 0 
 values = [0, 1, 2, 3, 4]
 for number in values:
     sum = sum + number
+print(sum)
+
+
+#Example 2
+sum = 0
+values = [2, 9, 1, 7]
+for number in values:
+    sum += number
 print(sum)    
