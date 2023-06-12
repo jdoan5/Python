@@ -122,7 +122,7 @@ num_list = [4, 1, 8, 3]
 # result = int(input('Favorite number:'))
 # print(type(result))
 
-mystring = 'hello'
+""" mystring = 'hello'
 mylist = []
 for letter in mystring:
     mylist.append(letter)
@@ -135,4 +135,6 @@ mylist = [x for x in 'word']
 print(mylist)
 
 mylist = [x for x in range (0, 100)]
-print(mylist)
+print(mylist) """
+
+print("123"[2])
