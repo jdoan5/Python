@@ -1,5 +1,7 @@
 # How to calculate tip and percentage for each person
-sn
+# Author: John Doan
+# June 2023
+
 # User input
 print("Tip Calculator")
 bill = float(input("Please enter the total bill: \n$"))
