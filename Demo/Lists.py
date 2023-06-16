@@ -137,4 +137,4 @@ print(mylist)
 mylist = [x for x in range (0, 100)]
 print(mylist) """
 
-print("123"[2])
+print(round(8 / 3))
