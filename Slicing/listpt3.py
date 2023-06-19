@@ -28,6 +28,13 @@ my_list = [0, 1, 2, 3, 4]
 print(my_list[::-1])
 
 # Example 6
-# Here is an example print a slice of 'lists1'
+# Here is an example print a slice of 'lists1'. In this example, lists1 returns a new list containing the elements at indcies 0,1,2,3
+# Here, the element [11,55,"cat"] is nested at index 3
 list1= [1, 66, "Python", [11, 55, "cat"], [], 2.22, True]
-print(list1[1:4])
+print(list1[0:4])
+
+# Example 7
+# Another example of reserve order. In this example, it will be accessed from the element at index -1, which is the last element in the list
+my_list = [0, 1, 2, 3, 4]
+print(my_list[-1])
+
