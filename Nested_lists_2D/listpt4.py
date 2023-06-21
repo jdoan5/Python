@@ -29,7 +29,7 @@ print(countries2)
 
 # Example 5 
 a = []
-for i in range(5)
+for i in range(5):
     a.append([])
     for j in range(5):
         a[i].append(j)
@@ -63,3 +63,4 @@ for i in range(2):
     for j in range(2):
         a[i].append(j)
 print(a)
+
