@@ -137,4 +137,11 @@ print(mylist)
 mylist = [x for x in range (0, 100)]
 print(mylist) """
 
-print(round(8 / 3))
+# import sys
+# for name in dir(sys):
+#     print(name, end='\t')
+
+import math
+
+for name in dir(math):
+    print(name, end='\t')
