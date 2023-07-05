@@ -9,16 +9,17 @@ def get_def_and_pop(word_list, word_dictionary):
     definition = word_dictionary.get(word)
     return word, definition
 
+# The origin of the vocabulary words
 def get_word_and_definition(R):
     word, definition = R.split(',', 1)
     return word, definition
-fh = open(r'C:\Users\john_\Documents\GitHub\Python\Vocabulary_quiz\Vocabulary.csv')
+fh = open(r'Vocabulary.csv')
 wd_list = fh.readlines()
 
 # Removed duplicate voculary words
 wd_list.pop(0)
 wd_set = set(wd_list)
-fh = open(r'C:\Users\john_\Documents\GitHub\Python\Vocabulary_quiz\Vocabulary_updated.csv', "w")
+fh = open(r'Vocabulary_updated.csv', "w")
 fh.writelines(wd_set)
 
 word_dictionary = dict()
