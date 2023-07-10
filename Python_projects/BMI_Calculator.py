@@ -10,11 +10,5 @@ result = weight / (height ** 2)
 # Convert the result into integer instead a float result 
 print(int(result)) """
 
-def do_the_mess(paramter):
-    paramter[0] += variable
-    return paramter[0]
-
-the_list = [x for x in range(2,3)]
-variable = -1
-do_the_mess(the_list)
-print(the_list[0])
+def runner(bradn, mode="" year=2021, convera=False):
+    return(br)
