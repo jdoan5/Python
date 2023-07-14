@@ -9,7 +9,7 @@ display.set_caption('My Game')
 #set the screen size
 screen = display.set_mode((512, 512))
 
-matched = image.load('other_assets/matched.png')
+matched = image.load('matched.png')
 screen.blit(matched, (0, 0))
 display.flip()
 
