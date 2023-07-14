@@ -78,5 +78,7 @@ while running:
                 current_images = []
 
             if total_skipped == len(tiles):
-                running = False    
-print('Goodbye')
+                running = False  
+                 
+# end message                 
+print('Thank you for playing')
