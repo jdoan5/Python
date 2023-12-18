@@ -10,6 +10,13 @@ def mark(row, col, player):
 def is_valid_mark(row,col):
     return board[row][col] == 0    
 
+def is_valid_mark():
+    for c in range(COLUMNS):
+        for r in range(ROWS):
+            if board[r][c]==0:
+                return False
+    return True
+
 board = np.zeroes((ROWS,COLUMNS))
 
 print(board)
