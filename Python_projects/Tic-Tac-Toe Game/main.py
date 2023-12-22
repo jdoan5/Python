@@ -19,7 +19,7 @@ def is_valid_mark():
 
 board = np.zeroes((ROWS,COLUMNS))
 
-print(board)
-mark(1,0,2)
-print(board)
-print(is_valid_mark(1,0))
+Turn = 0 
+
+game_over = False
+
