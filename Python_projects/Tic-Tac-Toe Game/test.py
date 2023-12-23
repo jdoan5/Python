@@ -1,30 +1,23 @@
 import tkinter as tk
-from tkinter import messagebox
 from PIL import Image, ImageTk
 
-def show_message():
-    messagebox.showinfo("Message", "Merry Christmas!")
-    display_image()
+def on_image_click(event):
+    print("Merry Christmas!")
 
-def display_image():
-    image = Image.open("christmas.jpg")
-    photo = ImageTk.PhotoImage(image)
-    image_label.config(image=photo)
-    image_label.image = photo
+# Create the main window
+root = tk.Tk()
+root.title("Merry Christmas App")
 
-def create_window():
-    global image_label
-    window = tk.Tk()
-    window.title("Christmas Greeting App")
-    window.geometry("400x400")
+# Load an image
+image = Image.open("christmas.jpn")
+photo = ImageTk.PhotoImage(image)
 
-    christmas_button = tk.Button(window, text = "Click Here")
-    christmas_button.pack(pady=20)
+# Add image to a label widget
+label = tk.Label(root, image=photo)
+label.pack()
 
-    image_label = tk.Label(window)
-    image_label.pack()
+# Bind click event
+label.bind("<Button-1>", on_image_click)
 
-    window.mainloop()
-
-if __name__ == "__main__":
-    create_window()
+# Start the GUI
+root.mainloop()
