@@ -7,7 +7,7 @@ def show_message():
     display_image()
 
 def display_image():
-    image = Image.open("christmas.png")
+    image = Image.open("christmas.jpg")
     photo = ImageTk.PhotoImage(image)
     image_label.config(image=photo)
     image_label.image = photo
