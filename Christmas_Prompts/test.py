@@ -44,7 +44,7 @@ def main():
     root = tk.Tk()
     root.geometry("800x600")  # Set this to the size of your image
 
-    app = App(root, "image\christmas_2.jpg")  # Replace with your image path
+    app = App(root, "image/christmas_2.jpg")  # Replace with your image path
 
     root.mainloop()
 
