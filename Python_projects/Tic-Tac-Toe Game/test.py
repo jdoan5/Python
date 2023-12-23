@@ -1,28 +1,22 @@
 import tkinter as tk
-from PIL import Image, ImageTk
 
-def show_image():
-    # Load an image
-    image = Image.open("/Users/johndoan/Documents/GitHub/Python/image/panda.png")
-    
-    photo = ImageTk.PhotoImage(image)
+class App:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Click Message App")
+        self.button = tk.Button(root, text="Click me!", command=self.on_click)
+        self.button.pack()
+        self.label = tk.Label(root, text="")
+        self.label.pack()
+        self.click_count = 0
+        self.messages = ["First Click!", "Second Click!", "Third Click!", "More clicks!"]
 
-    # Add image to a label widget and display
-    image_label.config(image=photo)
-    image_label.image = photo  # Keep a reference!
-    TK_SILENCE_DEPRECATION=1 
+    def on_click(self):
+        message = self.messages[min(self.click_count, len(self.messages) - 1)]
+        self.label.config(text=message)
+        self.click_count += 1
 
 # Create the main window
 root = tk.Tk()
-root.title("Clickable Text with Picture")
-
-# Create a button widget
-button = tk.Button(root, text="Click me!", command=show_image)
-button.pack()
-
-# Create an empty label for the image
-image_label = tk.Label(root)
-image_label.pack()
-
-# Start the GUI
+app = App(root)
 root.mainloop()
