@@ -42,10 +42,9 @@ class App:
 
 def main():
     root = tk.Tk()
-    root.geometry("800x600")  # Set this to the size of your image
+    root.geometry("800x600")  #size of the background image
 
-    app = App(root, "image/christmas_2.jpg")  # Replace with your image path
-
+    app = App(root, "image/christmas_2.jpg") #image path
     root.mainloop()
 
 if __name__ == "__main__":
