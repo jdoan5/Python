@@ -1,45 +1,45 @@
 import tkinter as tk
+from tkinter import filedialog
 from tkinter import messagebox
-from tkinter.font import Font
-from PIL import Image, ImageTk
-import random
 
+def save_file():
+    file_path = filedialog.asksaveasfilename(defaultextension=".txt")
+    if not file_path:
+        return
+    with open(file_path, "w") as file:
+        text = text_area.get("1.0", tk.END)
+        file.write(text)
+    root.title(f"Simple Text Editor - {file_path}")
 
-class App:
-    def __init__(self, root,):
-        self.root = root
-        self.root.title("Random Christmas Messages")
+def open_file():
+    file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")])
+    if not file_path:
+        return
+    with open(file_path, "r") as file:
+        text = file.read()
+        text_area.delete("1.0", tk.END)
+        text_area.insert("1.0", text)
+    root.title(f"Simple Text Editor - {file_path}")
 
-        self.messages = ["Christmas is a time for remembering family and trying to guess everyone's sizes! Have a Wonderful Christmas!",
-                          "I've finally found the true meaning of Xmas, it's for those people who can't spell Christmas!", 
-                          "Christmas is mostly for children. But we adults can enjoy it too until the credit card bills arrive!", 
-                          "Merry Christmas, ya filthy animal",]
+def new_file():
+    root.title("Simple Text Editor")
+    text_area.delete("1.0", tk.END)
 
-        #set a window size
-        self.root.geometry("400x300")
+root = tk.Tk()
+root.title("Simple Text Editor")
 
-        #set a background color
-        self.root.configure(bg="light coral")
+menu_bar = tk.Menu(root)
+root.config(menu=menu_bar)
 
-        #set font size for the "button"
-        large_font = Font(family="Helvetica", size=16, weight="bold")
+file_menu = tk.Menu(menu_bar, tearoff=0)
+menu_bar.add_cascade(label="File", menu=file_menu)
+file_menu.add_command(label="New", command=new_file)
+file_menu.add_command(label="Open...", command=open_file)
+file_menu.add_command(label="Save As...", command=save_file)
+file_menu.add_separator()
+file_menu.add_command(label="Exit", command=root.quit)
 
-        #click on "button"
-        self.button = tk.Button(root, text="Suprise Me", command=self.show_random_message,
-                                bg="light coral", fg="black", font=large_font)
-        self.button.pack(expand=True)
-        
-        
-        
+text_area = tk.Text(root)
+text_area.pack(expand=True, fill=tk.BOTH)
 
-    def show_random_message(self):
-        random_message = random.choice(self.messages)
-        messagebox.showinfo("Random Message", random_message)
-
-def main():
-    root = tk.Tk()
-    app = App(root)
-    root.mainloop()
-
-if __name__ == "__main__":
-    main()
+root.mainloop()
