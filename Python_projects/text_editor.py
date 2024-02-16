@@ -23,10 +23,11 @@ class TextEditor(QMainWindow):
         viewAction.triggered.connect(self.viewFile)
 
         menubar = self.menuBar()
-        fileMenu = menubar.addMenu('&File')
-        fileMenu.addAction(openAction)
-        fileMenu.addAction(saveAction)
-        fileMenu.addAction(viewAction)
+        fileMenu1 = menubar.addMenu('&File')
+        fileMenu = menubar.addMenu('&View')
+        fileMenu1.addAction(openAction)
+        fileMenu1.addAction(saveAction)
+        fileMenu1.addAction(viewAction)
 
     def openFile(self):
         filename, _ = QFileDialog.getOpenFileName(self, 'Open File', '/')
