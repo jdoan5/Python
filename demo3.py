@@ -1,6 +1,9 @@
-float_value = 3.14
-int_value = int(float_value)
-print(int_value)
+from flask import Flask
+app = Flask(__name__)
 
-type(2.4)
-print(type)
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+if __name__ == '__main__':
+    app.run(debug=True)
