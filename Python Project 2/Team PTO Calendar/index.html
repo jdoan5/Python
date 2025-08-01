@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Team PTO Calendar</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Team PTO Calendar</h1>
+    <form method="post">
+        <input name="name" placeholder="Name" required>
+        <input name="start" type="date" required>
+        <input name="end" type="date" required>
+        <input name="pto_type" placeholder="PTO Type" required>
+        <button type="submit">Add PTO</button>
+    </form>
+    <table>
+        <tr><th>Name</th><th>Start Date</th><th>End Date</th><th>PTO Type</th></tr>
+        {% for pto in pto_list %}
+            <tr>
+                <td>{{ pto.name }}</td>
+                <td>{{ pto.start }}</td>
+                <td>{{ pto.end }}</td>
+                <td>{{ pto.pto_type }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
