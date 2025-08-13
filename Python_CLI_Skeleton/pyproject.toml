@@ -1,0 +1,21 @@
+[project]
+name = "python-cli-skeleton"
+version = "0.1.0"
+description = "A minimal, dependency-free Python CLI starter using argparse."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "You"}]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Environment :: Console",
+    "Topic :: Utilities",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+mycli = "cli_app.cli:main"

@@ -34,7 +34,21 @@ list1= [1, 66, "Python", [11, 55, "cat"], [], 2.22, True]
 print(list1[0:4])
 
 # Example 7
-# Another example of reserve order. In this example, it will be accessed from the element at index -1, which is the last element in the list
+# Another example of reverse order. In this example, it will be accessed from the element at index -1, which is the last element in the list
 my_list = [0, 1, 2, 3, 4]
 print(my_list[-1])
+
+# Example 8
+# Using negative indexing [-1] to safely get the last element of a sequence.
+# Directly accessing seq[-1] will raise IndexError on an empty list, so here's a safe helper.
+
+def last_or_none(seq):
+    """Return the last element using negative indexing, or None if the sequence is empty."""
+    try:
+        return seq[-1]
+    except IndexError:
+        return None
+
+print(last_or_none([1, 2, 3]))   # 3
+print(last_or_none([]))          # None
 
