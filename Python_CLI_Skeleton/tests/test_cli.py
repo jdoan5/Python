@@ -15,3 +15,5 @@ def test_version_json():
     out = run(["version", "--json"]).stdout.strip()
     data = json.loads(out)
     assert "version" in data
+
+JSON path data extract "*(]"
