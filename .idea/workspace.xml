@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Fake News Learning with ML/predict.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Fake News Learning with ML/save_model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Fake News Learning with ML/top_features.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Fake News Learning with ML/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fake News Learning with ML/data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Fake News Learning with ML/data.csv" afterDir="false" />
-    </list>
+    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -195,6 +188,7 @@
       <workItem from="1762384244899" duration="2168000" />
       <workItem from="1762401699369" duration="111000" />
       <workItem from="1762401825826" duration="1752000" />
+      <workItem from="1762404315049" duration="310000" />
     </task>
     <servers />
   </component>
