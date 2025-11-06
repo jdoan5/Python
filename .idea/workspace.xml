@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/baseline.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/data.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/predict.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/shap_explain.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/train.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/perm_importance.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -231,7 +227,7 @@
       <workItem from="1762384244899" duration="2168000" />
       <workItem from="1762401699369" duration="111000" />
       <workItem from="1762401825826" duration="1752000" />
-      <workItem from="1762404315049" duration="4467000" />
+      <workItem from="1762404315049" duration="5742000" />
     </task>
     <servers />
   </component>
