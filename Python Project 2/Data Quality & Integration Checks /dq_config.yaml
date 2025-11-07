@@ -1,0 +1,20 @@
+source:
+  type: csv           # csv | sqlite
+  path: data/customers.csv
+
+checks:
+  table:
+    min_rows: 10
+    unique_keys: [customer_id]
+    no_duplicate_rows: true
+
+  columns:
+    customer_id: {dtype: int,  nullable: false, unique: true}
+    email:       {dtype: str,  nullable: false, regex: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"}
+    signup_date: {dtype: date, nullable: false, min: "2020-01-01"}
+    plan:        {dtype: str,  nullable: false, allowed_values: ["free","basic","pro"]}
+
+integrations:
+  foreign_keys:
+    - child:  {column: plan}
+      parent: {type: csv, path: data/plan_lookup.csv, column: plan_code}
