@@ -1,0 +1,13 @@
+{
+  "threshold_default": 0.5,
+  "threshold_cost_aware": 0.5499999999999999,
+  "false_positives_default": 2,
+  "false_positives_cost_aware": 0,
+  "false_positive_reduction_pct": 100.0,
+  "recall_fake_default": 1.0,
+  "recall_fake_cost_aware": 0.0,
+  "cost_weights": {
+    "FP": 5.0,
+    "FN": 1.0
+  }
+}
