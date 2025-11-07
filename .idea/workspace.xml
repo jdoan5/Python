@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting/backtest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting/baseline_naive.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting/forecast.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Fake News Learning with ML/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Fake News Learning with ML/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting/make_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting/make_data.py" afterDir="false" />
-    </list>
+    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -262,7 +253,7 @@
       <workItem from="1762401825826" duration="1752000" />
       <workItem from="1762404315049" duration="5853000" />
       <workItem from="1762467054663" duration="245000" />
-      <workItem from="1762467316438" duration="4127000" />
+      <workItem from="1762467316438" duration="4730000" />
     </task>
     <servers />
   </component>
