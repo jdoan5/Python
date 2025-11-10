@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Data Quality &amp; Integration Checks /Data/customers.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Data Quality &amp; Integration Checks /Data/plan_lookup.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Data Quality &amp; Integration Checks /README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Python Project 2/Data Quality &amp; Integration Checks /Data/yaml_to_mermaid.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Python Project 2/Data Quality &amp; Integration Checks /dq_config_orders.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python Project 2/Data Quality &amp; Integration Checks /dq_config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Data Quality &amp; Integration Checks /dq_config.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +62,7 @@
     "Python.top_features.executor": "Run",
     "Python.train (1).executor": "Run",
     "Python.train.executor": "Run",
+    "Python.yaml_to_mermaid.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -76,7 +77,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
@@ -88,7 +89,7 @@
       <recent name="$PROJECT_DIR$/Python Project" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.dq_check">
+  <component name="RunManager" selected="Python.yaml_to_mermaid">
     <configuration name="backtest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -181,7 +182,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="train" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="yaml_to_mermaid" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -190,12 +191,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python Project 2/Data Quality &amp; Integration Checks /Data" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting/train.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python Project 2/Data Quality &amp; Integration Checks /Data/yaml_to_mermaid.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -206,11 +207,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.yaml_to_mermaid" />
         <item itemvalue="Python.dq_check" />
         <item itemvalue="Python.train (1)" />
         <item itemvalue="Python.forecast" />
         <item itemvalue="Python.backtest" />
-        <item itemvalue="Python.train" />
       </list>
     </recent_temporary>
   </component>
@@ -240,7 +241,7 @@
       <workItem from="1762556257425" duration="1457000" />
       <workItem from="1762804932454" duration="2293000" />
       <workItem from="1762811322709" duration="924000" />
-      <workItem from="1762813573944" duration="1427000" />
+      <workItem from="1762813573944" duration="2896000" />
     </task>
     <servers />
   </component>
@@ -272,5 +273,6 @@
     <SUITE FILE_PATH="coverage/Python$save_model.coverage" NAME="save_model Coverage Results" MODIFIED="1762403078394" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Fake News Learning with ML" />
     <SUITE FILE_PATH="coverage/Python$shap_explain.coverage" NAME="shap_explain Coverage Results" MODIFIED="1762407948027" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction" />
     <SUITE FILE_PATH="coverage/Python$forecast.coverage" NAME="forecast Coverage Results" MODIFIED="1762470000442" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting" />
+    <SUITE FILE_PATH="coverage/Python$yaml_to_mermaid.coverage" NAME="yaml_to_mermaid Coverage Results" MODIFIED="1762816097277" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Data Quality &amp; Integration Checks /Data" />
   </component>
 </project>

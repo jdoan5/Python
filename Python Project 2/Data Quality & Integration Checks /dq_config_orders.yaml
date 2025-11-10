@@ -1,0 +1,34 @@
+flowchart TD
+  CFG2[dq_config_orders.yaml]
+
+  subgraph SOURCE2["source"]
+    S2_TYPE["type: csv"]
+    S2_PATH["path: data/orders.csv"]
+  end
+
+  subgraph CHECKS2["checks"]
+    subgraph TBL2["table"]
+      MIN2["min_rows: 5"]
+      UK2["unique_keys: [order_id]"]
+      NDR2["no_duplicate_rows: true"]
+    end
+    subgraph COLS2["columns"]
+      O_ID["order_id\n— dtype: int\n— nullable: false\n— unique: true"]
+      O_CID["customer_id\n— dtype: int\n— nullable: false"]
+      O_DATE["order_date\n— dtype: date\n— nullable: false\n— min: 2020-01-01"]
+      O_STATUS["status\n— dtype: str\n— nullable: false\n— allowed: pending | paid | shipped | cancelled"]
+      O_AMT["amount\n— dtype: float\n— nullable: false\n— min: 0"]
+    end
+  end
+
+  subgraph INTEG2["integrations"]
+    FK2["foreign_keys[0]"]
+    CHILD2["child.column: customer_id"]
+    PARENT2["parent: csv\npath: data/customers.csv\ncolumn: customer_id"]
+    FK2 --> CHILD2
+    FK2 --> PARENT2
+  end
+
+  CFG2 --> SOURCE2
+  CFG2 --> CHECKS2
+  CFG2 --> INTEG2
