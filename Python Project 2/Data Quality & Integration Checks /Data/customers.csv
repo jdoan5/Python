@@ -1,0 +1,5 @@
+customer_id,email,signup_date,plan
+1,alice@example.com,2022-01-04,basic
+2,bob@example.com,2022-02-10,free
+3,charlie@example.com,2023-04-15,pro
+3,dupe@example.com,2023-05-01,basic

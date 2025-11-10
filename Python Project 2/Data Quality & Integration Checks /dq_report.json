@@ -1,0 +1,110 @@
+{
+  "summary": {
+    "passed": 13,
+    "failed": 3,
+    "total": 16
+  },
+  "results": [
+    {
+      "check": "min_rows",
+      "pass": false,
+      "rows": 4
+    },
+    {
+      "check": "no_duplicate_rows",
+      "pass": "True",
+      "duplicate_rows": 0
+    },
+    {
+      "check": "unique_keys",
+      "pass": "False",
+      "duplicate_key_rows": 1,
+      "keys": [
+        "customer_id"
+      ]
+    },
+    {
+      "check": "dtype",
+      "column": "customer_id",
+      "target": "int",
+      "pass": "True",
+      "invalid_dtype": 0
+    },
+    {
+      "check": "not_null",
+      "column": "customer_id",
+      "pass": "True",
+      "nulls": 0
+    },
+    {
+      "check": "unique",
+      "column": "customer_id",
+      "pass": "False",
+      "non_unique": 2
+    },
+    {
+      "check": "dtype",
+      "column": "email",
+      "target": "str",
+      "pass": true,
+      "invalid_dtype": 0
+    },
+    {
+      "check": "not_null",
+      "column": "email",
+      "pass": "True",
+      "nulls": 0
+    },
+    {
+      "check": "regex",
+      "column": "email",
+      "pass": "True",
+      "invalid": 0
+    },
+    {
+      "check": "dtype",
+      "column": "signup_date",
+      "target": "date",
+      "pass": "True",
+      "invalid_dtype": 0
+    },
+    {
+      "check": "not_null",
+      "column": "signup_date",
+      "pass": "True",
+      "nulls": 0
+    },
+    {
+      "check": "min",
+      "column": "signup_date",
+      "pass": "True",
+      "violations": 0,
+      "min": "2020-01-01"
+    },
+    {
+      "check": "dtype",
+      "column": "plan",
+      "target": "str",
+      "pass": true,
+      "invalid_dtype": 0
+    },
+    {
+      "check": "not_null",
+      "column": "plan",
+      "pass": "True",
+      "nulls": 0
+    },
+    {
+      "check": "allowed_values",
+      "column": "plan",
+      "pass": "True",
+      "invalid": 0
+    },
+    {
+      "check": "foreign_key",
+      "child": "plan",
+      "pass": true,
+      "missing_count": 0
+    }
+  ]
+}
