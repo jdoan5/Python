@@ -9,4 +9,24 @@ Emits both **JSON** and **Markdown** reports you can share or gate in CI.
 - **Columns:** type coercion (int/float/bool/date/datetime), NOT NULL, uniqueness, allowed values, regex patterns
 - **Integrations:** foreign-key presence against a parent lookup (CSV or SQLite)
 
+
 ## Project structure
+data-quality/
+├─ data/
+│  ├─ customers.csv
+│  ├─ plan_lookup.csv
+│  └─ orders.csv
+├─ dq_config.yaml
+├─ dq_config_orders.yaml
+├─ dq_check.py
+├─ requirements.txt
+└─ README.md
+
+```mermaid
+flowchart TD
+  CFG[dq_config.yaml] --> S[source]
+  CFG --> C[checks]
+  CFG --> I[integrations]
+  C --> T[table]
+  C --> COL[columns]
+

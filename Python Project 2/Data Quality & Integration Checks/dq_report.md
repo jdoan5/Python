@@ -1,8 +1,8 @@
 ## Data Quality Summary
-- Passed: **13**  Failed: **3**  Total: **16**
+- Passed: **14**  Failed: **2**  Total: **16**
 
 ### Checks
-- ❌ `min_rows` {'check': 'min_rows', 'pass': False, 'rows': 4}
+- ✅ `min_rows` {'check': 'min_rows', 'pass': True, 'rows': 4}
 - ✅ `no_duplicate_rows` {'check': 'no_duplicate_rows', 'pass': np.True_, 'duplicate_rows': 0}
 - ❌ `unique_keys` {'check': 'unique_keys', 'pass': np.False_, 'duplicate_key_rows': 1, 'keys': ['customer_id']}
 - ✅ `dtype` {'check': 'dtype', 'column': 'customer_id', 'target': 'int', 'pass': np.True_, 'invalid_dtype': 0}
