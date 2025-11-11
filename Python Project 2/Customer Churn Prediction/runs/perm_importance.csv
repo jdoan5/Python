@@ -1,0 +1,13 @@
+feature,importance
+tenure,0.0833333333333333
+total_charges,0.0833333333333333
+monthly_charges,0.0
+senior_citizen,0.0
+contract_Month-to-month,0.0
+contract_Two year,0.0
+gender_Female,0.0
+gender_Male,0.0
+payment_method_Bank transfer (automatic),0.0
+payment_method_Credit card,0.0
+payment_method_Electronic check,0.0
+payment_method_lectronic check,0.0

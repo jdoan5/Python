@@ -1,0 +1,41 @@
+project:
+  name: customer-churn
+paths:
+  data: data.csv
+  model_dir: models
+  run_dir: runs
+
+target: Churn
+
+features:
+  numeric: [tenure, MonthlyCharges, TotalCharges]
+  categorical: [Contract, PaymentMethod, InternetService, SeniorCitizen]
+
+preprocessing:
+  imputer: median          # for numeric
+  scaler: standard         # standard | minmax | none
+  one_hot_drop: first      # drop first level to avoid collinearity
+
+model:
+  type: logistic_regression     # logistic_regression | random_forest | gradient_boosting
+  params:
+    C: 1.0
+    class_weight: balanced
+    solver: liblinear
+    max_iter: 1000
+
+train:
+  test_size: 0.2
+  random_state: 42
+  scoring: roc_auc
+  cv_folds: 5
+  save_name: churn_model.joblib
+
+explainability:
+  permutation_importance:
+    n_repeats: 10
+    random_state: 42
+    output_csv: runs/perm_importance.csv
+  shap:
+    sample_size: 2000
+    out_dir: runs/shap
