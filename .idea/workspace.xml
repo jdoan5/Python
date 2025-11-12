@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/models/churn_model.joblib" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/models/churn_model.joblib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/runs/pr_curve.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/runs/pr_curve.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/runs/roc_curve.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/runs/roc_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -242,7 +241,7 @@
       <workItem from="1762811322709" duration="924000" />
       <workItem from="1762813573944" duration="2937000" />
       <workItem from="1762816543193" duration="3758000" />
-      <workItem from="1762902670567" duration="302000" />
+      <workItem from="1762902670567" duration="1909000" />
     </task>
     <servers />
   </component>
