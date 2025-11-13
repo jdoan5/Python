@@ -1,0 +1,10 @@
+churn,model,brand,tenture (months),customer satisfaction (1-10 scale),color,MSRP,Type,Fuel Type
+Yes,X1,Lov,12,5,Beige,20000,Sedan,Gasoline
+No,T1,Inv,48,2,Magnetic,25000,Sedan,Hybrid
+Yes,X6,Benz,46,3,Silver,18000,Sedan,Hybrid
+Yes,M5,Maz,6,10,White,30000,SUV,Hybird
+Yes,Z24,Ram4,12,9,Lunar Stone,25000,SUV,Gasoline
+Yes,C12,Zog,56,9,bLUE,33000,Couple,Gasoline
+No,A3,Equin,28,7,Burgundy,20000,Sedan,Hybrid
+Yes,A5,Inif,18,7,Gray,25000,SUV,Gasoline
+Yes,Z33,Laxu ,18,6,Orange,28000,SUV,Gasoline
