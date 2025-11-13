@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/baseline.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/runs/pr_curve.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/runs/pr_curve.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/runs/roc_curve.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction/runs/roc_curve.png" afterDir="false" />
-    </list>
+    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -243,7 +237,7 @@
       <workItem from="1762816543193" duration="3758000" />
       <workItem from="1762902670567" duration="1909000" />
       <workItem from="1762921910843" duration="16000" />
-      <workItem from="1762984865581" duration="2566000" />
+      <workItem from="1762984865581" duration="2607000" />
     </task>
     <servers />
   </component>
