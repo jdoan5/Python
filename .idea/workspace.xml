@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/data/data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/baseline.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/baseline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/data.csv" beforeDir="false" />
-    </list>
+    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -85,6 +80,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/data" />
       <recent name="$PROJECT_DIR$/Miscellaneous" />
       <recent name="$PROJECT_DIR$/Python Project 2" />
       <recent name="$PROJECT_DIR$/Python Project" />
@@ -243,7 +239,7 @@
       <workItem from="1762902670567" duration="1909000" />
       <workItem from="1762921910843" duration="16000" />
       <workItem from="1762984865581" duration="2607000" />
-      <workItem from="1763063575133" duration="5305000" />
+      <workItem from="1763063575133" duration="5944000" />
     </task>
     <servers />
   </component>
