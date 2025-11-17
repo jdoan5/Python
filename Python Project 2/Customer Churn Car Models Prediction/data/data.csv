@@ -1,4 +1,4 @@
-churn,model,brand,tenture (months),customer satisfaction (1-10 scale),color,MSRP,Type,Fuel Type
+churn,model,brand,tenture_months,satisfaction_1_10,color,msrp,body_type,fuel_type
 Yes,X1,Lov,12,5,Beige,20000,Sedan,Gasoline
 No,T1,Inv,48,2,Magnetic,25000,Sedan,Hybrid
 Yes,X6,Benz,46,3,Silver,18000,Sedan,Hybrid
