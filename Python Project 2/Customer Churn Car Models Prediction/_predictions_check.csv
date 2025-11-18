@@ -1,0 +1,10 @@
+churn,model,brand,tenure_months,satisfaction_1_10,color,msrp,body_type,fuel_type,prediction,probability
+Yes,X1,Lov,12,5,Beige,20000,Sedan,Gasoline,1,0.8122969766103084
+No,T1,Inv,48,2,Magnetic,25000,Sedan,Hybrid,1,0.7269414310609499
+Yes,X6,Benz,46,3,Silver,18000,Sedan,Hybrid,1,0.6990458916939047
+Yes,M5,Maz,6,10,White,30000,SUV,Hybird,1,0.8578270756873148
+Yes,Z24,Ram4,12,9,Lunar Stone,25000,SUV,Gasoline,1,0.8033741517453643
+Yes,C12,Zog,56,9,bLUE,33000,Couple,Gasoline,1,0.7671501174539436
+No,A3,Equin,28,7,Burgundy,20000,Sedan,Hybrid,0,0.17964323450872197
+Yes,A5,Inif,18,7,Gray,25000,SUV,Gasoline,1,0.8663818722279959
+Yes,Z33,Laxu ,18,6,Orange,28000,SUV,Gasoline,1,0.9000547362485675
