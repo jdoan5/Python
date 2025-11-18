@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/evaluate_predictions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/predict.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/review_predictions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/baseline.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/baseline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/data/data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/data/data.csv" afterDir="false" />
-    </list>
+    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -266,7 +258,7 @@
       <workItem from="1762921910843" duration="16000" />
       <workItem from="1762984865581" duration="2607000" />
       <workItem from="1763063575133" duration="5965000" />
-      <workItem from="1763417102230" duration="10115000" />
+      <workItem from="1763417102230" duration="10846000" />
     </task>
     <servers />
   </component>
@@ -294,7 +286,7 @@
     <SUITE FILE_PATH="coverage/Python$baseline.coverage" NAME="baseline Coverage Results" MODIFIED="1763419939236" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction" />
     <SUITE FILE_PATH="coverage/Python$make_data.coverage" NAME="make_data Coverage Results" MODIFIED="1762469689872" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting" />
     <SUITE FILE_PATH="coverage/Python$backtest.coverage" NAME="backtest Coverage Results" MODIFIED="1762469964775" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting" />
-    <SUITE FILE_PATH="coverage/Python$predict.coverage" NAME="predict Coverage Results" MODIFIED="1763428873817" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction" />
+    <SUITE FILE_PATH="coverage/Python$predict.coverage" NAME="predict Coverage Results" MODIFIED="1763428992831" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction" />
     <SUITE FILE_PATH="coverage/Python$evaluate_predictions.coverage" NAME="evaluate_predictions Coverage Results" MODIFIED="1763427280382" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction" />
     <SUITE FILE_PATH="coverage/Python$baseline_naive.coverage" NAME="baseline_naive Coverage Results" MODIFIED="1762469751563" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting" />
     <SUITE FILE_PATH="coverage/Python$save_model.coverage" NAME="save_model Coverage Results" MODIFIED="1762403078394" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Fake News Learning with ML" />
