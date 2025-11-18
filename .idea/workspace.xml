@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/evaluate_predictions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/predict.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/review_predictions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/baseline.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/baseline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/data/data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/data/data.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +69,7 @@
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "database.data.extractors.current.export.id": "Comma-separated (CSV)_id",
     "database.data.extractors.current.id": "Comma-separated (CSV)_id",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging main",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "/Users/johndoan/Documents/GitHub/Python/Python Project 2/Customer Churn Car Models Prediction",
@@ -101,7 +95,7 @@
       <recent name="$PROJECT_DIR$/Python Project" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.predict">
+  <component name="RunManager">
     <configuration name="baseline" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -217,22 +211,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <list>
-      <item itemvalue="Python.baseline" />
-      <item itemvalue="Python.evaluate_predictions" />
-      <item itemvalue="Python.predict" />
-      <item itemvalue="Python.review_predictions" />
-      <item itemvalue="Python.train" />
-    </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Python.predict" />
-        <item itemvalue="Python.evaluate_predictions" />
-        <item itemvalue="Python.review_predictions" />
-        <item itemvalue="Python.baseline" />
-        <item itemvalue="Python.train" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
