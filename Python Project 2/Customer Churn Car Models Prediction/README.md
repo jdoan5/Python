@@ -130,3 +130,4 @@ flowchart TD
 - Set a **random seed** in training if you want fully reproducible splits.
 - If you’ll join predictions back later, add a stable `row_id` to your data first.
 - You can swap the model in `baseline.py` (e.g., Random Forest) without changing the rest.
+- 
