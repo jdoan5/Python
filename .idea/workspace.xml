@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="" />
+    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Python Project 2/Calculator/calculator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -48,6 +51,7 @@
     "Python.baseline.executor": "Run",
     "Python.baseline2.executor": "Run",
     "Python.baseline_naive.executor": "Run",
+    "Python.calculator.executor": "Run",
     "Python.dq_check.executor": "Run",
     "Python.evaluate_predictions.executor": "Run",
     "Python.forecast.executor": "Run",
@@ -97,8 +101,8 @@
       <recent name="$PROJECT_DIR$/Python Project" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.prepare_baby_names">
-    <configuration name="evaluate_predictions" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.calculator">
+    <configuration name="calculator" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -107,36 +111,13 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python Project 2/Calculator" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/evaluate_predictions.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python Project 2/Calculator/calculator.py" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="predict" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Python" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction/predict.py" />
-      <option name="PARAMETERS" value="--file &quot;./data/data.csv&quot; --model &quot;./model.joblib&quot; --out &quot;./_predictions_check.csv&quot;" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -190,6 +171,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="tk_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Python" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python Project 2/Calculator" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python Project 2/Calculator/tk_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="train" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Python" />
       <option name="ENV_FILES" value="" />
@@ -215,6 +219,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.calculator" />
+        <item itemvalue="Python.tk_test" />
         <item itemvalue="Python.prepare_baby_names" />
       </list>
     </recent_temporary>
@@ -253,6 +259,7 @@
       <workItem from="1763063575133" duration="5965000" />
       <workItem from="1763417102230" duration="10115000" />
       <workItem from="1763487296345" duration="3328000" />
+      <workItem from="1763513682340" duration="1302000" />
     </task>
     <servers />
   </component>
@@ -271,8 +278,8 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Python$baseline__1_.coverage" NAME="baseline Coverage Results" MODIFIED="1762406644868" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction" />
     <SUITE FILE_PATH="coverage/Python$top_features.coverage" NAME="top_features Coverage Results" MODIFIED="1762403225718" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Fake News Learning with ML" />
+    <SUITE FILE_PATH="coverage/Python$baseline__1_.coverage" NAME="baseline Coverage Results" MODIFIED="1762406644868" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction" />
     <SUITE FILE_PATH="coverage/Python$train__1_.coverage" NAME="train (1) Coverage Results" MODIFIED="1762472098188" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Fake News Learning with ML" />
     <SUITE FILE_PATH="coverage/Python$train.coverage" NAME="train Coverage Results" MODIFIED="1762985835250" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Customer Churn Prediction" />
     <SUITE FILE_PATH="coverage/Python$review_predictions.coverage" NAME="review_predictions Coverage Results" MODIFIED="1763426701896" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction" />
@@ -282,6 +289,8 @@
     <SUITE FILE_PATH="coverage/Python$backtest.coverage" NAME="backtest Coverage Results" MODIFIED="1762469964775" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting" />
     <SUITE FILE_PATH="coverage/workspace_xml$prepare_baby_names.coverage" NAME="prepare_baby_names Coverage Results" MODIFIED="1763511757848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Onlooker Dashboard" />
     <SUITE FILE_PATH="coverage/Python$predict.coverage" NAME="predict Coverage Results" MODIFIED="1763428873817" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction" />
+    <SUITE FILE_PATH="coverage/workspace_xml$calculator.coverage" NAME="calculator Coverage Results" MODIFIED="1763515180962" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Calculator" />
+    <SUITE FILE_PATH="coverage/workspace_xml$tk_test.coverage" NAME="tk_test Coverage Results" MODIFIED="1763515113265" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Calculator" />
     <SUITE FILE_PATH="coverage/Python$evaluate_predictions.coverage" NAME="evaluate_predictions Coverage Results" MODIFIED="1763427280382" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction" />
     <SUITE FILE_PATH="coverage/Python$baseline_naive.coverage" NAME="baseline_naive Coverage Results" MODIFIED="1762469751563" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Python Project 2/Store-Item Sales Forecasting" />
     <SUITE FILE_PATH="coverage/Python$save_model.coverage" NAME="save_model Coverage Results" MODIFIED="1762403078394" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Fake News Learning with ML" />
