@@ -14,7 +14,7 @@ class Calculator(tk.Tk):
             self,
             font=("Segoe UI", 20),
             bd=0,
-            bg="#222222",
+            bg="green", #the result display screen
             fg="#ffffff",
             justify="right",
             insertbackground="#ffffff"
