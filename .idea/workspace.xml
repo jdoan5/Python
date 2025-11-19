@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Looker Studio Dashboard/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Looker Studio Dashboard/Screenshots/Dashboard.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Onlooker Dashboard/Popular_Baby_Names.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Looker Studio Dashboard/Popular_Baby_Names.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Onlooker Dashboard/baby_names_trend.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Looker Studio Dashboard/baby_names_trend.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Onlooker Dashboard/prepare_baby_names.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Looker Studio Dashboard/prepare_baby_names.py" afterDir="false" />
-    </list>
+    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -78,7 +71,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/johndoan/Documents/GitHub/Python/Python Project 2/Popular Baby Names with Onlooker Dashboard/Screenshots",
+    "last_opened_file_path": "/Users/johndoan/Documents/GitHub/Python/Python Project 2/Popular Baby Names with Looker Studio Dashboard/Screenshots",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -91,6 +84,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Looker Studio Dashboard/Screenshots" />
       <recent name="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Onlooker Dashboard/Screenshots" />
       <recent name="$PROJECT_DIR$/Python Project 2/Popular Baby Names with Onlooker Dashboard" />
       <recent name="$PROJECT_DIR$/Python Project 2/Customer Churn Car Models Prediction" />
@@ -258,7 +252,7 @@
       <workItem from="1762984865581" duration="2607000" />
       <workItem from="1763063575133" duration="5965000" />
       <workItem from="1763417102230" duration="10115000" />
-      <workItem from="1763487296345" duration="3055000" />
+      <workItem from="1763487296345" duration="3328000" />
     </task>
     <servers />
   </component>
