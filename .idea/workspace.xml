@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Python Project 2/Calculator/calculator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="3db37c2c-0011-4cb7-b9b3-e863a826c598" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -61,6 +58,7 @@
     "Python.review_predictions.executor": "Run",
     "Python.save_model.executor": "Run",
     "Python.shap_explain.executor": "Run",
+    "Python.tk_test.executor": "Run",
     "Python.top_features.executor": "Run",
     "Python.train (1).executor": "Run",
     "Python.train.executor": "Run",
@@ -259,7 +257,7 @@
       <workItem from="1763063575133" duration="5965000" />
       <workItem from="1763417102230" duration="10115000" />
       <workItem from="1763487296345" duration="3328000" />
-      <workItem from="1763513682340" duration="1302000" />
+      <workItem from="1763513682340" duration="2713000" />
     </task>
     <servers />
   </component>
