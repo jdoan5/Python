@@ -1,5 +1,13 @@
+import platform
 import tkinter as tk
 from tkinter import messagebox
+
+IS_MAC = platform.system() == "Darwin"
+
+BTN_TEXT_COLOR = "#000000" if IS_MAC else "#ffffff"   # black on mac, white elsewhere
+BTN_BG_NORMAL  = "#333333" if not IS_MAC else "#f0f0f0"
+BTN_BG_CLEAR   = "#c0392b" if not IS_MAC else "#f0f0f0"
+BTN_BG_EQUAL   = "#27ae60" if not IS_MAC else "#f0f0f0"
 
 class Calculator(tk.Tk):
     def __init__(self):
