@@ -29,13 +29,14 @@ class Calculator(tk.Tk):
             self,
             font=("Segoe UI", 20),
             bd=0,
-            bg="green", #the result display screen
-            fg="#ffffff",
+            bg="light gray", #display screen background
+            fg="black", #display number color
             justify="right",
             insertbackground="#ffffff"
         )
         self.display.grid(row=0, column=0, columnspan=4, padx=8, pady=8, ipady=10, sticky="nsew")
 
+        #button layout
         buttons = [
             ("%", 1, 0), ("1/x", 1, 1), ("x²", 1,2), ("+/-", 1,3),
             ("7", 2, 0), ("8", 2, 1), ("9", 2, 2), ("/", 2, 3),
@@ -78,14 +79,20 @@ class Calculator(tk.Tk):
             self.update_display()
         elif char == "=":
             self.evaluate_expression()
+        elif char == "x²":
+            self.square_current()
+        elif char == "%":
+            self.percent_current()
         else:
             self.expression += char
             self.update_display()
+    
 
     def update_display(self):
         self.display.delete(0, tk.END)
         self.display.insert(0, self.expression)
 
+    #Wrong input or invalid
     def evaluate_expression(self):
         try:
             result = eval(self.expression)
