@@ -9,6 +9,13 @@ BTN_BG_NORMAL  = "#333333" if not IS_MAC else "#f0f0f0"
 BTN_BG_CLEAR   = "#c0392b" if not IS_MAC else "#f0f0f0"
 BTN_BG_EQUAL   = "#27ae60" if not IS_MAC else "#f0f0f0"
 
+IS_MAC = platform.system() == "Darwin"
+
+BTN_TEXT_COLOR = "#000000" if IS_MAC else "#ffffff"   # black on mac, white elsewhere
+BTN_BG_NORMAL  = "#333333" if not IS_MAC else "#f0f0f0"
+BTN_BG_CLEAR   = "#c0392b" if not IS_MAC else "#f0f0f0"
+BTN_BG_EQUAL   = "#27ae60" if not IS_MAC else "#f0f0f0"
+
 class Calculator(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -30,11 +37,12 @@ class Calculator(tk.Tk):
         self.display.grid(row=0, column=0, columnspan=4, padx=8, pady=8, ipady=10, sticky="nsew")
 
         buttons = [
-            ("7", 1, 0), ("8", 1, 1), ("9", 1, 2), ("/", 1, 3),
-            ("4", 2, 0), ("5", 2, 1), ("6", 2, 2), ("*", 2, 3),
-            ("1", 3, 0), ("2", 3, 1), ("3", 3, 2), ("-", 3, 3),
-            ("0", 4, 0), (".", 4, 1), ("C", 4, 2), ("+", 4, 3),
-            ("=", 5, 0, 4)
+            ("%", 1, 0), ("1/x", 1, 1), ("x²", 1,2), ("+/-", 1,3),
+            ("7", 2, 0), ("8", 2, 1), ("9", 2, 2), ("/", 2, 3),
+            ("4", 3, 0), ("5", 3, 1), ("6", 3, 2), ("*", 3, 3),
+            ("1", 4, 0), ("2", 4, 1), ("3", 4, 2), ("-", 4, 3),
+            ("0", 5, 0), (".", 5, 1), ("C", 5, 2), ("+", 5, 3),
+            ("=", 6, 0, 4)
         ]
 
         for btn in buttons:
@@ -45,8 +53,12 @@ class Calculator(tk.Tk):
                 self,
                 text=text,
                 font=("Segoe UI", 16),
-                bg="#333333" if text not in ("C", "=") else ("#c0392b" if text == "C" else "#27ae60"),
-                fg="#ffffff",
+                bg=(
+                    BTN_BG_CLEAR if text == "C"
+                    else BTN_BG_EQUAL if text == "="
+                    else BTN_BG_NORMAL
+                ),
+                fg=BTN_TEXT_COLOR,
                 bd=0,
                 activebackground="#555555",
                 activeforeground="#ffffff",
