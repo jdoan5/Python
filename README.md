@@ -1,38 +1,44 @@
+# Python Projects
 
-# Python Project
+A collection of small Python projects and practice examples.  
+This repo is where I experiment with core Python concepts, build mini-apps, and learn new libraries.
 
-A sample program in Python with varieties of syntax, on-hand practice examples. 
+---
 
+## Contents
 
-## Authors
+- 🧮 **Tkinter Calculator** – desktop calculator UI with buttons for basic operations and `x²`.
+- 📊 **Popular Baby Names Dashboard Prep** – data cleaning and trend labeling script for a Looker Studio dashboard.
+- 🧪 Misc practice scripts exploring syntax, control flow, functions, classes, and file I/O.
 
-- [@jdoan5 ](https://github.com/jdoan5)
+*(More projects will be added over time.)*
 
+---
 
-## Badges
+## Author
+
+- [@jdoan5](https://github.com/jdoan5)
+
+---
+
+## Licenses / Badges
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 [![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
+> This repository currently uses the MIT license. Other badges are listed for reference only.
+
+---
 
 ## FAQ
 
-#### Question 1 
-What's the purpose of this deposition?
-Answer 1: Python source-code project
+#### Q1. What is the purpose of this repository?
+**A.** To practice Python and showcase small, self-contained projects (GUI apps, data scripts, CLI tools, etc.) that I can reference in my portfolio.
 
-#### Question 2
-How can I download?
-Answer 2: You can use any IDEs to download those files on your computer
-
-
-## 🔗 Links
-[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://johnvdoan.com)
-[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/johnvdoan)
-
-
-## Feedback
-
-If you have any feedback, please reach out to me
-
+#### Q2. How can I use or run these projects?
+**A.**  
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/jdoan5/Python.git
+   cd Python
