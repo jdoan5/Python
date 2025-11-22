@@ -1,55 +1,50 @@
 # Python Tkinter Calculator
 
 A simple desktop calculator built with **Python** and **Tkinter**.  
-Supports basic arithmetic operations and includes an **x² (square)** button.
+Run it directly with Python or package it into native apps for macOS/Windows.
 
 ---
 
 ## Features
 
-#Simple Calculator
-- Clean, minimal calculator UI using Tkinter
-- Basic operations: `+`, `-`, `×`, `÷`
-- Decimal support (`.`)
-- `C` button to clear the current expression
-- `CE` button to clear the last expression
-- `=` button to evaluate the expression
-- Cross-platform: works on Windows, macOS, and Linux (with a GUI environment)
+- Clean, minimal UI using Tkinter
+- Basic operations: `+`, `−`, `×`, `÷`, decimals (`.`)
+- Utility keys: **C** (clear all), **CE** (clear entry), **⌫** (backspace)
+- Unary keys: **x²** (square), **1/x** (reciprocal), **+/−** (negate)
+- **%** with calculator-style behavior (e.g., `200 + 10% → 220`)
+- Typing supported: `0–9 . + - * / ( )` and Enter/Esc/Backspace
+- Cross-platform: Windows, macOS, Linux (GUI required)
 
-#Simple Calculator
-- Clean, minimal calculator UI using Tkinter
-- Basic operations: `+`, `-`, `×`, `÷`
-- Decimal support (`.`)
-- `C` button to clear the current expression
-- `=` button to evaluate the expression
-- `x²` button to square the current value or expression result
-- Cross-platform: works on Windows, macOS, and Linux (with a GUI environment)
+> Note: On macOS, some themes ignore Tk button background colors; text color still applies.
 
 ---
 
 ## Files
 
-- `Simple Calculator.py` – main Tkinter simple calculator app  
-- `Scientific Calculator.py` – main Tkinter scientific calculator app  
-- `tk_test.py` *(optional)* – tiny script to test that Tkinter can open a window on your system
+- `calculator.py` — main Tkinter calculator app  
+- `tk_test.py` *(optional)* — tiny script to confirm Tkinter can open a window
+
+No third-party pip packages are required to run from source.
 
 ---
 
 ## Requirements
 
-- **Python 3.x**
-- Tkinter  
-  - Included by default on Windows and most macOS installations.
-  - On some Linux systems you may need to install it (e.g. `sudo apt-get install python3-tk`).
-
-No extra `pip` packages are required.
+- **Python 3.9+** (3.11+ recommended)
+- **Tkinter**
+  - Included by default with the official installers on **Windows** and **macOS**.
+  - On some Linux distros: `sudo apt-get install python3-tk`
 
 ---
 
-## How to Run
+## How to Run (from source)
 
-1. Open a terminal (or PyCharm’s built-in terminal).
-2. Navigate to the project folder:
+Open a terminal (or PyCharm’s terminal) and run:
 
-   ```bash
-   cd path/to/your/project
+### macOS / Linux
+```bash
+python3 --version
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python calculator.py
