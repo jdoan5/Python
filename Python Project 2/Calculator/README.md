@@ -7,6 +7,16 @@ Supports basic arithmetic operations and includes an **x² (square)** button.
 
 ## Features
 
+#Simple Calculator
+- Clean, minimal calculator UI using Tkinter
+- Basic operations: `+`, `-`, `×`, `÷`
+- Decimal support (`.`)
+- `C` button to clear the current expression
+- `CE` button to clear the last expression
+- `=` button to evaluate the expression
+- Cross-platform: works on Windows, macOS, and Linux (with a GUI environment)
+
+#Simple Calculator
 - Clean, minimal calculator UI using Tkinter
 - Basic operations: `+`, `-`, `×`, `÷`
 - Decimal support (`.`)
@@ -19,7 +29,8 @@ Supports basic arithmetic operations and includes an **x² (square)** button.
 
 ## Files
 
-- `calculator.py` – main Tkinter calculator app  
+- `Simple Calculator.py` – main Tkinter simple calculator app  
+- `Scientific Calculator.py` – main Tkinter scientific calculator app  
 - `tk_test.py` *(optional)* – tiny script to test that Tkinter can open a window on your system
 
 ---
