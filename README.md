@@ -1,44 +1,48 @@
 # Python Projects
 
-A collection of small Python projects and practice examples.  
-This repo is where I experiment with core Python concepts, build mini-apps, and learn new libraries.
+A collection of small Python projects and practice examples.
+
+This repo is where I experiment with core Python concepts, build mini-apps, and explore new libraries.  
+Projects range from simple GUI tools to data preprocessing scripts.
 
 ---
 
-## Contents
+## Contents (Featured Projects)
 
-- 🧮 **Tkinter Calculator** – desktop calculator UI with buttons for basic operations and `x²`.
-- 📊 **Popular Baby Names Dashboard Prep** – data cleaning and trend labeling script for a Looker Studio dashboard.
-- 🧪 Misc practice scripts exploring syntax, control flow, functions, classes, and file I/O.
+### 🧮 Tkinter Calculator
+A desktop calculator built with Tkinter, featuring:
 
-*(More projects will be added over time.)*
-
----
-
-## Author
-
-- [@jdoan5](https://github.com/jdoan5)
+- Buttons for basic arithmetic operations
+- Support for `x²` (square) operation
+- Simple, responsive layout suitable for beginners learning GUI programming
 
 ---
 
-## Licenses / Badges
+### 📊 Popular Baby Names – Dashboard Prep
+Data preparation scripts for a **Popular Baby Names** dashboard (e.g., Looker Studio / Google Data Studio):
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
-[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
-
-> This repository currently uses the MIT license. Other badges are listed for reference only.
+- Cleans and normalizes raw baby name datasets
+- Adds labels and trend fields to support charts and filters
+- Exports cleaned data for use in BI / dashboard tools
 
 ---
 
-## FAQ
+### 🧪 Misc Practice Scripts
+A grab-bag of short scripts used to practice:
 
-#### Q1. What is the purpose of this repository?
-**A.** To practice Python and showcase small, self-contained projects (GUI apps, data scripts, CLI tools, etc.) that I can reference in my portfolio.
+- Core syntax and control flow
+- Functions and classes
+- File I/O
+- Small CLI utilities and experiments
 
-#### Q2. How can I use or run these projects?
-**A.**  
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/jdoan5/Python.git
-   cd Python
+> More projects will be added over time as I keep learning and experimenting.
+
+---
+
+## Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/jdoan5/Python.git
+cd Python
