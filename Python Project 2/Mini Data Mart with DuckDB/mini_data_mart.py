@@ -10,7 +10,7 @@ con = duckdb.connect(DB_PATH)
 
 # 2 Example: Create dimension tables
 con.execute("""
-            CREATE TABLE dim_customer AS
+            CREATE TABLE IF NOT EXISTS dim_customer AS
             SELECT *
             FROM (VALUES (1, 'Alice', 'North'),
                          (2, 'Bob', 'South'),
