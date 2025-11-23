@@ -1,12 +1,12 @@
-# Create and load the data mart
-# This is the ETL/setup script
-
 from pathlib import Path
 import duckdb
 
 # --- Paths ---
 BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "mini_data_mart.duckdb"
+DB_PATH = BASE_DIR / "mini_data_mart.duckdb" #DuckDB file
+DATA_DIR = BASE_DIR / "data"
+
+SALES_CVS = DATA_DIR /"fact_sales.csv"
 
 print(f"Creating / using database at: {DB_PATH}")
 
@@ -90,8 +90,8 @@ con.execute("""
 con.execute("""
             INSERT INTO fact_sales
             VALUES (1001, 1, 10, '2025-01-01', 1, 1200.00),
-                   (1002, 1, 11, '2025-01-02', 1, 200.00),
-                   (1003, 1, 12, '2025-01-03', 1, 300.00),
+                   (1002, 2, 11, '2025-01-02', 2, 200.00),
+                   (1003, 3, 12, '2025-01-03', 1, 300.00),
                    (1004, 1, 11, '2025-01-03', 1, 200.00);
             """)
 
