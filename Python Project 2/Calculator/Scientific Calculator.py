@@ -1,8 +1,8 @@
+# Scientific-ish Calculator (macOS-safe: visible buttons via ttk)
 import tkinter as tk
 import re
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 
-# Very small safety gate for eval: digits, dot, + - * / ( ) and whitespace only
 MATH_ALLOWED = re.compile(r"^[0-9\.\+\-\*\/\(\)\s]+$")
 
 class Calculator(tk.Tk):
@@ -14,116 +14,104 @@ class Calculator(tk.Tk):
         self.resizable(True, True)
         self.expression = ""
 
-        # ---- Display --------------------------------------------------------
+        # --- Display ---------------------------------------------------------
         self.display = tk.Entry(
-            self,
-            font=("Cambria", 50),
-            bd=0,
-            bg="#205b7a",    # display background
-            fg="#ffffff",    # display text color
-            justify="right",
-            insertbackground="#ffffff"
+            self, font=("Cambria", 50), bd=0,
+            bg="#205b7a", fg="#ffffff", justify="right", insertbackground="#ffffff"
         )
         self.display.grid(row=0, column=0, columnspan=4, padx=8, pady=8, ipady=10, sticky="nsew")
 
-        # ---- Buttons (label, row, col[, colspan]) --------------------------
+        # --- ttk styles (use a theme that honors colors on macOS) ------------
+        style = ttk.Style(self)
+        try:
+            style.theme_use("clam")
+        except tk.TclError:
+            pass
+
+        style.configure("Calc.TButton",   font=("Segoe UI", 18), foreground="#111111", padding=(8, 12))
+        style.configure("Op.TButton",     font=("Segoe UI", 18), foreground="#111111",
+                        background="#dfe9ef", relief="flat")
+        style.configure("Danger.TButton", font=("Segoe UI", 18, "bold"), foreground="#ffffff",
+                        background="#e74c3c", relief="flat")
+        style.configure("Warn.TButton",   font=("Segoe UI", 18, "bold"), foreground="#ffffff",
+                        background="#ef6c00", relief="flat")
+        style.configure("Back.TButton",   font=("Segoe UI", 18), foreground="#ffffff",
+                        background="#6d4c41", relief="flat")
+        style.configure("Eq.TButton",     font=("Segoe UI", 18, "bold"), foreground="#ffffff",
+                        background="#2ecc71", relief="flat")
+        style.map("Eq.TButton", background=[("active", "#28b765")])
+
+        # --- Buttons ---------------------------------------------------------
         self.BUTTONS = [
             ("C",  1, 0), ("CE", 1, 1), ("⌫", 1, 2), ("÷",  1, 3),
             ("7",  2, 0), ("8",  2, 1), ("9",  2, 2), ("×",  2, 3),
             ("4",  3, 0), ("5",  3, 1), ("6",  3, 2), ("−",  3, 3),
             ("1",  4, 0), ("2",  4, 1), ("3",  4, 2), ("+",  4, 3),
-            ("0",  5, 0), (".",  5, 1), ("=",  5, 2, 2),  # "=" spans two columns
+            ("0",  5, 0), (".",  5, 1), ("=",  5, 2, 2),
         ]
 
-        for btn in self.BUTTONS:
-            text, row, col = btn[0], btn[1], btn[2]
-            colspan = btn[3] if len(btn) == 4 else 1
+        for data in self.BUTTONS:
+            text, row, col = data[0], data[1], data[2]
+            colspan = data[3] if len(data) == 4 else 1
 
-            # Colors (macOS may ignore bg, but fg is applied)
-            is_eq  = (text == "=")
-            is_c   = (text == "C")
-            is_ce  = (text == "CE")
-            is_bsp = (text == "⌫")
-            is_op  = text in {"÷", "×", "−", "+"}
+            # choose a ttk style per key
+            if text == "=":
+                sty = "Eq.TButton"
+            elif text == "C":
+                sty = "Danger.TButton"
+            elif text == "CE":
+                sty = "Warn.TButton"
+            elif text == "⌫":
+                sty = "Back.TButton"
+            elif text in {"÷", "×", "−", "+"}:
+                sty = "Op.TButton"
+            else:
+                sty = "Calc.TButton"
 
-            bg = "#444444"
-            fg = "#ffffff"
-            if is_eq:  bg = "#2e7d32"   # green
-            elif is_c: bg = "#c62828"   # red
-            elif is_ce: bg = "#ef6c00"  # orange
-            elif is_bsp: bg = "#6d4c41" # brown-ish
-            elif is_op: bg = "#455a64"  # bluish for ops
-
-            b = tk.Button(
+            ttk.Button(
                 self,
                 text=text,
-                font=("Segoe UI", 18),
-                bg=bg, fg=fg, bd=0,
-                activebackground="#666666",
-                activeforeground="#ffffff",
-                command=lambda char=text: self.on_button_click(char)
-            )
-            b.grid(row=row, column=col, columnspan=colspan,
+                style=sty,
+                command=lambda ch=text: self.on_button_click(ch)
+            ).grid(row=row, column=col, columnspan=colspan,
                    padx=4, pady=4, ipadx=10, ipady=16, sticky="nsew")
 
-        # Responsive grid
-        for r in range(6):  # 0..5
+        # Grid weights
+        for r in range(6):
             self.rowconfigure(r, weight=1)
         for c in range(4):
             self.columnconfigure(c, weight=1)
 
-        # ---- Keyboard shortcuts --------------------------------------------
-        # Enter = evaluate
+        # --- Keyboard bindings ----------------------------------------------
         self.bind("<Return>",    lambda e: self.on_button_click("="))
         self.bind("<KP_Enter>",  lambda e: self.on_button_click("="))
-        # Esc = clear all
         self.bind("<Escape>",    lambda e: self.on_button_click("C"))
-        # Backspace = delete one char
         self.bind("<BackSpace>", lambda e: self.on_button_click("⌫"))
-
-        # Direct typing for digits, dot, parentheses, and common ops
         for key in "0123456789.+-*/()":
             self.bind(key, lambda e, k=key: self._type_key(k))
-        # Allow 'x' or 'X' to mean multiply
         self.bind("x", lambda e: self._type_key("*"))
         self.bind("X", lambda e: self._type_key("*"))
-        # Divide key on some keyboards
         self.bind("÷", lambda e: self._type_key("/"))
 
-    # ---- UI Handlers --------------------------------------------------------
+    # --- Handlers ------------------------------------------------------------
     def on_button_click(self, char: str):
         if char == "C":
-            # Clear all
             self.expression = ""
-            self.update_display()
-            return
-
+            return self.update_display()
         if char == "CE":
-            # Clear entry: remove only the trailing number (and decimal part) if present
             self.expression = re.sub(r"\d+(\.\d+)?\s*$", "", self.expression)
-            self.update_display()
-            return
-
+            return self.update_display()
         if char == "⌫":
-            # Backspace one char
             self.expression = self.expression[:-1]
-            self.update_display()
-            return
-
+            return self.update_display()
         if char == "=":
-            self.evaluate_expression()
-            return
-
-        # Normalize pretty symbols to Python operators
+            return self.evaluate_expression()
         if char in self.SYMBOL_MAP:
             char = self.SYMBOL_MAP[char]
-
-        # Append and refresh
         self.expression += char
         self.update_display()
 
     def _type_key(self, k: str):
-        # Typed directly from keyboard
         self.expression += k
         self.update_display()
 
@@ -131,7 +119,7 @@ class Calculator(tk.Tk):
         self.display.delete(0, tk.END)
         self.display.insert(0, self.expression)
 
-    # ---- Evaluation ---------------------------------------------------------
+    # --- Eval ---------------------------------------------------------------
     def evaluate_expression(self):
         expr = self.expression.strip()
         try:
@@ -149,14 +137,11 @@ class Calculator(tk.Tk):
             self.expression = ""
             self.update_display()
 
-    # Pretty-print ints without trailing .0
     def _fmt(self, n):
         try:
             return str(int(n)) if float(n) == int(n) else str(n)
         except Exception:
             return str(n)
 
-
 if __name__ == "__main__":
-    app = Calculator()
-    app.mainloop()
+    Calculator().mainloop()
