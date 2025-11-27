@@ -10,16 +10,16 @@ class Calculator(tk.Tk):
 
     def __init__(self):
         super().__init__()
-        self.title("Python Calculator")
+        self.title("Scientific Calculator ")
         self.resizable(True, True)
         self.expression = ""
 
         # --- Display ---------------------------------------------------------
         self.display = tk.Entry(
             self, font=("Cambria", 50), bd=0,
-            bg="#205b7a", fg="#ffffff", justify="right", insertbackground="#ffffff"
+            bg="#205b7a", fg="#ffffff", justify="right", insertbackground="#ffffff" #background display screen
         )
-        self.display.grid(row=0, column=0, columnspan=4, padx=8, pady=8, ipady=10, sticky="nsew")
+        self.display.grid(row=0, column=0, columnspan=8, padx=8, pady=8, ipady=10, sticky="nsew")
 
         # --- ttk styles (use a theme that honors colors on macOS) ------------
         style = ttk.Style(self)
@@ -43,11 +43,14 @@ class Calculator(tk.Tk):
 
         # --- Buttons ---------------------------------------------------------
         self.BUTTONS = [
-            ("C",  1, 0), ("CE", 1, 1), ("⌫", 1, 2), ("÷",  1, 3),
-            ("7",  2, 0), ("8",  2, 1), ("9",  2, 2), ("×",  2, 3),
-            ("4",  3, 0), ("5",  3, 1), ("6",  3, 2), ("−",  3, 3),
-            ("1",  4, 0), ("2",  4, 1), ("3",  4, 2), ("+",  4, 3),
-            ("0",  5, 0), (".",  5, 1), ("=",  5, 2, 2),
+            ("(",  1, 0),     (")", 1, 1),      ("C", 1, 2),     ("CE", 1, 3),    ("⌫",  1, 4),
+            ("%",  2, 0),     ("1/x", 2, 1),    ("√", 2, 2),     ("+/-", 2, 3),   ("", 2, 4),
+            ("sin", 3, 0),    ("cos", 3, 1),    ("tan", 3, 2),   ("e", 3, 3),     ("x²", 3, 4),
+            ("sin⁻¹", 4, 0),  ("cos⁻¹", 4, 1),  ("tan⁻¹", 4,2),  ("log10", 4, 3), ("÷", 4, 4),
+            ("",  5, 0),      ("7",  5, 1),     ("8",  5, 2),    ("9",  5, 3),    ("×", 5, 4),
+            ("",  6, 0),      ("4",  6, 1),     ("5",  6, 2),    ("6",  6, 3),    ("-", 6, 4),
+            ("",  7, 0),      ("1",  7, 1),     ("2",  7, 2),    ("3",  7, 3),    ("+",7,4),
+            ("",  8, 0),      (".",  8, 1),     ("0", 8, 2),     ("Ans", 8,3),    ("=",  8, 4),
         ]
 
         for data in self.BUTTONS:
@@ -63,7 +66,7 @@ class Calculator(tk.Tk):
                 sty = "Warn.TButton"
             elif text == "⌫":
                 sty = "Back.TButton"
-            elif text in {"÷", "×", "−", "+"}:
+            elif text in {"÷", "×", "-", "+"}:
                 sty = "Op.TButton"
             else:
                 sty = "Calc.TButton"
