@@ -1,5 +1,7 @@
 import tkinter as tk
 import math
+import random
+import traceback
 
 
 class ScientificCalculator(tk.Tk):
@@ -87,7 +89,7 @@ class ScientificCalculator(tk.Tk):
         if label == "=":
             return "#4caf50"  # green
         if label in {"÷", "×", "−", "+"}:
-            return "#e8f2ff"  # light blue
+            return "#ADD8E6"  # light blue
         return "#f2f0eb"  # gray for others
 
     # --------------------------------------------------------------------- #
@@ -122,6 +124,20 @@ class ScientificCalculator(tk.Tk):
             self.expression.set(self.expression.get() + str(self.last_answer))
             return
 
+        if label == "%":
+            expr = self.expression.get()
+            if not expr:
+                return
+            try:
+                value = float(expr)
+                result = value / 100
+                self.last_answer = result
+                self.expression.set(str(result))
+            except ValueError:
+                # If it is not a simple number, just append "/100"
+                self.expression.set(expr + "/100")
+                return
+
         # Otherwise append translated token to the expression string
         self.expression.set(self.expression.get() + self._to_expr_token(label))
 
@@ -146,6 +162,7 @@ class ScientificCalculator(tk.Tk):
             "x²": "**2",
             "x³": "**3",
             "x!": "fact(",
+            "%": "%",
             # simple “Rand” inserts a random number 0–1
             "Rand": "rand()",
         }
@@ -172,7 +189,7 @@ class ScientificCalculator(tk.Tk):
             "ln": math.log,         # natural log
             "log10": math.log10,
             "fact": math.factorial,
-            "rand": lambda: math.random() if hasattr(math, "random") else 0.0,
+            "rand": random.random,
         }
 
         try:
