@@ -1,3 +1,5 @@
+# Extended version of a Tkinter calculator with more scientific calculation functionality
+
 import tkinter as tk
 import math
 import random
