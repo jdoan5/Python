@@ -1,0 +1,101 @@
+ticket_id,created_at,resolved_at,priority,channel,category,agent,status,resolution_hours,sla_target_hours,met_sla,created_date,created_hour,created_dow
+T0001,2025-11-02 16:24:58-05,2025-11-06 00:13:07-05,Low,Email,Tech Support,Agent B,Resolved,79.8025,72,false,2025-11-02,21,Sunday
+T0002,2025-10-28 23:23:28-04,2025-10-30 12:16:17-04,Medium,Email,Login Issues,Agent A,Resolved,36.88027777777778,48,true,2025-10-29,3,Wednesday
+T0003,2025-10-26 03:14:22-04,2025-10-29 18:50:55-04,Low,Web,Billing,Agent D,Resolved,87.60916666666667,72,false,2025-10-26,7,Sunday
+T0004,2025-11-14 06:35:35-05,2025-11-18 14:00:54-05,Low,Web,Tech Support,Agent C,Closed,103.42194444444445,72,false,2025-11-14,11,Friday
+T0005,2025-09-11 13:36:39-04,,Low,Web,Login Issues,Agent C,In Progress,,72,false,2025-09-11,17,Thursday
+T0006,2025-11-18 23:11:20-05,,Low,Web,Other,Agent A,In Progress,,72,false,2025-11-19,4,Wednesday
+T0007,2025-09-09 07:03:41-04,2025-09-10 08:43:17-04,High,Phone,Other,Agent C,Resolved,25.66,24,false,2025-09-09,11,Tuesday
+T0008,2025-11-04 19:17:56-05,,Low,Phone,Login Issues,Agent B,In Progress,,72,false,2025-11-05,0,Wednesday
+T0009,2025-09-28 15:10:09-04,2025-09-30 15:45:06-04,Medium,Phone,Billing,Agent C,Resolved,48.5825,48,false,2025-09-28,19,Sunday
+T0010,2025-10-30 18:49:19-04,2025-10-31 09:06:10-04,High,Chat,Other,Agent B,Resolved,14.280833333333334,24,true,2025-10-30,22,Thursday
+T0011,2025-11-07 01:42:38-05,,Medium,Email,Billing,Agent A,In Progress,,48,false,2025-11-07,6,Friday
+T0012,2025-09-27 15:19:31-04,2025-09-29 21:44:35-04,Low,Chat,Other,Agent C,Closed,54.41777777777778,72,true,2025-09-27,19,Saturday
+T0013,2025-09-15 12:21:31-04,2025-09-16 19:46:39-04,Medium,Chat,Billing,Agent C,Closed,31.41888888888889,48,true,2025-09-15,16,Monday
+T0014,2025-10-06 18:57:24-04,2025-10-07 00:59:53-04,Low,Chat,Other,Agent D,Resolved,6.041388888888889,72,true,2025-10-06,22,Monday
+T0015,2025-09-16 11:35:23-04,2025-09-17 09:26:45-04,High,Chat,Account Update,Agent A,Closed,21.85611111111111,24,true,2025-09-16,15,Tuesday
+T0016,2025-10-23 00:22:10-04,2025-10-24 01:31:19-04,Medium,Email,Login Issues,Agent C,Closed,25.1525,48,true,2025-10-23,4,Thursday
+T0017,2025-10-13 20:31:13-04,,Low,Web,Login Issues,Agent C,Open,,72,false,2025-10-14,0,Tuesday
+T0018,2025-10-20 22:25:40-04,2025-10-24 09:00:59-04,Low,Phone,Other,Agent B,Resolved,82.5886111111111,72,false,2025-10-21,2,Tuesday
+T0019,2025-10-29 19:05:09-04,,Medium,Web,Login Issues,Agent A,In Progress,,48,false,2025-10-29,23,Wednesday
+T0020,2025-09-24 21:24:29-04,2025-09-27 02:24:33-04,Low,Chat,Other,Agent A,Resolved,53.00111111111111,72,true,2025-09-25,1,Thursday
+T0021,2025-11-14 10:46:31-05,,High,Chat,Billing,Agent D,Open,,24,false,2025-11-14,15,Friday
+T0022,2025-09-27 09:04:14-04,2025-09-28 00:02:07-04,High,Web,Billing,Agent B,Closed,14.964722222222223,24,true,2025-09-27,13,Saturday
+T0023,2025-10-14 04:17:27-04,2025-10-14 17:07:26-04,High,Web,Login Issues,Agent B,Resolved,12.833055555555555,24,true,2025-10-14,8,Tuesday
+T0024,2025-10-28 18:36:31-04,2025-11-01 20:29:19-04,Low,Email,Login Issues,Agent A,Closed,97.88,72,false,2025-10-28,22,Tuesday
+T0025,2025-09-08 12:33:12-04,2025-09-08 18:11:03-04,High,Chat,Tech Support,Agent D,Closed,5.630833333333333,24,true,2025-09-08,16,Monday
+T0026,2025-09-25 05:40:06-04,2025-09-26 13:16:23-04,Medium,Web,Billing,Agent A,Closed,31.60472222222222,48,true,2025-09-25,9,Thursday
+T0027,2025-10-11 13:22:53-04,2025-10-12 14:28:19-04,Medium,Email,Login Issues,Agent A,Resolved,25.090555555555557,48,true,2025-10-11,17,Saturday
+T0028,2025-09-25 18:51:18-04,2025-09-26 15:29:18-04,Low,Chat,Other,Agent D,Closed,20.633333333333333,72,true,2025-09-25,22,Thursday
+T0029,2025-09-25 21:32:06-04,2025-09-30 09:27:30-04,Low,Web,Other,Agent A,Resolved,107.92333333333333,72,false,2025-09-26,1,Friday
+T0030,2025-09-10 16:45:42-04,2025-09-14 14:16:45-04,Low,Chat,Account Update,Agent D,Resolved,93.5175,72,false,2025-09-10,20,Wednesday
+T0031,2025-09-17 15:04:34-04,,Medium,Email,Account Update,Agent C,In Progress,,48,false,2025-09-17,19,Wednesday
+T0032,2025-09-29 08:07:21-04,2025-10-02 05:54:03-04,Medium,Web,Billing,Agent B,Resolved,69.77833333333334,48,false,2025-09-29,12,Monday
+T0033,2025-11-13 05:21:11-05,2025-11-15 18:53:46-05,Medium,Email,Login Issues,Agent D,Resolved,61.543055555555554,48,false,2025-11-13,10,Thursday
+T0034,2025-09-07 03:58:58-04,2025-09-08 04:36:55-04,High,Email,Billing,Agent A,Resolved,24.6325,24,false,2025-09-07,7,Sunday
+T0035,2025-10-10 20:18:32-04,2025-10-12 18:09:57-04,Low,Chat,Other,Agent A,Closed,45.856944444444444,72,true,2025-10-11,0,Saturday
+T0036,2025-09-26 23:04:19-04,2025-09-29 23:56:34-04,Low,Phone,Billing,Agent C,Closed,72.87083333333334,72,false,2025-09-27,3,Saturday
+T0037,2025-10-16 00:51:15-04,2025-10-17 17:49:36-04,Medium,Email,Login Issues,Agent D,Resolved,40.9725,48,true,2025-10-16,4,Thursday
+T0038,2025-09-08 18:09:13-04,2025-09-09 07:22:08-04,High,Chat,Other,Agent C,Resolved,13.215277777777779,24,true,2025-09-08,22,Monday
+T0039,2025-11-25 23:17:31-05,2025-11-28 10:24:59-05,Low,Phone,Tech Support,Agent B,Closed,59.12444444444444,72,true,2025-11-26,4,Wednesday
+T0040,2025-10-31 00:45:22-04,,High,Email,Other,Agent C,Open,,24,false,2025-10-31,4,Friday
+T0041,2025-11-25 20:37:40-05,2025-11-26 14:15:39-05,Low,Phone,Login Issues,Agent A,Closed,17.633055555555554,72,true,2025-11-26,1,Wednesday
+T0042,2025-10-30 08:47:58-04,2025-10-31 12:40:10-04,Low,Phone,Billing,Agent C,Resolved,27.87,72,true,2025-10-30,12,Thursday
+T0043,2025-09-10 14:30:53-04,2025-09-11 18:30:14-04,High,Web,Tech Support,Agent A,Closed,27.989166666666666,24,false,2025-09-10,18,Wednesday
+T0044,2025-09-17 07:57:25-04,2025-09-17 12:52:21-04,High,Web,Other,Agent D,Resolved,4.915555555555556,24,true,2025-09-17,11,Wednesday
+T0045,2025-10-24 14:45:41-04,2025-10-24 20:14:14-04,Low,Phone,Other,Agent B,Closed,5.475833333333333,72,true,2025-10-24,18,Friday
+T0046,2025-11-27 21:13:21-05,2025-11-29 12:03:58-05,Low,Phone,Billing,Agent B,Closed,38.84361111111111,72,true,2025-11-28,2,Friday
+T0047,2025-10-31 21:41:24-04,,High,Chat,Billing,Agent B,Open,,24,false,2025-11-01,1,Saturday
+T0048,2025-11-26 04:17:33-05,2025-11-27 10:31:27-05,Medium,Email,Billing,Agent C,Resolved,30.231666666666666,48,true,2025-11-26,9,Wednesday
+T0049,2025-09-27 13:08:46-04,,Low,Email,Account Update,Agent A,Open,,72,false,2025-09-27,17,Saturday
+T0050,2025-09-21 00:28:56-04,2025-09-23 00:20:41-04,Medium,Phone,Tech Support,Agent B,Closed,47.8625,48,true,2025-09-21,4,Sunday
+T0051,2025-10-03 12:20:58-04,2025-10-04 17:43:36-04,Medium,Email,Tech Support,Agent C,Closed,29.377222222222223,48,true,2025-10-03,16,Friday
+T0052,2025-09-04 07:45:28-04,2025-09-07 00:35:27-04,Low,Phone,Billing,Agent C,Closed,64.83305555555556,72,true,2025-09-04,11,Thursday
+T0053,2025-11-11 08:04:36-05,2025-11-13 02:00:52-05,Medium,Web,Other,Agent A,Closed,41.937777777777775,48,true,2025-11-11,13,Tuesday
+T0054,2025-09-05 22:52:19-04,2025-09-06 02:19:16-04,High,Web,Login Issues,Agent B,Closed,3.4491666666666667,24,true,2025-09-06,2,Saturday
+T0055,2025-11-01 03:30:04-04,2025-11-02 02:39:36-05,Medium,Email,Tech Support,Agent C,Closed,24.15888888888889,48,true,2025-11-01,7,Saturday
+T0056,2025-10-25 11:19:06-04,2025-10-29 12:55:07-04,Low,Chat,Account Update,Agent D,Closed,97.60027777777778,72,false,2025-10-25,15,Saturday
+T0057,2025-10-11 01:40:03-04,2025-10-12 06:10:09-04,High,Email,Tech Support,Agent C,Closed,28.501666666666665,24,false,2025-10-11,5,Saturday
+T0058,2025-10-16 18:56:41-04,2025-10-19 16:05:34-04,Medium,Web,Billing,Agent D,Resolved,69.14805555555556,48,false,2025-10-16,22,Thursday
+T0059,2025-11-04 13:40:38-05,2025-11-08 20:32:28-05,Low,Phone,Other,Agent C,Resolved,102.8638888888889,72,false,2025-11-04,18,Tuesday
+T0060,2025-11-05 22:10:17-05,2025-11-06 16:33:19-05,Medium,Chat,Billing,Agent B,Closed,18.38388888888889,48,true,2025-11-06,3,Thursday
+T0061,2025-10-30 23:48:55-04,2025-11-01 17:54:04-04,Low,Web,Account Update,Agent B,Closed,42.08583333333333,72,true,2025-10-31,3,Friday
+T0062,2025-09-25 07:58:07-04,2025-09-28 23:00:30-04,Low,Email,Login Issues,Agent D,Closed,87.03972222222222,72,false,2025-09-25,11,Thursday
+T0063,2025-09-06 12:27:40-04,2025-09-07 05:43:25-04,High,Chat,Login Issues,Agent D,Closed,17.2625,24,true,2025-09-06,16,Saturday
+T0064,2025-11-13 22:18:14-05,,Medium,Web,Other,Agent D,In Progress,,48,false,2025-11-14,3,Friday
+T0065,2025-10-15 08:10:56-04,2025-10-16 04:40:43-04,Medium,Chat,Tech Support,Agent D,Resolved,20.496388888888887,48,true,2025-10-15,12,Wednesday
+T0066,2025-11-09 21:07:26-05,2025-11-11 12:28:29-05,Medium,Chat,Tech Support,Agent C,Resolved,39.350833333333334,48,true,2025-11-10,2,Monday
+T0067,2025-09-16 06:54:17-04,2025-09-18 03:31:04-04,Low,Web,Billing,Agent B,Closed,44.613055555555555,72,true,2025-09-16,10,Tuesday
+T0068,2025-10-12 00:16:05-04,,Low,Chat,Account Update,Agent D,Open,,72,false,2025-10-12,4,Sunday
+T0069,2025-11-23 18:46:27-05,,High,Web,Account Update,Agent A,In Progress,,24,false,2025-11-23,23,Sunday
+T0070,2025-11-13 18:10:05-05,2025-11-14 14:32:47-05,Medium,Web,Other,Agent B,Closed,20.378333333333334,48,true,2025-11-13,23,Thursday
+T0071,2025-09-04 11:04:35-04,,Medium,Phone,Account Update,Agent B,Open,,48,false,2025-09-04,15,Thursday
+T0072,2025-11-01 01:24:27-04,2025-11-01 17:24:32-04,High,Email,Account Update,Agent A,Closed,16.00138888888889,24,true,2025-11-01,5,Saturday
+T0073,2025-09-19 06:54:11-04,2025-09-20 18:52:32-04,Low,Phone,Account Update,Agent C,Closed,35.9725,72,true,2025-09-19,10,Friday
+T0074,2025-09-28 15:49:43-04,2025-09-30 07:07:39-04,Medium,Phone,Login Issues,Agent D,Closed,39.29888888888889,48,true,2025-09-28,19,Sunday
+T0075,2025-09-23 09:55:09-04,,High,Email,Login Issues,Agent A,Open,,24,false,2025-09-23,13,Tuesday
+T0076,2025-11-22 01:59:19-05,2025-11-22 15:13:42-05,Low,Chat,Billing,Agent B,Resolved,13.239722222222222,72,true,2025-11-22,6,Saturday
+T0077,2025-10-16 19:03:05-04,2025-10-18 05:46:56-04,High,Phone,Tech Support,Agent B,Resolved,34.73083333333334,24,false,2025-10-16,23,Thursday
+T0078,2025-11-16 02:49:49-05,,Low,Phone,Login Issues,Agent A,In Progress,,72,false,2025-11-16,7,Sunday
+T0079,2025-10-10 03:42:56-04,2025-10-11 07:45:09-04,High,Chat,Login Issues,Agent B,Resolved,28.036944444444444,24,false,2025-10-10,7,Friday
+T0080,2025-11-17 21:47:15-05,2025-11-18 01:12:04-05,High,Email,Tech Support,Agent D,Closed,3.413611111111111,24,true,2025-11-18,2,Tuesday
+T0081,2025-09-02 20:55:31-04,,Medium,Web,Login Issues,Agent D,In Progress,,48,false,2025-09-03,0,Wednesday
+T0082,2025-11-09 06:35:32-05,2025-11-13 09:59:29-05,Low,Web,Billing,Agent C,Closed,99.39916666666667,72,false,2025-11-09,11,Sunday
+T0083,2025-10-16 18:40:41-04,,Medium,Phone,Tech Support,Agent B,Open,,48,false,2025-10-16,22,Thursday
+T0084,2025-09-28 17:23:37-04,2025-09-30 05:29:22-04,Medium,Chat,Account Update,Agent D,Closed,36.09583333333333,48,true,2025-09-28,21,Sunday
+T0085,2025-09-19 07:09:41-04,2025-09-21 22:39:51-04,Medium,Chat,Tech Support,Agent C,Closed,63.50277777777778,48,false,2025-09-19,11,Friday
+T0086,2025-10-25 14:31:51-04,2025-10-27 19:48:31-04,Low,Chat,Login Issues,Agent B,Resolved,53.27777777777778,72,true,2025-10-25,18,Saturday
+T0087,2025-11-07 15:40:49-05,2025-11-08 08:24:49-05,Medium,Web,Account Update,Agent A,Resolved,16.733333333333334,48,true,2025-11-07,20,Friday
+T0088,2025-10-01 08:57:20-04,2025-10-02 12:03:48-04,High,Phone,Account Update,Agent C,Closed,27.107777777777777,24,false,2025-10-01,12,Wednesday
+T0089,2025-10-05 19:13:18-04,2025-10-06 00:26:41-04,High,Web,Tech Support,Agent C,Resolved,5.223055555555556,24,true,2025-10-05,23,Sunday
+T0090,2025-10-02 06:43:26-04,2025-10-03 13:18:34-04,Low,Chat,Billing,Agent B,Closed,30.585555555555555,72,true,2025-10-02,10,Thursday
+T0091,2025-09-11 09:41:12-04,2025-09-11 12:12:02-04,Low,Phone,Billing,Agent C,Resolved,2.513888888888889,72,true,2025-09-11,13,Thursday
+T0092,2025-09-28 06:38:08-04,2025-09-28 21:08:51-04,Low,Email,Other,Agent C,Closed,14.511944444444444,72,true,2025-09-28,10,Sunday
+T0093,2025-09-11 14:29:25-04,2025-09-12 11:13:02-04,Low,Phone,Account Update,Agent D,Resolved,20.726944444444445,72,true,2025-09-11,18,Thursday
+T0094,2025-09-26 03:45:40-04,2025-09-27 21:43:47-04,Medium,Email,Login Issues,Agent D,Resolved,41.96861111111111,48,true,2025-09-26,7,Friday
+T0095,2025-09-16 08:59:36-04,2025-09-19 19:47:20-04,Low,Phone,Login Issues,Agent B,Resolved,82.79555555555555,72,false,2025-09-16,12,Tuesday
+T0096,2025-11-15 21:56:27-05,2025-11-16 19:32:21-05,High,Web,Account Update,Agent D,Closed,21.598333333333333,24,true,2025-11-16,2,Sunday
+T0097,2025-10-01 07:01:53-04,,High,Email,Other,Agent A,Open,,24,false,2025-10-01,11,Wednesday
+T0098,2025-11-01 08:59:58-04,2025-11-03 20:03:45-05,Low,Phone,Login Issues,Agent B,Resolved,60.06305555555556,72,true,2025-11-01,12,Saturday
+T0099,2025-09-01 21:40:43-04,2025-09-02 15:06:48-04,Medium,Web,Other,Agent D,Closed,17.434722222222224,48,true,2025-09-02,1,Tuesday
+T0100,2025-11-08 20:31:25-05,2025-11-10 17:54:10-05,Medium,Email,Billing,Agent C,Resolved,45.37916666666667,48,true,2025-11-09,1,Sunday
