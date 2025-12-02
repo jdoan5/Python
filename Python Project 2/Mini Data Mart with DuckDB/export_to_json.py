@@ -1,24 +1,22 @@
-from pathlib import Path
 import duckdb
+import pandas as pd
+from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "mini_data_mart.duckdb"
-DATA_DIR = BASE_DIR / "data/JSON"
+# Paths
+CSV_DIR = Path("data/JSON-export")
+CSV_DIR.mkdir(exist_ok=True)
 
-DATA_DIR.mkdir(exist_ok=True)
+con = duckdb.connect("mini_data_mart.duckdb")
 
-con = duckdb.connect(DB_PATH.as_posix())
+tables = ["dim_customer", "dim_product", "dim_date", "fact_sales"]
 
-# Export each table as JSON (array of records)
-for (table_name,) in con.execute("SHOW TABLES;").fetchall():
-    json_path = DATA_DIR / f"{table_name}.json"
-    print(f"Exporting {table_name} -> {json_path}")
+print("=== Exporting tables to JSON ===")
+for t in tables:
+    out_path = CSV_DIR / f"{t}.json"
+    print(f"Exporting {t} → {out_path}")
 
-    con.execute(f"""
-        COPY {table_name}
-        TO '{json_path.as_posix()}'
-        (FORMAT JSON);
-    """)
+    # Simple and reliable way to export
+    df = con.sql(f"SELECT * FROM {t};").df()
+    df.to_csv(out_path, index=False)
 
-con.close()
-print("JSON export complete.")
+print("\nDone! JSONs saved in data/JSON-export/")

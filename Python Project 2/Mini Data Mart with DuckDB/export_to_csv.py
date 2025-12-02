@@ -1,24 +1,22 @@
-#Optional to export .duckdb to csv file
-from pathlib import Path
 import duckdb
+import pandas as pd
+from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "mini_data_mart.duckdb"
-DATA_DIR = BASE_DIR / "data/CSV"
+# Paths
+CSV_DIR = Path("data/CSV-export")
+CSV_DIR.mkdir(exist_ok=True)
 
-DATA_DIR.mkdir(exist_ok=True)
+con = duckdb.connect("mini_data_mart.duckdb")
 
-con = duckdb.connect(DB_PATH.as_posix())
+tables = ["dim_customer", "dim_product", "dim_date", "fact_sales"]
 
-# Export each table
-for (table_name,) in con.execute("SHOW TABLES;").fetchall():
-    csv_path = DATA_DIR / f"{table_name}.csv"
-    print(f"Exporting {table_name} -> {csv_path}")
-    con.execute(f"""
-        COPY {table_name}
-        TO '{csv_path.as_posix()}'
-        (HEADER, DELIMITER ',');
-    """)
+print("=== Exporting tables to CSV ===")
+for t in tables:
+    out_path = CSV_DIR / f"{t}.csv"
+    print(f"Exporting {t} → {out_path}")
 
-con.close()
-print("Export complete.")
+    # Simple and reliable way to export
+    df = con.sql(f"SELECT * FROM {t};").df()
+    df.to_csv(out_path, index=False)
+
+print("\nDone! CSVs saved in data/CSV-export/")
