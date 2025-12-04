@@ -1,3 +1,8 @@
 This is the product overview
 
-s
+Where is your product made from?
+The product is made from recycle plastic.
+
+What is the product's price?
+The product's price is $10.
+

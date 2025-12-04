@@ -14,4 +14,13 @@ Visit our website at https://example.com.
 How can I delete my account?
 You can delete your account by clicking "Delete account" on your profile page.
 
+What is your privacy policy?
+Read our privacy policy at https://example.com/privacy.
+
+What are your terms of service?
+Read our terms of service at https://example.com/terms.
+
+What is your return policy?
+Read our return policy at https://example.com/returns.
+
 
