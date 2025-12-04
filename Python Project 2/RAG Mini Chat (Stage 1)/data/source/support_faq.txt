@@ -7,3 +7,11 @@ We will send a reset link to your email address.
 How do I contact support?
 You can email support@example.com or open a ticket in the help center.
 Support hours are 9am–5pm EST, Monday to Friday.
+
+Where can I find more information about the product?
+Visit our website at https://example.com.
+
+How can I delete my account?
+You can delete your account by clicking "Delete account" on your profile page.
+
+
