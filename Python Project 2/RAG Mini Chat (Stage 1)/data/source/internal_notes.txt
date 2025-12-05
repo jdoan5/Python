@@ -1,4 +1,16 @@
 #This is an internal note.
 
-Who are you?
-Sorry I do not know.
+Q: What is this?
+A: This is an internal note.
+
+Q: Why is this here?
+A: To keep track of internal notes.
+
+Q: Who wrote this?
+A: Internal stakeholders
+
+Q: When was this written?
+A: 2021-03-01
+
+Q: Where can I find more information about this?
+A: https://github.com/RAG-Project/RAG-Mini-Chat

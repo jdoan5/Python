@@ -1,8 +1,9 @@
 This is the product overview
 
-Where is your product made from?
-The product is made from recycle plastic.
+Q: Where is your product made from?
+A: The product is made from recycle plastic.
 
-What is the product's price?
-The product's price is $10.
+Q: What is the product's price?
+A: The product's price is $10.
+
 
