@@ -1,9 +1,0 @@
-#This is a support FAQ
-
-How do I reset my password?
-You can reset your password by clicking "Forgot password" on the login page.
-We will send a reset link to your email address.
-
-How do I contact support?
-You can email support@example.com or open a ticket in the help center.
-Support hours are 9am–5pm EST, Monday to Friday.

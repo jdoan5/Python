@@ -1,4 +1,0 @@
-scikit-learn
-numpy
-openai   # or whichever client you use
-python-dotenv
