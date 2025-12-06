@@ -30,3 +30,5 @@ def ask_llm(prompt: str) -> str:
     except Exception as exc:
         # Fallback so your CLI doesn’t crash hard
         return f"[LLM error] {exc}"
+
+---------------------------------------------------------------------------------------------

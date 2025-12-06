@@ -1,36 +1,41 @@
 # RAG Mini Chat — Stage 2 (Retrieval + LLM)
 
-Stage 2 builds on the Stage 1 “RAG Mini Chat” by adding a **real LLM call** and a
-small **retrieval-augmented chat CLI**.
+Small Retrieval-Augmented Generation (RAG) demo.
 
-Instead of only returning raw chunks, the app now:
+Stage 2 builds on Stage 1 by adding:
 
-1. Retrieves the most relevant text chunks from `data/source/`.
-2. Builds a context block from those chunks.
-3. Calls an LLM with that context.
-4. Prints a natural-language answer (plus you still control exactly what text
-   the model sees).
+- A simple text **index** built from `.txt` files in `data/source/`.
+- A `search()` function that pulls relevant chunks for a question.
+- An `llm_client` that can either:
+  - Call the **OpenAI API** when an `OPENAI_API_KEY` is available, or
+  - Fall back to a **local stub** that just echoes the prompt (useful for offline testing).
 
 ---
 
-## 1. Project Structure
+## Project layout
 
 ```text
 RAG Mini Chat (Stage 2)/
-  data/
-    source/
-      internal_notes.txt
-      product_overview.txt
-      support_faq.txt
-  index/
-    chunks.parquet           # built by build_index.py
-  rag/
-    __init__.py
-    build_index.py           # Stage 2 index builder
-    retrieval.py             # search() + answer_question()
-    llm_client.py            # thin wrapper around the LLM API (ask_llm)
-    chat_cli_stage1.py       # optional: Stage 1 style CLI (no LLM)
-    chat_cli_stage2.py       # Stage 2 RAG chat CLI
-  requirements.txt
-  README.md
-  .env                       # NOT committed – holds API key
+├─ data/
+│  └─ source/
+│     ├─ product_overview.txt
+│     ├─ support_faq.txt
+│     └─ Special_Order_Overview.txt
+├─ index/
+│  └─ chunks.parquet          # created by build_index2.py
+└─ rag/
+   ├─ build_index2.py         # build text index from data/source
+   ├─ retrieval.py            # search() + answer_question()
+   ├─ llm_client.py           # ask_llm(): OpenAI or local stub
+   ├─ chat_cli_stage2.py      # command-line chat loop
+   └─ __init__.py
+
+```
+## Data → Index → Chat (Overview)
+
+```mermaid
+flowchart LR
+  A["Text files in data/source"] --> B["build_index2.py (create chunks.parquet)"]
+  B --> C["search() in retrieval.py (find relevant chunks)"]
+  C --> D["ask_llm() in llm_client.py (call OpenAI or local stub)"]
+  D --> E["chat_cli_stage2.py (CLI conversation)"]
