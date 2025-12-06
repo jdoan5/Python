@@ -16,7 +16,7 @@ TFIDF_PATH = INDEX_DIR / "tfidf_matrix.joblib"
 
 def load_index():
     if not CHUNKS_PATH.exists():
-        raise SystemExit("Index not found. Run build_index.py first.")
+        raise SystemExit("Index not found. Run build_index1.py first.")
 
     chunks = pd.read_parquet(CHUNKS_PATH)
     vectorizer = joblib.load(VECTORIZER_PATH)

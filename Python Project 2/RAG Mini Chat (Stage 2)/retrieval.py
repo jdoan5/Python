@@ -9,7 +9,7 @@ import pandas as pd
 from llm_client import ask_llm
 
 
-# Path to your chunks parquet created by build_index.py
+# Path to your chunks parquet created by build_index1.py
 INDEX_DIR = Path(__file__).resolve().parent / "index"
 CHUNKS_PARQUET = INDEX_DIR / "chunks.parquet"
 

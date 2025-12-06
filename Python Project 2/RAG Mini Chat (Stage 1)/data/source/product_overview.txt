@@ -6,4 +6,13 @@ A: The product is made from recycle plastic.
 Q: What is the product's price?
 A: The product's price is $10.
 
+Q: How many items can you buy?
+A: You can buy 10 items per transaction.
+
+Q: How do I buy the product?
+A: You can buy the product by visiting our website.
+
+Q: What is your shipping policy?
+A: We ship within 24 hours.
+
 
