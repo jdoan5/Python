@@ -1,0 +1,13 @@
+# This is a special order overview file.
+
+Q: How can I get a special order?
+A: Contact the local store owner.
+
+Q: What is a special order?
+A: A special order is a request for a product that is not normally available.
+
+Q: What is handle with a special order?
+A: The local store owner will handle the special order.
+
+Q: How long does it take to handle a special order?
+A: It usually takes 24 hours to handle a special order.

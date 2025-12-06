@@ -1,4 +1,4 @@
-# A program to calculate the Body Mass Index (BMI)
+# A program to calculate the Body Mass index (BMI)
 
 # User input
 """ weight = int(input("Enter your weight in kilograms: "))

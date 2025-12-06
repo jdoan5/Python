@@ -1,8 +1,8 @@
-# RAG Mini Bot — Stage 1 (Local Retrieval Only)
+# RAG Mini Bot — Stage 1 (Local Retrieval Only or local TF-IDF search)
 
 Small “retrieval-first” helper that searches over local text files and returns the
 most relevant passages. No LLM yet — this stage is all about understanding the
-**R**etrieval part of RAG.
+**R**etrieval part of RAG. 
 
 What Stage 1 Does
 	1.	You drop .txt documents into data/source/.
