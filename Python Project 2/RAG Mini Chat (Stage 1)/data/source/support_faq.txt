@@ -23,4 +23,7 @@ Read our terms of service at https://example.com/terms.
 What is your return policy?
 Read our return policy at https://example.com/returns.
 
+What is chat support hour?
+Chat support is available 24/7.
+
 

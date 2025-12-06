@@ -15,6 +15,20 @@ DATA_DIR = BASE_DIR / "data"
 SOURCE_DIR = DATA_DIR / "source"
 INDEX_DIR = BASE_DIR / "index"
 
+
+files = sorted(SOURCE_DIR.glob("*.txt"))
+files_2 = sorted(INDEX_DIR.glob("*.parquet"))
+file_3 = sorted(INDEX_DIR.glob("*.joblib"))
+
+print(f"Found {len(files)} source files in {SOURCE_DIR}:")
+for f in files:
+    print("  -", f.name)
+
+print(f"Created {len(files_2 + file_3)} index files in {INDEX_DIR}:")
+for f in files_2 + file_3:
+    print("  -", f.name)
+
+
 INDEX_DIR.mkdir(exist_ok=True)
 
 
