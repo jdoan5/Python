@@ -14,3 +14,6 @@ A: 2021-03-01
 
 Q: Where can I find more information about this?
 A: https://github.com/RAG-Project/RAG-Mini-Chat
+
+Q: Which level of escalation is this?
+A: 1
