@@ -1,0 +1,15 @@
+retrieval:
+  k: 4                 # how many chunks to pull
+  min_score: 0.15      # ignore very low-similarity hits (if you add score)
+  max_context_chars: 2400
+
+llm:
+  provider: "local"    # "local" or "openai"
+  model: "gpt-4.1-mini"
+  temperature: 0.2
+  max_tokens: 300
+
+display:
+  show_sources: true
+  show_scores: true
+  show_raw_context: false
