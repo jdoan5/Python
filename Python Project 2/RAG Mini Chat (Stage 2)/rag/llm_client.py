@@ -1,46 +1,61 @@
-# llm_client.py – simple wrapper so other code can call the LLM
+# rag/llm_client.py
 from __future__ import annotations
 
 import os
-from textwrap import shorten
+from pathlib import Path
 
-try:
-    # Optional: if you have OpenAI installed, you can use it
-    from openai import OpenAI
-    _HAS_OPENAI = True
-except ImportError:
-    OpenAI = None
-    _HAS_OPENAI = False
+from dotenv import load_dotenv
+from openai import OpenAI  # new OpenAI Python SDK
 
 
-def _call_openai(prompt: str) -> str:
-    """
-    Real call to OpenAI if OPENAI_API_KEY is set and openai is installed.
-    Otherwise we fall back to a stub response.
-    """
-    api_key = os.environ.get("OPENAI_API_KEY")
+# --- Load .env --------------------------------------------------------------
 
-    if not api_key or not _HAS_OPENAI:
-        # Fallback: stub so the app still works for learning/demo
-        snippet = shorten(prompt, width=180, placeholder="...")
-        return f"[LLM stub] No API key / SDK. I would answer based on this prompt:\n{snippet}"
+HERE = Path(__file__).resolve().parent
+DOTENV_PATH = HERE / ".env"
 
-    client = OpenAI(api_key=api_key)
+# Load variables from rag/.env
+load_dotenv(DOTENV_PATH)
 
-    resp = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "You are a concise, helpful assistant."},
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.2,
-        max_tokens=300,
-    )
-    return resp.choices[0].message.content.strip()
+raw_key = os.getenv("OPENAI_API_KEY")
+model = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
+
+print(f"DEBUG (llm_client): .env path used: {DOTENV_PATH}")
+print(f"DEBUG (llm_client): raw OPENAI_API_KEY present? {bool(raw_key)}")
+print(f"DEBUG (llm_client): OPENAI_MODEL = {model!r}")
+
+# --- Create client or fall back to stub ------------------------------------
+
+client: OpenAI | None
+
+if raw_key:
+    client = OpenAI(api_key=raw_key)
+    print("DEBUG (llm_client): Created real OpenAI client.")
+else:
+    client = None
+    print("DEBUG (llm_client): No API key – using stub answers.")
 
 
 def ask_llm(prompt: str) -> str:
     """
-    Public helper used by retrieval.answer_question().
+    Send a prompt to OpenAI if we have a client.
+    Otherwise return a stub answer (so the rest of the app still works).
     """
-    return _call_openai(prompt)
+    global client
+
+    print(f"DEBUG (llm_client.ask_llm): client is None? {client is None}")
+
+    # Fallback path (no key / misconfig)
+    if client is None:
+        return "Stub answer (no API key):\n" + prompt
+
+    # Real API call
+    try:
+        response = client.responses.create(
+            model=model,
+            input=prompt,
+        )
+        # Responses API: first output → first content block → text
+        return response.output[0].content[0].text
+    except Exception as e:
+        # In case of quota issues or any other error, show something useful
+        return f"[LLM error] {e}"
