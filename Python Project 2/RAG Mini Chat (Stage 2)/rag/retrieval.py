@@ -42,28 +42,34 @@ def load_tfidf():
 # ---------- Search --------------------------------------------------------
 def search(query: str, k: int = 4) -> List[Dict]:
     """
-    TF-IDF cosine similarity search over chunks.
+    Very simple text search over chunks.
 
-    Returns up to k best-matching chunks as dictionaries:
-    { 'doc_id': ..., 'chunk_id': ..., 'text': ..., 'score': ... }
+    For Stage 2 we keep it basic:
+      - case-insensitive substring match on the chunk text
+      - return up to k best matches
     """
     df = load_index()
-    vectorizer, tfidf_matrix = load_tfidf()
 
-    # Vector for the query
-    q_vec = vectorizer.transform([query])
-    scores = cosine_similarity(q_vec, tfidf_matrix)[0]
+    # --- Handle older index files gracefully -----------------------------
+    # Some older runs used 'source' instead of 'doc_id'.
+    if "doc_id" not in df.columns and "source" in df.columns:
+        df = df.rename(columns={"source": "doc_id"})
 
-    # If everything is zero, treat as "no hits"
-    if np.max(scores) <= 0:
-        return []
+    # If chunk_id is missing, synthesize it
+    if "chunk_id" not in df.columns:
+        df["chunk_id"] = range(len(df))
 
-    top_idx = scores.argsort()[::-1][:k]
-    results = df.iloc[top_idx].copy()
-    results["score"] = scores[top_idx]
+    # crude relevance: text contains the query (case-insensitive)
+    mask = df["text"].str.contains(query, case=False, na=False)
+    results = df[mask].copy()
 
-    return results[["doc_id", "chunk_id", "text", "score"]].to_dict(orient="records")
+    # optional: sort shorter chunks first
+    results["len"] = results["text"].str.len()
+    results = results.sort_values("len").head(k)
 
+    # build list of dicts with whatever columns we have
+    cols = [c for c in ["doc_id", "chunk_id", "text", "score"] if c in results.columns]
+    return results[cols].to_dict(orient="records")
 
 # ---------- Simple “answer” helper ---------------------------------------
 def answer_question(question: str) -> str:
