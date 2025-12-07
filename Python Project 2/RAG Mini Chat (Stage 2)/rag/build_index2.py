@@ -1,4 +1,4 @@
-# build_index2.py
+# retrieval-version-with-OpenAI.py
 from __future__ import annotations
 
 from pathlib import Path

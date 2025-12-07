@@ -1,0 +1,54 @@
+# rag/retrieval.py
+# Use to call OpenAI's API to retrieve relevant documents
+'
+from __future__ import annotations
+
+from pathlib import Path
+from typing import List, Dict
+
+import pandas as pd
+
+from llm_client import ask_llm
+
+# PROJECT ROOT = one level up from rag/
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+INDEX_DIR = PROJECT_ROOT / "index"
+CHUNKS_PARQUET = INDEX_DIR / "chunks.parquet"
+
+
+def load_index() -> pd.DataFrame:
+    if not CHUNKS_PARQUET.exists():
+        raise FileNotFoundError(
+            f"Index file not found at {CHUNKS_PARQUET}. Run build_index2.py first."
+        )
+    return pd.read_parquet(CHUNKS_PARQUET)
+
+
+def search(query: str, k: int = 4) -> List[Dict]:
+    df = load_index()
+    mask = df["text"].str.contains(query, case=False, na=False)
+    results = df[mask].copy()
+    results["len"] = results["text"].str.len()
+    results = results.sort_values("len").head(k)
+    return results[["source", "chunk_id", "text"]].to_dict(orient="records")
+
+
+def answer_question(question: str) -> str:
+    hits = search(question, k=4)
+
+    if not hits:
+        return "I couldn't find anything in the documents for that question yet."
+
+    context = "\n\n".join(
+        f"Source: {h['source']}\n{h['text']}"
+        for h in hits
+    )
+
+    prompt = (
+        "You are a helpful support assistant. Use ONLY the context below.\n\n"
+        f"{context}\n\n"
+        f"Question: {question}\n"
+        "Answer in 2–3 sentences."
+    )
+
+    return ask_llm(prompt)
