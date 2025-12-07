@@ -1,0 +1,74 @@
+{
+  "ts": "2025-12-07T12:29:43.381585",
+  "session_id": "rag3_20251207_122934",
+  "question": "How do I reset password?",
+  "answer": "Stub answer (local mode).\n\nI would answer based on this prompt/context:\n\nUse ONLY the context below to answer.\n\n[1] (support_faq.txt#chunk1)\nHow do I reset my password?\nYou can reset your password by clicking \"Forgot password\" on the login page.\nWe will send a reset link to your email address.\n\n[2] (product_overview.txt#chunk0)\nThis is the product overview\n\n[3] (product_overview.txt#chunk2)\nQ: What is the product's price?\nA: The product's price is $10.\n\n[4] (product_overview.txt#chunk1)\nQ: Where is your product made from?\nA: The product is made from recycle plastic.\n\n\nQuestion: How do I reset password?\nAnswer (be concise and grounded in the snippets):",
+  "hits": [
+    {
+      "doc_id": "support_faq.txt",
+      "chunk_id": 1,
+      "text": "How do I reset my password?\nYou can reset your password by clicking \"Forgot password\" on the login page.\nWe will send a reset link to your email address.",
+      "score": 0.7274109749994387
+    },
+    {
+      "doc_id": "product_overview.txt",
+      "chunk_id": 0,
+      "text": "This is the product overview",
+      "score": 0.0
+    },
+    {
+      "doc_id": "product_overview.txt",
+      "chunk_id": 2,
+      "text": "Q: What is the product's price?\nA: The product's price is $10.",
+      "score": 0.0
+    },
+    {
+      "doc_id": "product_overview.txt",
+      "chunk_id": 1,
+      "text": "Q: Where is your product made from?\nA: The product is made from recycle plastic.",
+      "score": 0.0
+    }
+  ],
+  "retrieval_cfg": {
+    "k": 4,
+    "min_score": 0.15,
+    "max_context_chars": 2400
+  }
+}
+{
+  "ts": "2025-12-07T12:30:37.979674",
+  "session_id": "rag3_20251207_122934",
+  "question": "What is handle with a special order?",
+  "answer": "Stub answer (local mode).\n\nI would answer based on this prompt/context:\n\nUse ONLY the context below to answer.\n\n[1] (Special_Order_Overview.txt#chunk3)\nQ: What is handle with a special order?\nA: The local store owner will handle the special order.\n\n[2] (Special_Order_Overview.txt#chunk4)\nQ: How long does it take to handle a special order?\nA: It usually takes 24 hours to handle a special order.\n\n[3] (Special_Order_Overview.txt#chunk2)\nQ: What is a special order?\nA: A special order is a request for a product that is not normally available.\n\n[4] (Special_Order_Overview.txt#chunk0)\n# This is a special order overview file.\n\n\nQuestion: What is handle with a special order?\nAnswer (be concise and grounded in the snippets):",
+  "hits": [
+    {
+      "doc_id": "Special_Order_Overview.txt",
+      "chunk_id": 3,
+      "text": "Q: What is handle with a special order?\nA: The local store owner will handle the special order.",
+      "score": 0.815054917336964
+    },
+    {
+      "doc_id": "Special_Order_Overview.txt",
+      "chunk_id": 4,
+      "text": "Q: How long does it take to handle a special order?\nA: It usually takes 24 hours to handle a special order.",
+      "score": 0.700682552773538
+    },
+    {
+      "doc_id": "Special_Order_Overview.txt",
+      "chunk_id": 2,
+      "text": "Q: What is a special order?\nA: A special order is a request for a product that is not normally available.",
+      "score": 0.431830489520348
+    },
+    {
+      "doc_id": "Special_Order_Overview.txt",
+      "chunk_id": 0,
+      "text": "# This is a special order overview file.",
+      "score": 0.3514479562404159
+    }
+  ],
+  "retrieval_cfg": {
+    "k": 4,
+    "min_score": 0.15,
+    "max_context_chars": 2400
+  }
+}

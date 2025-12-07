@@ -1,2 +1,74 @@
-{"ts": "2025-12-07T00:54:36.369145", "session_id": "rag3_20251207_005434", "question": "what products do you offer?", "answer": "Stub answer (local mode).\n\nI would answer based on this prompt/context:\n\nYou are a helpful assistant. Use ONLY the context below to answer.\n\n[1] (product_overview.txt#chunk0)\nThis is the product overview\n\n[2] (product_overview.txt#chunk1)\nQ: Where is your product made from?\nA: The product is made from recycle plastic.\n\n[3] (product_overview.txt#chunk2)\nQ: What is the product's price?\nA: The product's price is $10.\n\n[4] (product_overview.txt#chunk3)\nQ: How many items can you buy?\nA: You can buy 10 items per transaction.\n\n\nQuestion: what products do you offer?\nAnswer (be concise and grounded in the snippets):", "hits": [{"doc_id": "product_overview.txt", "chunk_id": 0, "text": "This is the product overview", "score": 0.0}, {"doc_id": "product_overview.txt", "chunk_id": 1, "text": "Q: Where is your product made from?\nA: The product is made from recycle plastic.", "score": 0.0}, {"doc_id": "product_overview.txt", "chunk_id": 2, "text": "Q: What is the product's price?\nA: The product's price is $10.", "score": 0.0}, {"doc_id": "product_overview.txt", "chunk_id": 3, "text": "Q: How many items can you buy?\nA: You can buy 10 items per transaction.", "score": 0.0}], "retrieval_cfg": {"k": 4, "min_score": 0.15, "max_context_chars": 2400}}
-{"ts": "2025-12-07T00:55:30.355233", "session_id": "rag3_20251207_005434", "question": "what products do you offer?", "answer": "Stub answer (local mode).\n\nI would answer based on this prompt/context:\n\nYou are a helpful assistant. Use ONLY the context below to answer.\n\n[1] (product_overview.txt#chunk0)\nThis is the product overview\n\n[2] (product_overview.txt#chunk1)\nQ: Where is your product made from?\nA: The product is made from recycle plastic.\n\n[3] (product_overview.txt#chunk2)\nQ: What is the product's price?\nA: The product's price is $10.\n\n[4] (product_overview.txt#chunk3)\nQ: How many items can you buy?\nA: You can buy 10 items per transaction.\n\n\nQuestion: what products do you offer?\nAnswer (be concise and grounded in the snippets):", "hits": [{"doc_id": "product_overview.txt", "chunk_id": 0, "text": "This is the product overview", "score": 0.0}, {"doc_id": "product_overview.txt", "chunk_id": 1, "text": "Q: Where is your product made from?\nA: The product is made from recycle plastic.", "score": 0.0}, {"doc_id": "product_overview.txt", "chunk_id": 2, "text": "Q: What is the product's price?\nA: The product's price is $10.", "score": 0.0}, {"doc_id": "product_overview.txt", "chunk_id": 3, "text": "Q: How many items can you buy?\nA: You can buy 10 items per transaction.", "score": 0.0}], "retrieval_cfg": {"k": 4, "min_score": 0.15, "max_context_chars": 2400}}
+{
+  "ts": "2025-12-07T00:54:36.369145",
+  "session_id": "rag3_20251207_005434",
+  "question": "what products do you offer?",
+  "answer": "Stub answer (local mode).\n\nI would answer based on this prompt/context:\n\nYou are a helpful assistant. Use ONLY the context below to answer.\n\n[1] (product_overview.txt#chunk0)\nThis is the product overview\n\n[2] (product_overview.txt#chunk1)\nQ: Where is your product made from?\nA: The product is made from recycle plastic.\n\n[3] (product_overview.txt#chunk2)\nQ: What is the product's price?\nA: The product's price is $10.\n\n[4] (product_overview.txt#chunk3)\nQ: How many items can you buy?\nA: You can buy 10 items per transaction.\n\n\nQuestion: what products do you offer?\nAnswer (be concise and grounded in the snippets):",
+  "hits": [
+    {
+      "doc_id": "product_overview.txt",
+      "chunk_id": 0,
+      "text": "This is the product overview",
+      "score": 0.0
+    },
+    {
+      "doc_id": "product_overview.txt",
+      "chunk_id": 1,
+      "text": "Q: Where is your product made from?\nA: The product is made from recycle plastic.",
+      "score": 0.0
+    },
+    {
+      "doc_id": "product_overview.txt",
+      "chunk_id": 2,
+      "text": "Q: What is the product's price?\nA: The product's price is $10.",
+      "score": 0.0
+    },
+    {
+      "doc_id": "product_overview.txt",
+      "chunk_id": 3,
+      "text": "Q: How many items can you buy?\nA: You can buy 10 items per transaction.",
+      "score": 0.0
+    }
+  ],
+  "retrieval_cfg": {
+    "k": 4,
+    "min_score": 0.15,
+    "max_context_chars": 2400
+  }
+}
+{
+  "ts": "2025-12-07T00:55:30.355233",
+  "session_id": "rag3_20251207_005434",
+  "question": "what products do you offer?",
+  "answer": "Stub answer (local mode).\n\nI would answer based on this prompt/context:\n\nYou are a helpful assistant. Use ONLY the context below to answer.\n\n[1] (product_overview.txt#chunk0)\nThis is the product overview\n\n[2] (product_overview.txt#chunk1)\nQ: Where is your product made from?\nA: The product is made from recycle plastic.\n\n[3] (product_overview.txt#chunk2)\nQ: What is the product's price?\nA: The product's price is $10.\n\n[4] (product_overview.txt#chunk3)\nQ: How many items can you buy?\nA: You can buy 10 items per transaction.\n\n\nQuestion: what products do you offer?\nAnswer (be concise and grounded in the snippets):",
+  "hits": [
+    {
+      "doc_id": "product_overview.txt",
+      "chunk_id": 0,
+      "text": "This is the product overview",
+      "score": 0.0
+    },
+    {
+      "doc_id": "product_overview.txt",
+      "chunk_id": 1,
+      "text": "Q: Where is your product made from?\nA: The product is made from recycle plastic.",
+      "score": 0.0
+    },
+    {
+      "doc_id": "product_overview.txt",
+      "chunk_id": 2,
+      "text": "Q: What is the product's price?\nA: The product's price is $10.",
+      "score": 0.0
+    },
+    {
+      "doc_id": "product_overview.txt",
+      "chunk_id": 3,
+      "text": "Q: How many items can you buy?\nA: You can buy 10 items per transaction.",
+      "score": 0.0
+    }
+  ],
+  "retrieval_cfg": {
+    "k": 4,
+    "min_score": 0.15,
+    "max_context_chars": 2400
+  }
+}
