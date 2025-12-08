@@ -1,16 +1,15 @@
-# FastAPI app, routes
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from app.config import settings
-from app.api.v1 import router as v1_router
+from .config import settings
+from .api.v1 import router as v1_router
 
 
 def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.app_name,
         version="1.0.0",
-        debug=settings.debug
+        debug=settings.debug,
     )
 
     # Include versioned API
@@ -19,19 +18,21 @@ def create_app() -> FastAPI:
     @app.get("/", summary="Root")
     async def root():
         return {
-            "message": "Hello-Prod FastAPI is running",
+            "message": "Hello-Prod FastAPI is running OK",
             "docs": "/docs",
             "env": settings.environment,
         }
 
-    # Centralized error handling
+    # Simple example of centralized error handling
     @app.exception_handler(Exception)
-    async def unhandle_exception_handler(request: Request, exc: Exception):
+    async def unhandled_exception_handler(request: Request, exc: Exception):
+        # In a real prod app you’d log this to structured logs / APM
         return JSONResponse(
             status_code=500,
-            content={"detail": "Internal Server Error", "error_type": type(exc).__name__},
+            content={"detail": "Internal server error", "error_type": type(exc).__name__},
         )
 
     return app
+
 
 app = create_app()

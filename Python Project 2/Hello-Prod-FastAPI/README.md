@@ -1,44 +1,36 @@
-# Hello-Prod FastAPI — Python
+# Hello-Prod FastAPI
 
-A tiny but **production-flavored** FastAPI service.
+A tiny **production-style FastAPI starter**.
 
-This project is intentionally small, but it’s structured the way you’d build a real API: versioned routes, environment-based settings, and a simple health endpoint that could sit behind a load balancer.
+It’s intentionally simple, but shows how you would structure a real service:
 
----
-
-## Features
-
-- ✅ **FastAPI** app with versioned routes (`/api/v1/...`)
-- ✅ **Health check** endpoint ready for uptime probes
-- ✅ **Hello** endpoint that returns a friendly message plus environment info
-- ✅ **Config via environment variables / `.env`** using `pydantic-settings`
-- ✅ Centralized **error handler** for unexpected exceptions
-- ✅ Optional **tests** using `TestClient` (FastAPI’s test utilities)
+- Versioned API router (`/api/v1`)
+- Centralized configuration with `settings`
+- Health check endpoint for monitoring
+- Centralized exception handler
+- Ready for `uvicorn` + tests (`pytest`)
 
 ---
 
-## Tech Stack
-
-- **Python 3.11+**
-- **FastAPI**
-- **Uvicorn**
-- **pydantic-settings** (for configuration)
-
----
-
-## Project Structure
+## Project structure
 
 ```text
 Hello-Prod-FastAPI/
 ├─ app/
 │  ├─ __init__.py
-│  ├─ main.py          # FastAPI app factory, routes wiring, error handler
-│  ├─ config.py        # Settings pulled from environment / .env
+│  ├─ config.py          # Settings (app name, environment, debug flag, etc.)
+│  ├─ main.py            # FastAPI application factory + root route + error handler
 │  └─ api/
 │     ├─ __init__.py
-│     └─ v1.py         # Versioned API routes (health, hello)
+│     └─ v1.py           # Versioned API router (e.g. /api/v1/health)
+│
 ├─ tests/
-│  └─ test_health.py   # Example test for /api/v1/health
-├─ requirements.txt
-├─ README.md
-└─ run_dev.sh          # Optional helper to start the dev server
+│  └─ test_health.py     # Basic health-check test
+│
+├─ requirements.txt      # Python dependencies
+├─ run_dev.sh            # Helper script for local dev (optional)
+└─ README.md             # This file
+```
+## Requirements
+	•	Python 3.11+ (3.10 also fine)
+	•	pip and venv available on your system
