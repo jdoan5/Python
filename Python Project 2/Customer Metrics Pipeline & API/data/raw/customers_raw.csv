@@ -1,0 +1,6 @@
+customer_id,age,tenure_months,avg_monthly_spend,num_support_tickets,is_premium,churned
+C001,28,6,85.5,2,0,0
+C002,45,24,120.0,1,1,0
+C003,37,3,60.0,4,0,1
+C004,52,18,200.0,3,1,0
+C005,31,8,40.0,6,0,1

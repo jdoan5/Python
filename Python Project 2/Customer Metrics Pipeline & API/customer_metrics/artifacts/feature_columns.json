@@ -1,0 +1,9 @@
+{
+  "feature_columns": [
+    "age",
+    "tenure_months",
+    "avg_monthly_spend",
+    "num_support_tickets",
+    "is_premium"
+  ]
+}
