@@ -160,6 +160,19 @@ class DataSizePage(ttk.Frame):
         ("Kilobytes (KB)", 1024),
         ("Megabytes (MB)", 1024 ** 2),
         ("Gigabytes (GB)", 1024 ** 3),
+        ("Terabytes (TB)", 1024 ** 4),
+        ("Petabytes (PB)", 1024 ** 5),
+        ("Exabytes (EB)", 1024 ** 6),
+        ("Zettabytes (ZB)", 1024 ** 7),
+        ("Yottabytes (YB)", 1024 ** 8),
+        ("Kibibytes (KiB)", 1024 ** 1),
+        ("Mebibytes (MiB)", 1024 ** 2),
+        ("Gibibytes (GiB)", 1024 ** 3),
+        ("Tebibytes (TiB)", 1024 ** 4),
+        ("Pebibytes (PiB)", 1024 ** 5),
+        ("Exbibytes (EiB)", 1024 ** 6),
+        ("Zebibytes (ZiB)", 1024 ** 7),
+        ("Yobibytes (YiB)", 1024 ** 8), 
     ]
 
     def __init__(self, parent, controller):
