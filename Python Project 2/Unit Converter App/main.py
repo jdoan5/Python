@@ -34,34 +34,48 @@ class MainMenu(ttk.Frame):
         super().__init__(parent, padding=24)
         self.controller = controller
 
-        title = ttk.Label(self, text="Unit Converter Hub", font=("Segoe UI", 18, "bold"))
+        title = ttk.Label(self, text="Unit Converter App", font=("Segoe UI", 18, "bold"))
         subtitle = ttk.Label(self, text="Choose a converter:", font=("Segoe UI", 11))
 
-        btn_bmi = ttk.Button(
-            self,
-            text="Body Mass Index Calculator",
-            command=lambda: controller.show_frame("BodyMassIndexPage")
-        )
+        # Add your menu items here (label, frame_name)
+        items = [
+            ("Body Mass Index Calculator", "BodyMassIndexPage"),  # keep your page name
+            ("Currency Converter", "CurrencyPage"),
+            ("Data Size Converter", "DataSizePage"),
+            ("Temperature Converter", "TemperaturePage"),
+            # Add more later:
+            # ("Length Converter", "LengthPage"),
+            # ("Weight Converter", "WeightPage"),
+        ]
 
-        btn_curr = ttk.Button(
-            self, text="Currency Converter",
-            command=lambda: controller.show_frame("CurrencyPage")
-        )
-        btn_data = ttk.Button(
-            self, text="Data Size Converter",
-            command=lambda: controller.show_frame("DataSizePage")
-        )
-        btn_temp = ttk.Button(
-            self, text="Temperature Converter",
-            command=lambda: controller.show_frame("TemperaturePage")
-        )
+        # Header
+        title.grid(row=0, column=0, columnspan=2, pady=(18, 6))
+        subtitle.grid(row=1, column=0, columnspan=2, pady=(0, 22))
 
-        title.pack(pady=(30, 6))
-        subtitle.pack(pady=(0, 18))
-        btn_bmi.pack(pady=8, ipadx=14, ipady=6)
-        btn_curr.pack(pady=8, ipadx=14, ipady=6)
-        btn_data.pack(pady=8, ipadx=14, ipady=6)
-        btn_temp.pack(pady=8, ipadx=14, ipady=6)
+        # Two-column button grid
+        start_row = 2
+        for i, (label, page) in enumerate(items):
+            r = start_row + (i // 2)
+            c = i % 2
+
+            btn = ttk.Button(
+                self,
+                text=label,
+                command=lambda p=page: controller.show_frame(p)
+            )
+            btn.grid(
+                row=r, column=c,
+                padx=16, pady=14,
+                ipadx=18, ipady=8,
+                sticky="ew"
+            )
+
+        # Make both columns stretch evenly
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+
+        # Give some breathing room below
+        self.grid_rowconfigure(start_row + ((len(items) - 1) // 2) + 1, weight=1)
 
 class BodyMassIndexPage(ttk.Frame):
     UNITS = ["Feet", "Inches", "Centimeters", "Meters"]
@@ -101,6 +115,41 @@ class BodyMassIndexPage(ttk.Frame):
             padx=10, pady=6, anchor="w"
         )
 
+        # --- Two-column note with colored headers ---
+        note_frame = ttk.Frame(self)
+
+        note_left_header = tk.Label(
+            note_frame,
+            text="BMI Category",
+            font=("Segoe UI", 14, "bold"),
+            fg="#111111",
+            bg="#ffe08a",   # header background (left)
+            padx=10, pady=6,
+            anchor="w",
+        )
+        note_left_body = ttk.Label(
+            note_frame,
+            text="Underweight\nHealthy\nOverweight\nObese",
+            foreground="red",
+            font=("Segoe UI", 14, "bold"),
+        )
+
+        note_right_header = tk.Label(
+            note_frame,
+            text="BMI Range",
+            font=("Segoe UI", 14, "bold"),
+            fg="#111111",
+            bg="#a7f0ff",   # header background (right)
+            padx=10, pady=6,
+            anchor="w",
+        )
+        note_right_body = ttk.Label(
+            note_frame,
+            text="Below 18.5\n18.5 – 24.9\n25.0 – 29.9\n30.0 and above",
+            foreground="red",
+            font=("Segoe UI", 14, "bold"),
+        )
+
         header.grid(row=0, column=0, columnspan=2, pady=(6, 10), sticky="w")
         back_btn.grid(row=0, column=3, pady=(6, 10), sticky="e")
 
@@ -118,6 +167,17 @@ class BodyMassIndexPage(ttk.Frame):
 
         result_caption.grid(row=5, column=0, padx=(0, 10), pady=(10, 0), sticky="e")
         result_label.grid(row=5, column=1, columnspan=3, pady=(10, 0), sticky="we")
+
+        note_frame.grid(row=6, column=0, columnspan=4, pady=(10, 0), sticky="we")
+
+        note_left_header.grid(row=0, column=0, sticky="we", padx=(0, 12))
+        note_right_header.grid(row=0, column=1, sticky="we")
+
+        note_left_body.grid(row=1, column=0, sticky="w", padx=(0, 12), pady=(6, 0))
+        note_right_body.grid(row=1, column=1, sticky="w", pady=(6, 0))
+
+        note_frame.grid_columnconfigure(0, weight=1)
+        note_frame.grid_columnconfigure(1, weight=1)
 
         for col in range(4):
             self.grid_columnconfigure(col, weight=1)
