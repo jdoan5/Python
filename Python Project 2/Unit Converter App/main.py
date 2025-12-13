@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-
 from currencies import load_currencies
-
 
 class UnitApp(tk.Tk):
     def __init__(self):
@@ -20,7 +18,7 @@ class UnitApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for Page in (MainMenu, CurrencyPage, DataSizePage, TemperaturePage):
+        for Page in (MainMenu, BodyMassIndexPage,CurrencyPage, DataSizePage, TemperaturePage):
             name = Page.__name__
             frame = Page(parent=container, controller=self)
             self.frames[name] = frame
@@ -39,6 +37,12 @@ class MainMenu(ttk.Frame):
         title = ttk.Label(self, text="Unit Converter Hub", font=("Segoe UI", 18, "bold"))
         subtitle = ttk.Label(self, text="Choose a converter:", font=("Segoe UI", 11))
 
+        btn_bmi = ttk.Button(
+            self,
+            text="Body Mass Index Calculator",
+            command=lambda: controller.show_frame("BodyMassIndexPage")
+        )
+
         btn_curr = ttk.Button(
             self, text="Currency Converter",
             command=lambda: controller.show_frame("CurrencyPage")
@@ -54,9 +58,108 @@ class MainMenu(ttk.Frame):
 
         title.pack(pady=(30, 6))
         subtitle.pack(pady=(0, 18))
+        btn_bmi.pack(pady=8, ipadx=14, ipady=6)
         btn_curr.pack(pady=8, ipadx=14, ipady=6)
         btn_data.pack(pady=8, ipadx=14, ipady=6)
         btn_temp.pack(pady=8, ipadx=14, ipady=6)
+
+class BodyMassIndexPage(ttk.Frame):
+    UNITS = ["Feet", "Inches", "Centimeters", "Meters"]
+
+    def __init__(self, parent, controller):
+        super().__init__(parent, padding=14)
+        self.controller = controller
+
+        header = ttk.Label(self, text="BMI Converter", font=("Segoe UI", 14, "bold"))
+        back_btn = ttk.Button(
+            self, text="↩ Back to Main Menu",
+            command=lambda: controller.show_frame("MainMenu")
+        )
+
+        self.value_var = tk.StringVar()
+        self.from_unit = tk.StringVar(value=self.UNITS[0])
+        self.to_unit = tk.StringVar(value=self.UNITS[1])
+        self.result_var = tk.StringVar(value="")
+
+        value_label = ttk.Label(self, text="Value:")
+        value_entry = ttk.Entry(self, textvariable=self.value_var, width=20)
+
+        from_label = ttk.Label(self, text="From:")
+        from_combo = ttk.Combobox(self, values=self.UNITS, textvariable=self.from_unit, state="readonly", width=20)
+
+        to_label = ttk.Label(self, text="To:")
+        to_combo = ttk.Combobox(self, values=self.UNITS, textvariable=self.to_unit, state="readonly", width=20)
+
+        convert_btn = ttk.Button(self, text="Convert", command=self.convert)
+        swap_btn = ttk.Button(self, text="↔ Swap", command=self.swap_units)
+
+        result_caption = ttk.Label(self, text="Result:")
+        result_label = tk.Label(
+            self, textvariable=self.result_var,
+            font=("Segoe UI", 11, "bold"),
+            fg="#ffffff", bg="#333333",
+            padx=10, pady=6, anchor="w"
+        )
+
+        header.grid(row=0, column=0, columnspan=2, pady=(6, 10), sticky="w")
+        back_btn.grid(row=0, column=3, pady=(6, 10), sticky="e")
+
+        value_label.grid(row=1, column=0, padx=(0, 10), pady=6, sticky="e")
+        value_entry.grid(row=1, column=1, pady=6, sticky="w")
+
+        from_label.grid(row=2, column=0, padx=(0, 10), pady=6, sticky="e")
+        from_combo.grid(row=2, column=1, pady=6, sticky="w")
+
+        to_label.grid(row=3, column=0, padx=(0, 10), pady=6, sticky="e")
+        to_combo.grid(row=3, column=1, pady=6, sticky="w")
+
+        convert_btn.grid(row=4, column=0, pady=12, sticky="e")
+        swap_btn.grid(row=4, column=1, pady=12, sticky="w")
+
+        result_caption.grid(row=5, column=0, padx=(0, 10), pady=(10, 0), sticky="e")
+        result_label.grid(row=5, column=1, columnspan=3, pady=(10, 0), sticky="we")
+
+        for col in range(4):
+            self.grid_columnconfigure(col, weight=1)
+
+    def swap_units(self):
+        a = self.from_unit.get()
+        b = self.to_unit.get()
+        self.from_unit.set(b)
+        self.to_unit.set(a)
+        self.result_var.set("")
+
+    def convert(self):
+        try:
+            val = float((self.value_var.get() or "").replace(",", ""))
+        except ValueError:
+            messagebox.showerror("Invalid input", "Please enter a numeric value.")
+            return
+
+        from_u = self.from_unit.get()
+        to_u = self.to_unit.get()
+
+        if "Feet" in from_u:
+            c = val
+        elif "Centimeters" in from_u:
+            c = (val - 32) * 5.0 / 9.0
+        elif "Kelvin" in from_u:
+            c = val - 273.15
+        else:
+            messagebox.showerror("Error", "Unknown source unit.")
+            return
+
+        if "Feet" in to_u:
+            result = c
+        elif "Centimeters" in to_u:
+            result = c * 9.0 / 5.0 + 32
+        elif "Kelvin" in to_u:
+            result = c + 273.15
+        else:
+            messagebox.showerror("Error", "Unknown target unit.")
+            return
+
+        self.result_var.set(f"{val:g} {from_u} = {result:.3f} {to_u}")
 
 class CurrencyPage(ttk.Frame):
     """
@@ -495,7 +598,6 @@ class TemperaturePage(ttk.Frame):
 
         self.result_var.set(f"{val:g} {from_u} = {result:.3f} {to_u}")
 
-#
 if __name__ == "__main__":
     app = UnitApp()
     app.mainloop()
