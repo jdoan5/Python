@@ -2,12 +2,13 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from currencies import load_currencies
 
+
 class UnitApp(tk.Tk):
     def __init__(self):
         super().__init__()
 
         self.title("Unit Converter App")
-        self.geometry("640x420")       # stable size on macOS
+        self.geometry("640x420")  # stable size on macOS
         self.resizable(False, False)
 
         container = ttk.Frame(self)
@@ -18,7 +19,7 @@ class UnitApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for Page in (MainMenu, BodyMassIndexPage,CurrencyPage, DataSizePage, TemperaturePage):
+        for Page in (MainMenu, BodyMassIndexPage, CurrencyPage, DataSizePage, TemperaturePage):
             name = Page.__name__
             frame = Page(parent=container, controller=self)
             self.frames[name] = frame
@@ -39,13 +40,12 @@ class MainMenu(ttk.Frame):
 
         # Add your menu items here (label, frame_name)
         items = [
-            ("Body Mass Index Calculator", "BodyMassIndexPage"),  # keep your page name
+            ("Body Mass Index Converter", "BodyMassIndexPage"),
             ("Currency Converter", "CurrencyPage"),
             ("Data Size Converter", "DataSizePage"),
             ("Temperature Converter", "TemperaturePage"),
-            # Add more later:
-            # ("Length Converter", "LengthPage"),
-            # ("Weight Converter", "WeightPage"),
+            ("Time Converter", "TimePage"),
+            ("Weight Converter", "WeightPage")
         ]
 
         # Header
@@ -78,97 +78,145 @@ class MainMenu(ttk.Frame):
         self.grid_rowconfigure(start_row + ((len(items) - 1) // 2) + 1, weight=1)
 
 class BodyMassIndexPage(ttk.Frame):
-    UNITS = ["Feet", "Inches", "Centimeters", "Meters"]
+    """
+    Body Mass Index calculator.
+
+    Metric:
+        Height in centimeters, weight in kilograms
+    US / Imperial:
+        Height in feet + inches, weight in pounds
+
+    BMI formula:
+        BMI = weight_kg / (height_m ** 2)
+    """
 
     def __init__(self, parent, controller):
         super().__init__(parent, padding=14)
         self.controller = controller
 
-        header = ttk.Label(self, text="BMI Converter", font=("Segoe UI", 14, "bold"))
-        back_btn = ttk.Button(
-            self, text="↩ Back to Main Menu",
-            command=lambda: controller.show_frame("MainMenu")
-        )
+        # 0 = Metric, 1 = US / Imperial
+        self.mode_var = tk.IntVar(value=0)
 
-        self.value_var = tk.StringVar()
-        self.from_unit = tk.StringVar(value=self.UNITS[0])
-        self.to_unit = tk.StringVar(value=self.UNITS[1])
+        # Height / weight variables
+        self.height_main_var = tk.StringVar()   # cm OR feet
+        self.height_in_var = tk.StringVar()     # inches (US only)
+        self.weight_var = tk.StringVar()
         self.result_var = tk.StringVar(value="")
 
-        value_label = ttk.Label(self, text="Value:")
-        value_entry = ttk.Entry(self, textvariable=self.value_var, width=20)
+        # --- Header + back ---
+        header = ttk.Label(self, text="Body Mass Index (BMI)", font=("Segoe UI", 14, "bold"))
+        back_btn = ttk.Button(
+            self,
+            text="↩ Back to Main Menu",
+            command=lambda: controller.show_frame("MainMenu"),
+        )
 
-        from_label = ttk.Label(self, text="From:")
-        from_combo = ttk.Combobox(self, values=self.UNITS, textvariable=self.from_unit, state="readonly", width=20)
+        header.grid(row=0, column=0, columnspan=2, pady=(6, 8), sticky="w")
+        back_btn.grid(row=0, column=3, pady=(6, 8), sticky="e")
 
-        to_label = ttk.Label(self, text="To:")
-        to_combo = ttk.Combobox(self, values=self.UNITS, textvariable=self.to_unit, state="readonly", width=20)
+        # --- Mode selector ---
+        mode_frame = ttk.Frame(self)
+        ttk.Label(mode_frame, text="Unit system:").pack(side="left", padx=(0, 8))
+        ttk.Radiobutton(
+            mode_frame,
+            text="Metric (cm / kg)",
+            variable=self.mode_var,
+            value=0,
+            command=self._on_mode_change,
+        ).pack(side="left", padx=(0, 12))
+        ttk.Radiobutton(
+            mode_frame,
+            text="US / Imperial (ft+in / lb)",
+            variable=self.mode_var,
+            value=1,
+            command=self._on_mode_change,
+        ).pack(side="left")
 
-        convert_btn = ttk.Button(self, text="Convert", command=self.convert)
-        swap_btn = ttk.Button(self, text="↔ Swap", command=self.swap_units)
+        mode_frame.grid(row=1, column=0, columnspan=4, pady=(0, 10), sticky="w")
+
+        # --- Height / weight inputs ---
+
+        # main height field (cm or feet)
+        self.height_label_main = ttk.Label(self, text="Height (cm):")
+        height_entry_main = ttk.Entry(self, textvariable=self.height_main_var, width=10)
+
+        # inches field (US only) - MUST be attributes so we can show/hide later
+        self.height_label_in = ttk.Label(self, text="Inches (in):")
+        self.height_in_entry = ttk.Entry(self, textvariable=self.height_in_var, width=10)
+
+        self.weight_label = ttk.Label(self, text="Weight (kg):")
+        weight_entry = ttk.Entry(self, textvariable=self.weight_var, width=10)
+
+        # place them
+        self.height_label_main.grid(row=2, column=0, padx=(0, 10), pady=6, sticky="e")
+        height_entry_main.grid(row=2, column=1, pady=6, sticky="w")
+
+        self.height_label_in.grid(row=2, column=2, padx=(10, 5), pady=6, sticky="e")
+        self.height_in_entry.grid(row=2, column=3, pady=6, sticky="w")
+
+        self.weight_label.grid(row=3, column=0, padx=(0, 10), pady=6, sticky="e")
+        weight_entry.grid(row=3, column=1, pady=6, sticky="w")
+
+        # --- Buttons + result ---
+        calc_btn = ttk.Button(self, text="Calculate BMI", command=self.calculate_bmi)
+        clear_btn = ttk.Button(self, text="Clear", command=self.clear_fields)
+
+        calc_btn.grid(row=4, column=0, pady=10, sticky="e")
+        clear_btn.grid(row=4, column=1, pady=10, sticky="w")
 
         result_caption = ttk.Label(self, text="Result:")
         result_label = tk.Label(
-            self, textvariable=self.result_var,
+            self,
+            textvariable=self.result_var,
             font=("Segoe UI", 11, "bold"),
-            fg="#ffffff", bg="#333333",
-            padx=10, pady=6, anchor="w"
+            fg="#ffffff",
+            bg="#333333",
+            padx=8,
+            pady=5,
+            anchor="w",
         )
 
-        # --- Two-column note with colored headers ---
+        result_caption.grid(row=5, column=0, padx=(0, 10), pady=(10, 0), sticky="e")
+        result_label.grid(row=5, column=1, columnspan=3, pady=(10, 0), sticky="we")
+
+        # --- BMI category note (two columns) ---
         note_frame = ttk.Frame(self)
 
         note_left_header = tk.Label(
             note_frame,
             text="BMI Category",
-            font=("Segoe UI", 14, "bold"),
+            font=("Segoe UI", 11, "bold"),
             fg="#111111",
-            bg="#ffe08a",   # header background (left)
-            padx=10, pady=6,
+            bg="#ffe08a",
+            padx=10,
+            pady=4,
             anchor="w",
         )
         note_left_body = ttk.Label(
             note_frame,
             text="Underweight\nHealthy\nOverweight\nObese",
-            foreground="red",
-            font=("Segoe UI", 14, "bold"),
+            foreground="#1d3557",
+            font=("Segoe UI", 10),
         )
 
         note_right_header = tk.Label(
             note_frame,
             text="BMI Range",
-            font=("Segoe UI", 14, "bold"),
+            font=("Segoe UI", 11, "bold"),
             fg="#111111",
-            bg="#a7f0ff",   # header background (right)
-            padx=10, pady=6,
+            bg="#a7f0ff",
+            padx=10,
+            pady=4,
             anchor="w",
         )
         note_right_body = ttk.Label(
             note_frame,
             text="Below 18.5\n18.5 – 24.9\n25.0 – 29.9\n30.0 and above",
-            foreground="red",
-            font=("Segoe UI", 14, "bold"),
+            foreground="#1d3557",
+            font=("Segoe UI", 10),
         )
 
-        header.grid(row=0, column=0, columnspan=2, pady=(6, 10), sticky="w")
-        back_btn.grid(row=0, column=3, pady=(6, 10), sticky="e")
-
-        value_label.grid(row=1, column=0, padx=(0, 10), pady=6, sticky="e")
-        value_entry.grid(row=1, column=1, pady=6, sticky="w")
-
-        from_label.grid(row=2, column=0, padx=(0, 10), pady=6, sticky="e")
-        from_combo.grid(row=2, column=1, pady=6, sticky="w")
-
-        to_label.grid(row=3, column=0, padx=(0, 10), pady=6, sticky="e")
-        to_combo.grid(row=3, column=1, pady=6, sticky="w")
-
-        convert_btn.grid(row=4, column=0, pady=12, sticky="e")
-        swap_btn.grid(row=4, column=1, pady=12, sticky="w")
-
-        result_caption.grid(row=5, column=0, padx=(0, 10), pady=(10, 0), sticky="e")
-        result_label.grid(row=5, column=1, columnspan=3, pady=(10, 0), sticky="we")
-
-        note_frame.grid(row=6, column=0, columnspan=4, pady=(10, 0), sticky="we")
+        note_frame.grid(row=6, column=0, columnspan=4, pady=(14, 0), sticky="we")
 
         note_left_header.grid(row=0, column=0, sticky="we", padx=(0, 12))
         note_right_header.grid(row=0, column=1, sticky="we")
@@ -182,44 +230,101 @@ class BodyMassIndexPage(ttk.Frame):
         for col in range(4):
             self.grid_columnconfigure(col, weight=1)
 
-    def swap_units(self):
-        a = self.from_unit.get()
-        b = self.to_unit.get()
-        self.from_unit.set(b)
-        self.to_unit.set(a)
+        # start in Metric mode (hide inches field)
+        self._on_mode_change()
+
+    # ---------- UI helpers ----------
+
+    def _on_mode_change(self):
+        """Update labels and show inches ONLY for US/Imperial."""
+        if self.mode_var.get() == 0:  # Metric
+            self.height_label_main.config(text="Height (cm):")
+            self.weight_label.config(text="Weight (kg):")
+
+            # Hide inches in metric
+            self.height_label_in.grid_remove()
+            self.height_in_entry.grid_remove()
+
+            # Clear inches so it doesn't affect later
+            self.height_in_var.set("")
+        else:  # US / Imperial
+            self.height_label_main.config(text="Height (feet):")
+            self.weight_label.config(text="Weight (lb):")
+
+            # Show inches in US/Imperial
+            self.height_label_in.grid()
+            self.height_in_entry.grid()
+
         self.result_var.set("")
 
-    def convert(self):
+    def clear_fields(self):
+        self.height_main_var.set("")
+        self.height_in_var.set("")
+        self.weight_var.set("")
+        self.result_var.set("")
+
+    # ---------- BMI calculation ----------
+
+    @staticmethod
+    def _classify_bmi(bmi: float) -> str:
+        if bmi < 18.5:
+            return "Underweight"
+        elif bmi < 25.0:
+            return "Healthy"
+        elif bmi < 30.0:
+            return "Overweight"
+        else:
+            return "Obese"
+
+    def calculate_bmi(self):
+        # Parse inputs
         try:
-            val = float((self.value_var.get() or "").replace(",", ""))
+            height_main = float((self.height_main_var.get() or "").replace(",", ""))
         except ValueError:
-            messagebox.showerror("Invalid input", "Please enter a numeric value.")
+            messagebox.showerror("Invalid input", "Please enter a numeric height.")
             return
 
-        from_u = self.from_unit.get()
-        to_u = self.to_unit.get()
-
-        if "Feet" in from_u:
-            c = val
-        elif "Centimeters" in from_u:
-            c = (val - 32) * 5.0 / 9.0
-        elif "Kelvin" in from_u:
-            c = val - 273.15
+        if self.mode_var.get() == 1:
+            inches_raw = (self.height_in_var.get() or "").replace(",", "")
+            if inches_raw.strip():
+                try:
+                    height_in = float(inches_raw)
+                except ValueError:
+                    messagebox.showerror("Invalid input", "Please enter a numeric inches value.")
+                    return
+            else:
+                height_in = 0.0
         else:
-            messagebox.showerror("Error", "Unknown source unit.")
+            height_in = 0.0  # unused in metric
+
+        try:
+            weight = float((self.weight_var.get() or "").replace(",", ""))
+        except ValueError:
+            messagebox.showerror("Invalid input", "Please enter a numeric weight.")
             return
 
-        if "Feet" in to_u:
-            result = c
-        elif "Centimeters" in to_u:
-            result = c * 9.0 / 5.0 + 32
-        elif "Kelvin" in to_u:
-            result = c + 273.15
+        if height_main <= 0 or weight <= 0:
+            messagebox.showerror("Invalid input", "Height and weight must be positive.")
+            return
+
+        # Convert to metric and compute BMI
+        if self.mode_var.get() == 0:
+            # Metric: height in cm, weight in kg
+            height_m = height_main / 100.0
+            weight_kg = weight
         else:
-            messagebox.showerror("Error", "Unknown target unit.")
+            # US: height = feet + inches, weight in pounds
+            total_inches = height_main * 12.0 + height_in
+            height_m = total_inches * 0.0254
+            weight_kg = weight * 0.45359237
+
+        if height_m <= 0:
+            messagebox.showerror("Invalid input", "Height must be greater than zero.")
             return
 
-        self.result_var.set(f"{val:g} {from_u} = {result:.3f} {to_u}")
+        bmi = weight_kg / (height_m ** 2)
+        category = self._classify_bmi(bmi)
+        self.result_var.set(f"BMI: {bmi:.1f}  ({category})")
 
 class CurrencyPage(ttk.Frame):
     """
@@ -227,7 +332,6 @@ class CurrencyPage(ttk.Frame):
     """
 
     # Demo rates: "1 unit of currency == X USD" (approx values; not live)
-    # Add more if you want; anything not here will show "not available".
     DEMO_TO_USD = {
         "USD": 1.00,
         "EUR": 1.0 / 0.85,
@@ -260,24 +364,32 @@ class CurrencyPage(ttk.Frame):
         try:
             self.currencies = load_currencies("data/currency.csv")
         except Exception as e:
-            self.currencies = [("US Dollar", "USD"), ("Euro", "EUR"), ("Pound Sterling", "GBP"), ("Vietnam Dong", "VND")]
-            messagebox.showwarning("Currency list not loaded",
-                                   f"Could not load data/currency.csv.\n\n{e}\n\nUsing a small fallback list.")
+            self.currencies = [
+                ("US Dollar", "USD"),
+                ("Euro", "EUR"),
+                ("Pound Sterling", "GBP"),
+                ("Vietnam Dong", "VND"),
+            ]
+            messagebox.showwarning(
+                "Currency list not loaded",
+                f"Could not load data/currency.csv.\n\n{e}\n\nUsing a small fallback list."
+            )
 
         self.display_list = [f"{name} ({code})" for name, code in self.currencies]
         self.display_to_code = {f"{name} ({code})": code for name, code in self.currencies}
 
         self.value_var = tk.StringVar()
         self.from_display = tk.StringVar(value=self.display_list[0] if self.display_list else "")
-        self.to_display = tk.StringVar(value=self.display_list[1] if len(self.display_list) > 1 else (self.display_list[0] if self.display_list else ""))
+        self.to_display = tk.StringVar(
+            value=self.display_list[1] if len(self.display_list) > 1
+            else (self.display_list[0] if self.display_list else "")
+        )
         self.result_var = tk.StringVar(value="")
 
         note = ttk.Label(
             self,
-            text=(
-                "Note: This is a LOCAL demo converter (no live exchange rates).\n"
-            ),
-            foreground="red", font=("Segoe UI", 20)
+            text="Note: This is a LOCAL demo converter (no live exchange rates).",
+            foreground="red", font=("Segoe UI", 12)
         )
 
         value_label = ttk.Label(self, text="Value:")
@@ -295,7 +407,6 @@ class CurrencyPage(ttk.Frame):
             state="normal", width=42
         )
 
-        # Lightweight “type to filter” for usability with large lists
         self.from_combo.bind("<KeyRelease>", lambda _e: self._filter_combo(self.from_combo, self.from_display))
         self.to_combo.bind("<KeyRelease>", lambda _e: self._filter_combo(self.to_combo, self.to_display))
 
@@ -337,22 +448,16 @@ class CurrencyPage(ttk.Frame):
             self.grid_columnconfigure(col, weight=1)
 
     def _filter_combo(self, combo: ttk.Combobox, var: tk.StringVar):
-        """
-        Filters the dropdown values based on what the user typed.
-        Keeps it capped so large currency lists stay responsive.
-        """
         typed = (var.get() or "").strip().lower()
         if not typed:
             combo["values"] = self.display_list
             return
-
         matches = [x for x in self.display_list if typed in x.lower()]
-        combo["values"] = matches[:200]  # cap for performance
+        combo["values"] = matches[:200]
 
     def _code_from_display(self, display: str) -> str:
         if display in self.display_to_code:
             return self.display_to_code[display]
-        # If user typed something not exactly matching, try a best-effort parse "(CODE)"
         if "(" in display and display.endswith(")"):
             return display.split("(")[-1][:-1].strip().upper()
         raise ValueError("Select a valid currency from the list.")
@@ -365,8 +470,6 @@ class CurrencyPage(ttk.Frame):
         self.result_var.set("")
 
     def _rate(self, from_code: str, to_code: str) -> float:
-        # Cross-rate using USD as the anchor:
-        # 1 FROM = (USD_per_FROM / USD_per_TO) TO
         if from_code not in self.DEMO_TO_USD:
             raise RuntimeError(f"No demo rate available for {from_code}")
         if to_code not in self.DEMO_TO_USD:
@@ -657,6 +760,8 @@ class TemperaturePage(ttk.Frame):
             return
 
         self.result_var.set(f"{val:g} {from_u} = {result:.3f} {to_u}")
+
+
 
 if __name__ == "__main__":
     app = UnitApp()
