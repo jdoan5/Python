@@ -103,12 +103,25 @@ def compute_kpis(con: duckdb.DuckDBPyConnection) -> Tuple[pd.DataFrame, pd.DataF
 
     return kpi_by_priority, kpi_by_day
 
+def export_kpis(kpi_by_priority: pd.DataFrame, kpi_by_day: pd.DataFrame) -> None:
+    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
-def export_kpis(kpi_by_priority: pd.DataFrame) -> None:
-    out_file = PROCESSED_DIR / "kpi_by_priority.csv"
-    kpi_by_priority.to_csv(out_file, index=False)
-    print(f"Wrote KPI summary to {out_file}")
+    # Priority KPI
+    out_priority = PROCESSED_DIR / "kpi_by_priority.csv"
+    kpi_by_priority.to_csv(out_priority, index=False)
 
+    # Daily volume KPI (normalize column names for the dashboard)
+    out_daily = PROCESSED_DIR / "kpi_ticket_volume_daily.csv"
+    kpi_by_day_normalized = kpi_by_day.rename(
+        columns={
+            "created_date": "date",
+            "tickets_count": "tickets",
+        }
+    )
+    kpi_by_day_normalized.to_csv(out_daily, index=False)
+
+    print(f"\nExported: {out_priority}")
+    print(f"Exported: {out_daily}")
 
 def main() -> None:
     print(f"Loading raw tickets from {RAW_FILE} ...")
@@ -126,10 +139,10 @@ def main() -> None:
     print("\n=== KPI by Priority ===")
     print(kpi_by_priority.to_string(index=False))
 
-    print("\n=== Tickets by Day (first 10 rows) ===")
-    print(kpi_by_day.head(10).to_string(index=False))
+    print("\n=== Tickets by Day (first 20 rows) ===")
+    print(kpi_by_day.head(20).to_string(index=False))
 
-    export_kpis(kpi_by_priority)
+    export_kpis(kpi_by_priority, kpi_by_day)
     con.close()
     print("\nDone. You now have a small ticket mart + KPIs.")
 
