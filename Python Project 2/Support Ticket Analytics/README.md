@@ -17,13 +17,13 @@ This project shows an end-to-end path from **raw tickets → curated “mini mar
 
 ```mermaid
 flowchart LR
-  A["Generate synthetic tickets<br/>generate_fake_tickets.py"] --> B["Raw CSV<br/>data/raw/support_tickets.csv"]
+  A["Generate synthetic tickets<br/>generate_fake_tickets.py"] --> B["Raw CSV<br/>data/raw/support_tickets.csv"] 
   B --> C["ETL + enrichment<br/>etl_build_mart.py"]
   C --> D["DuckDB mini mart<br/>tickets.duckdb"]
-  C --> E["Processed outputs<br/>data/processed/*.csv"]
+  C --> E["Processed outputs<br/>data/processed/kpi_ticket_volume_daily.csv, kpi_by_priority.csv"]
 
   D --> F["KPIs / queries<br/>inspect_duckdb.py"]
-  D --> G["Dashboards / reporting<br/>Looker, Sheets, etc."]
+  D --> G["Dashboards / reporting<br/>Dash (plotly, Streamlit, etc."]
 
   subgraph Notes["Notes"]
     N1["Replace synthetic CSV with real data (same columns)<br/>or update ETL mappings"]
@@ -48,6 +48,8 @@ Support Ticket Analytics/
 ├─ inspect_duckdb.py
 ├─ requirements.txt
 ├─ tickets.duckdb
+|─ app.py           #(optional) Dash (plotpy app for dashboard)
+|- streamlit_app.py #(optional) Streamlit app for dashboard
 └─ README.md
 ```
 
