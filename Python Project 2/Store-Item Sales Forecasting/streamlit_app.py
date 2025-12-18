@@ -20,7 +20,9 @@ st.caption("Lightweight dashboard for inspecting historical demand and generated
 def load_csv(path: Path, parse_dates=None) -> pd.DataFrame | None:
     if not path.exists():
         return None
-    return pd.read_csv(path, parse_dates=parse_dates)
+    df = pd.read_csv(path, parse_dates=parse_dates)
+    df.columns = df.columns.str.strip()  # fixes "sales " / " date" etc.
+    return df
 
 def pick_col(df: pd.DataFrame, candidates: list[str]) -> str | None:
     """Return the first matching column from candidates (case-insensitive)."""
@@ -39,15 +41,16 @@ def ensure_datetime(df: pd.DataFrame, col: str) -> pd.DataFrame:
 df_hist = load_csv(DATA_PATH)
 df_fcst = load_csv(FORECAST_PATH)
 
+# normalize date cols (if present)
 if df_hist is not None:
-    date_col = pick_col(df_hist, ["date", "ds", "timestamp"])
-    if date_col:
-        df_hist = ensure_datetime(df_hist, date_col)
+    hist_date_col_all = pick_col(df_hist, ["date", "ds", "timestamp"])
+    if hist_date_col_all:
+        df_hist = ensure_datetime(df_hist, hist_date_col_all)
 
 if df_fcst is not None:
-    fcst_date_col = pick_col(df_fcst, ["date", "ds", "timestamp"])
-    if fcst_date_col:
-        df_fcst = ensure_datetime(df_fcst, fcst_date_col)
+    fcst_date_col_all = pick_col(df_fcst, ["date", "ds", "timestamp"])
+    if fcst_date_col_all:
+        df_fcst = ensure_datetime(df_fcst, fcst_date_col_all)
 
 # ---------- Sidebar filters ----------
 st.sidebar.header("Filters")
@@ -68,7 +71,7 @@ if df_hist is not None and not df_hist.empty:
         selected_item = st.sidebar.selectbox("Item", ["All"] + items, index=0)
 
 # ---------- Apply filters ----------
-def apply_filters(df: pd.DataFrame) -> pd.DataFrame:
+def apply_filters(df: pd.DataFrame) -> pd.DataFrame | None:
     if df is None or df.empty:
         return df
     out = df.copy()
@@ -96,21 +99,29 @@ else:
 # ---------- KPI row ----------
 k1, k2, k3, k4 = st.columns(4)
 
+# historical KPIs
 if df_hist_f is not None and not df_hist_f.empty:
     hist_date_col = pick_col(df_hist_f, ["date", "ds", "timestamp"])
-    y_col = pick_col(df_hist_f, ["sales", "y", "demand", "units", "qty"])
+    hist_y_col = pick_col(df_hist_f, ["sales", "y", "demand", "units", "qty"])
     min_d = df_hist_f[hist_date_col].min() if hist_date_col else None
     max_d = df_hist_f[hist_date_col].max() if hist_date_col else None
     total_rows = len(df_hist_f)
 else:
-    y_col = None
+    hist_date_col = None
+    hist_y_col = None
     min_d = max_d = None
     total_rows = None
 
+# forecast KPIs + column detection (single source of truth)
 if df_fcst_f is not None and not df_fcst_f.empty:
-    fcst_y_col = pick_col(df_fcst_f, ["forecast", "yhat", "pred", "prediction", "y_pred", "sales_forecast"])
+    fcst_date_col = pick_col(df_fcst_f, ["date", "ds", "timestamp"])
+    fcst_y_col = pick_col(
+        df_fcst_f,
+        ["sales", "forecast", "yhat", "pred", "prediction", "y_pred", "sales_forecast"]
+    )
     horizon = len(df_fcst_f)
 else:
+    fcst_date_col = None
     fcst_y_col = None
     horizon = None
 
@@ -134,14 +145,11 @@ with left:
     if df_hist_f is None or df_hist_f.empty:
         st.warning(f"Missing or empty {DATA_PATH.name}. Generate it first (e.g., `python make_data.py`).")
     else:
-        hist_date_col = pick_col(df_hist_f, ["date", "ds", "timestamp"])
-        y_col = pick_col(df_hist_f, ["sales", "y", "demand", "units", "qty"])
-
-        if not hist_date_col or not y_col:
+        if not hist_date_col or not hist_y_col:
             st.error("Could not detect required columns in data.csv. Expected a date column and a sales/y column.")
             st.write("Columns found:", list(df_hist_f.columns))
         else:
-            fig = px.line(df_hist_f.sort_values(hist_date_col), x=hist_date_col, y=y_col)
+            fig = px.line(df_hist_f.sort_values(hist_date_col), x=hist_date_col, y=hist_y_col)
             fig.update_layout(height=420, margin=dict(l=20, r=20, t=30, b=20))
             st.plotly_chart(fig, width="stretch")
 
@@ -153,8 +161,7 @@ with right:
     else:
         st.dataframe(df_fcst_f.head(25), width="stretch", hide_index=True)
 
-        fcst_date_col = pick_col(df_fcst_f, ["date", "ds", "timestamp"])
-        fcst_y_col = pick_col(df_fcst_f, ["forecast", "yhat", "pred", "prediction", "y_pred", "sales_forecast"])
+        st.caption(f"Detected forecast columns → date: {fcst_date_col} | value: {fcst_y_col}")
 
         if fcst_date_col and fcst_y_col:
             fig2 = px.line(df_fcst_f.sort_values(fcst_date_col), x=fcst_date_col, y=fcst_y_col)
