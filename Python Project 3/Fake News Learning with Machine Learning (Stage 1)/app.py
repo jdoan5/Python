@@ -319,9 +319,10 @@ with st.sidebar:
 # -----------------------------
 st.title("Fake News Learning with Machine Learning (Stage 1)")
 st.caption(
-    "Baseline NLP classifier (TF‑IDF + Logistic Regression). "
+    "Baseline NLP classifier (TF-IDF + Logistic Regression). "
     "Use this dashboard to explain what the model does, show metrics, and demo predictions."
 )
+st.markdown("**Source:** https://www.kaggle.com/datasets/vishakhdapat/fake-news-detection")
 
 # -----------------------------
 # Tabs
@@ -344,6 +345,18 @@ with tab_overview:
     st.divider()
 
     st.subheader("Dataset snapshot")
+
+    if DATA_PATH.exists():
+        st.download_button(
+            label="Download dataset (CSV)",
+            data=DATA_PATH.read_bytes(),
+            file_name=DATA_PATH.name,  # "fake_and_real_news.csv"
+            mime="text/csv",
+            use_container_width=True,
+        )
+    else:
+        st.info("Dataset file not found.")
+
     if df_data.empty:
         st.info("Dataset not found. Put a CSV in `data/` (e.g., `fake_and_real_news.csv`) and refresh.")
     else:
@@ -485,8 +498,7 @@ with tab_batch:
             st.dataframe(wrong.head(100), use_container_width=True)
 
 st.divider()
-st.caption(
-    "Recruiter-friendly framing: this is a baseline classifier that demonstrates an end-to-end ML workflow "
-    "(data -> model -> evaluation -> saved artifacts -> simple UI). The next stages typically improve data, "
-    "validation, model comparison, and robustness."
-)
+#st.caption(
+#    "Recruiter-friendly framing: this is a baseline classifier that demonstrates an end-to-end ML workflow "
+#    "(data -> model -> evaluation -> saved artifacts -> simple UI). The next stages typically improve data, "
+#    "validation, model comparison, and robustness.")
