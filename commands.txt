@@ -32,3 +32,13 @@ streamlit cache clear
 
 11. Streamlit run
 streamlit run "application name"
+
+12. Copy another directory
+cp -r "source directory" "destination directory"
+ex: cp -R "Fake News Learning with Machine Learning (Stage 2)" \
+      "Fake News Learning with Machine Learning (Stage 3)"
+
+13. Remove files inside a directory
+ex: cd "Fake News Learning with Machine Learning (Stage 3)"
+rm -rf artifacts reports
+mkdir -p artifacts reports

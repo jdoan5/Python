@@ -1,0 +1,118 @@
+{
+  "stage": 3,
+  "best_experiment": "tfidf_linear_svm",
+  "best_params": {
+    "clf__C": "2.0"
+  },
+  "ngram_range": "(1,1)",
+  "max_features": 50000,
+  "calibrated": false,
+  "calibration_method": null,
+  "threshold_metric": "f1_fake",
+  "chosen_threshold": 0.47000000000000003,
+  "val_metrics_at_chosen_threshold": {},
+  "test_metrics": {
+    "accuracy": 0.996969696969697,
+    "precision_fake": 0.9979959919839679,
+    "recall_fake": 0.996,
+    "f1_fake": 0.996996996996997,
+    "macro_f1": 0.9969694465107308
+  },
+  "classification_report": {
+    "0": {
+      "precision": 0.9959266802443992,
+      "recall": 0.9979591836734694,
+      "f1-score": 0.9969418960244648,
+      "support": 980.0
+    },
+    "1": {
+      "precision": 0.9979959919839679,
+      "recall": 0.996,
+      "f1-score": 0.996996996996997,
+      "support": 1000.0
+    },
+    "accuracy": 0.996969696969697,
+    "macro avg": {
+      "precision": 0.9969613361141836,
+      "recall": 0.9969795918367347,
+      "f1-score": 0.9969694465107308,
+      "support": 1980.0
+    },
+    "weighted avg": {
+      "precision": 0.9969717871835753,
+      "recall": 0.996969696969697,
+      "f1-score": 0.996969724798471,
+      "support": 1980.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      978,
+      2
+    ],
+    [
+      4,
+      996
+    ]
+  ],
+  "label_convention": "0=Real, 1=Fake (if dataset includes Real/Fake).",
+  "env": {
+    "python": "3.13.9",
+    "platform": "macOS-26.2-arm64-arm-64bit-Mach-O"
+  },
+  "note": "Stage 3 adds threshold tuning over P(Fake); chosen_threshold maximizes the selected metric.",
+  "model_path": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Fake News Learning with Machine Learning (Stage 3)/artifacts/best_model.joblib",
+  "dataset": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Fake News Learning with Machine Learning (Stage 3)/data/fake_and_real_news.csv",
+  "text_col": "Text",
+  "label_col": "label",
+  "eval_split": {
+    "test_size": 0.2,
+    "random_state": 42
+  },
+  "threshold_sweep_path": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Fake News Learning with Machine Learning (Stage 3)/reports/threshold_sweep.csv",
+  "threshold_score_method": "decision_function_sigmoid",
+  "accuracy_at_threshold": 0.997979797979798,
+  "f1_macro_at_threshold": 0.9979795918367347,
+  "f1_fake_at_threshold": 0.998,
+  "confusion_matrix_at_threshold": [
+    [
+      978,
+      2
+    ],
+    [
+      2,
+      998
+    ]
+  ],
+  "classification_report_at_threshold": {
+    "0": {
+      "precision": 0.9979591836734694,
+      "recall": 0.9979591836734694,
+      "f1-score": 0.9979591836734694,
+      "support": 980.0
+    },
+    "1": {
+      "precision": 0.998,
+      "recall": 0.998,
+      "f1-score": 0.998,
+      "support": 1000.0
+    },
+    "accuracy": 0.997979797979798,
+    "macro avg": {
+      "precision": 0.9979795918367347,
+      "recall": 0.9979795918367347,
+      "f1-score": 0.9979795918367347,
+      "support": 1980.0
+    },
+    "weighted avg": {
+      "precision": 0.997979797979798,
+      "recall": 0.997979797979798,
+      "f1-score": 0.997979797979798,
+      "support": 1980.0
+    }
+  },
+  "label_map_int_to_name": {
+    "0": "Real",
+    "1": "Fake"
+  }
+}

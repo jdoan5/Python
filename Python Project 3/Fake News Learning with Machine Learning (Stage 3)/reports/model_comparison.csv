@@ -1,0 +1,4 @@
+experiment,ngram_range,max_features,cv_f1_macro,best_params
+tfidf_linear_svm,"(1,1)",50000,0.9970009826916415,"{""clf__C"": 2.0}"
+tfidf_logreg,"(1,1)",50000,0.9924232698419463,"{""clf__C"": 4.0}"
+tfidf_multinomial_nb,"(1,1)",50000,0.9572275402430165,"{""clf__alpha"": 0.25}"
