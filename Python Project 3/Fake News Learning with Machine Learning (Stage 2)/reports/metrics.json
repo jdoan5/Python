@@ -1,0 +1,55 @@
+{
+  "stage": 2,
+  "best_experiment": "tfidf_linear_svm",
+  "accuracy": 0.997979797979798,
+  "macro_f1": 0.9979796660530837,
+  "f1_fake": 0.9979959919839679,
+  "precision_fake": 1.0,
+  "recall_fake": 0.996,
+  "ngram_range": "(1,2)",
+  "max_features": 50000,
+  "label_convention": "0=Real, 1=Fake (if dataset provided Real/Fake labels).",
+  "classification_report": {
+    "0": {
+      "precision": 0.9959349593495935,
+      "recall": 1.0,
+      "f1-score": 0.9979633401221996,
+      "support": 980.0
+    },
+    "1": {
+      "precision": 1.0,
+      "recall": 0.996,
+      "f1-score": 0.9979959919839679,
+      "support": 1000.0
+    },
+    "accuracy": 0.997979797979798,
+    "macro avg": {
+      "precision": 0.9979674796747968,
+      "recall": 0.998,
+      "f1-score": 0.9979796660530837,
+      "support": 1980.0
+    },
+    "weighted avg": {
+      "precision": 0.9979880101831321,
+      "recall": 0.997979797979798,
+      "f1-score": 0.9979798309614765,
+      "support": 1980.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      980,
+      0
+    ],
+    [
+      4,
+      996
+    ]
+  ],
+  "env": {
+    "python": "3.13.9",
+    "platform": "macOS-26.2-arm64-arm-64bit-Mach-O",
+    "scikit_learn": "1.8.0"
+  },
+  "note": "Stage 2 adds model comparison and optional bigrams. Higher macro_f1/f1_fake generally means better balance on Fake vs Real."
+}

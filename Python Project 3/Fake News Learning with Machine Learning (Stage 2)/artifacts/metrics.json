@@ -1,0 +1,50 @@
+{
+  "accuracy": 0.98989898989899,
+  "confusion_matrix": [
+    [
+      972,
+      8
+    ],
+    [
+      12,
+      988
+    ]
+  ],
+  "classification_report": {
+    "0": {
+      "precision": 0.9878048780487805,
+      "recall": 0.9918367346938776,
+      "f1-score": 0.9898167006109979,
+      "support": 980.0
+    },
+    "1": {
+      "precision": 0.9919678714859438,
+      "recall": 0.988,
+      "f1-score": 0.9899799599198397,
+      "support": 1000.0
+    },
+    "accuracy": 0.98989898989899,
+    "macro avg": {
+      "precision": 0.9898863747673621,
+      "recall": 0.9899183673469387,
+      "f1-score": 0.9898983302654187,
+      "support": 1980.0
+    },
+    "weighted avg": {
+      "precision": 0.9899073999867417,
+      "recall": 0.98989898989899,
+      "f1-score": 0.9898991548073827,
+      "support": 1980.0
+    }
+  },
+  "n_train": 7920,
+  "n_test": 1980,
+  "label_meta": {
+    "type": "string",
+    "mapping": {
+      "fake": 1,
+      "real": 0
+    }
+  },
+  "note": "Stage 1 baseline: TF-IDF (unigrams) + Logistic Regression."
+}
