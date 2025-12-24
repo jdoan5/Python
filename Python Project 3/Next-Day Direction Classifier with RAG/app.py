@@ -160,6 +160,7 @@ st.set_page_config(page_title="Finance Direction — Run Dashboard", layout="wid
 
 st.title("Next-Day Direction Classifier — Run Dashboard")
 st.caption("Reads artifacts from ./runs (metrics.json, report.md, model.joblib, test_metrics.json).")
+st.caption("Disclaimer: This project is for educational and portfolio use. It does not provide financial advice and should not be used as a sole basis for investment decisions.")
 
 # Sidebar
 st.sidebar.header("Run Selection")

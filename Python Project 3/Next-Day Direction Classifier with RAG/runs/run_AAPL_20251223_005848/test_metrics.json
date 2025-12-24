@@ -2,13 +2,13 @@
   "symbol": "AAPL",
   "start_date": "2015-01-01",
   "end_date": null,
-  "n_rows_after_features": 2749,
+  "n_rows_after_features": 2750,
   "split": {
     "train": 1924,
     "val": 412,
-    "test": 413
+    "test": 414
   },
-  "test_accuracy": 0.5375302663438256,
+  "test_accuracy": 0.538647342995169,
   "confusion_matrix": [
     [
       23,
@@ -16,7 +16,7 @@
     ],
     [
       37,
-      199
+      200
     ]
   ],
   "classification_report": {
@@ -27,23 +27,23 @@
       "support": 177.0
     },
     "1": {
-      "precision": 0.5637393767705382,
-      "recall": 0.8432203389830508,
-      "f1-score": 0.6757215619694398,
-      "support": 236.0
+      "precision": 0.5649717514124294,
+      "recall": 0.8438818565400844,
+      "f1-score": 0.676818950930626,
+      "support": 237.0
     },
-    "accuracy": 0.5375302663438256,
+    "accuracy": 0.538647342995169,
     "macro avg": {
-      "precision": 0.4735363550519358,
-      "recall": 0.4865819209039548,
-      "f1-score": 0.4349071944868296,
-      "support": 413.0
+      "precision": 0.4741525423728814,
+      "recall": 0.4869126796824716,
+      "f1-score": 0.4354558889674227,
+      "support": 414.0
     },
     "weighted avg": {
-      "precision": 0.4864225010117362,
-      "recall": 0.5375302663438256,
-      "f1-score": 0.4693092469843454,
-      "support": 413.0
+      "precision": 0.4873147465815115,
+      "recall": 0.538647342995169,
+      "f1-score": 0.47043604287513335,
+      "support": 414.0
     }
   }
 }
