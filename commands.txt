@@ -35,8 +35,9 @@ streamlit run "application name"
 
 12. Copy another directory
 cp -r "source directory" "destination directory"
-ex: cp -R "Fake News Learning with Machine Learning (Stage 2)" \
+ex1: cp -R "Fake News Learning with Machine Learning (Stage 2)" \
       "Fake News Learning with Machine Learning (Stage 3)"
+ex2: cp -R "Next-Day Direction Classifier with RAG (Stage 1)" "Next-Day Direction Classifier with RAG (Stage 2)"
 
 13. Remove files inside a directory
 ex: cd "Fake News Learning with Machine Learning (Stage 3)"
