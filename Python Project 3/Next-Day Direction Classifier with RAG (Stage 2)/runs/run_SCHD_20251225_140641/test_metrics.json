@@ -1,0 +1,77 @@
+{
+  "accuracy": 0.5294117647058824,
+  "macro_f1": 0.4993353103589324,
+  "weighted_f1": 0.4963276649242374,
+  "confusion_matrix": {
+    "labels": [
+      "0",
+      "1"
+    ],
+    "matrix": [
+      [
+        58,
+        151
+      ],
+      [
+        41,
+        158
+      ]
+    ]
+  },
+  "classification_report": {
+    "0": {
+      "precision": 0.5858585858585859,
+      "recall": 0.27751196172248804,
+      "f1-score": 0.37662337662337664,
+      "support": 209.0
+    },
+    "1": {
+      "precision": 0.511326860841424,
+      "recall": 0.7939698492462312,
+      "f1-score": 0.6220472440944882,
+      "support": 199.0
+    },
+    "accuracy": 0.5294117647058824,
+    "macro avg": {
+      "precision": 0.548592723350005,
+      "recall": 0.5357409054843596,
+      "f1-score": 0.4993353103589324,
+      "support": 408.0
+    },
+    "weighted avg": {
+      "precision": 0.5495061023330584,
+      "recall": 0.5294117647058824,
+      "f1-score": 0.4963276649242374,
+      "support": 408.0
+    }
+  },
+  "support": 408,
+  "run_id": "SCHD_20251225_140641",
+  "processed_csv": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/data/processed/SCHD_20251225_140641_features.csv",
+  "model_path": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_SCHD_20251225_140641/model.joblib",
+  "features_used": [
+    "ret_1",
+    "ret_5",
+    "ret_10",
+    "ret_1_ma_5",
+    "ret_1_ma_10",
+    "ret_1_ma_20",
+    "ret_1_vol_5",
+    "ret_1_vol_10",
+    "ret_1_vol_20",
+    "hl_range",
+    "oc_change",
+    "close_vs_ma_10",
+    "close_vs_ma_20",
+    "close_vs_ma_50",
+    "ma_10_20_diff",
+    "vol_chg_1",
+    "log_vol"
+  ],
+  "target_col": "target_up",
+  "split": {
+    "train": 1899,
+    "val": 406,
+    "test": 408
+  }
+}

@@ -25,7 +25,8 @@ which python
 python -c "import sklearn; print('sklearn', sklearn.__version__)"
 
 8. Remove the file (inside the directory)
-rm -f "artifacts/fake_news_tfidf_logreg.joblib"
+example 1: rm -f "artifacts/fake_news_tfidf_logreg.joblib"
+example 2: rm -f file/*
 
 10. Streamlit clear cache
 streamlit cache clear
