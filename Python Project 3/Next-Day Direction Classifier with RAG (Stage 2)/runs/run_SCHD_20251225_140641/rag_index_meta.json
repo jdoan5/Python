@@ -1,0 +1,80 @@
+{
+  "index_file": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_SCHD_20251225_140641/rag_index.joblib",
+  "run_dir": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_SCHD_20251225_140641",
+  "n_docs_indexed": 5,
+  "missing_files": [],
+  "tfidf": {
+    "max_features": 4000,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "vocab_size": 564
+  },
+  "docs": [
+    {
+      "source": "report.md",
+      "path": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_SCHD_20251225_140641/report.md"
+    },
+    {
+      "source": "metrics.json",
+      "path": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_SCHD_20251225_140641/metrics.json"
+    },
+    {
+      "source": "val_metrics.json",
+      "path": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_SCHD_20251225_140641/val_metrics.json"
+    },
+    {
+      "source": "test_metrics.json",
+      "path": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_SCHD_20251225_140641/test_metrics.json"
+    },
+    {
+      "source": "classification_report_test.md",
+      "path": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_SCHD_20251225_140641/classification_report_test.md"
+    }
+  ],
+  "cfg_snapshot": {
+    "project_dir": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)",
+    "runs_dir": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs",
+    "data_raw": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/data/raw",
+    "data_processed": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/data/processed",
+    "symbols": [
+      "SPY",
+      "VOO",
+      "SCHD"
+    ],
+    "symbol": [
+      "SPY",
+      "VOO",
+      "SCHD"
+    ],
+    "start_date": "2015-01-01",
+    "end_date": "2025-12-31",
+    "train_ratio": 0.7,
+    "val_ratio": 0.15,
+    "random_state": 42,
+    "target_col": "target_up",
+    "feature_cols": [
+      "ret_1",
+      "ret_5",
+      "ret_10",
+      "ret_1_ma_5",
+      "ret_1_ma_10",
+      "ret_1_ma_20",
+      "ret_1_vol_5",
+      "ret_1_vol_10",
+      "ret_1_vol_20",
+      "hl_range",
+      "oc_change",
+      "close_ma_10",
+      "close_ma_20",
+      "close_ma_50",
+      "close_vs_ma_10",
+      "close_vs_ma_20",
+      "close_vs_ma_50",
+      "ma_10_20_diff",
+      "vol_chg_1",
+      "log_vol"
+    ]
+  }
+}

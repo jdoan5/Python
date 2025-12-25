@@ -1,0 +1,4 @@
+Hello world
+Hello Python foundations toolkit
+This is a small sample file for testing.
+Python makes it easy to work with text and data.

@@ -1,0 +1,28 @@
+{
+  "symbol": "AAPL",
+  "start_date": "2015-01-01",
+  "end_date": null,
+  "timestamp": "20251225_152747",
+  "raw_saved_to": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 1)/data/raw/AAPL_20251225_152747.csv",
+  "processed_saved_to": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 1)/data/processed/AAPL_20251225_152747_processed.csv",
+  "n_rows_after_features": 2751,
+  "split": {
+    "train": 1925,
+    "val": 412,
+    "test": 414
+  },
+  "features": [
+    "ret_1",
+    "ret_5",
+    "ret_1_ma_5",
+    "ret_1_ma_10",
+    "ret_1_vol_5",
+    "ret_1_vol_10",
+    "hl_range",
+    "oc_change",
+    "vol_chg_1",
+    "log_vol"
+  ],
+  "baseline_val_accuracy": 0.5048543689320388,
+  "model_val_accuracy": 0.4854368932038835
+}
