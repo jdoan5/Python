@@ -1,0 +1,53 @@
+{
+  "index_file": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_AAPL_20251224_163023/rag_index.joblib",
+  "run_dir": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_AAPL_20251224_163023",
+  "n_docs_indexed": 2,
+  "missing_files": [
+    "val_metrics.json",
+    "test_metrics.json",
+    "classification_report_test.md"
+  ],
+  "tfidf": {
+    "max_features": 4000,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "vocab_size": 380
+  },
+  "docs": [
+    {
+      "source": "report.md",
+      "path": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_AAPL_20251224_163023/report.md"
+    },
+    {
+      "source": "metrics.json",
+      "path": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_AAPL_20251224_163023/metrics.json"
+    }
+  ],
+  "cfg_snapshot": {
+    "project_dir": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)",
+    "runs_dir": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs",
+    "data_raw": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/data/raw",
+    "data_processed": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/data/processed",
+    "symbol": "AAPL",
+    "symbols": [
+      "AAPL"
+    ],
+    "start_date": "2015-01-01",
+    "end_date": "2025-12-31",
+    "train_ratio": 0.7,
+    "val_ratio": 0.15,
+    "random_state": 42,
+    "target_col": "target_up",
+    "feature_cols": [
+      "ret_1",
+      "ret_5",
+      "sma_5",
+      "sma_10",
+      "vol_10",
+      "range_1",
+      "volume_z_20"
+    ]
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "accuracy": 0.4827586206896552,
+  "macro_f1": 0.4824446386946387,
+  "weighted_f1": 0.4826958242906519,
+  "confusion_matrix": {
+    "labels": [
+      "0",
+      "1"
+    ],
+    "matrix": [
+      [
+        93,
+        106
+      ],
+      [
+        104,
+        103
+      ]
+    ]
+  },
+  "classification_report": {
+    "0": {
+      "precision": 0.4720812182741117,
+      "recall": 0.46733668341708545,
+      "f1-score": 0.4696969696969697,
+      "support": 199.0
+    },
+    "1": {
+      "precision": 0.49282296650717705,
+      "recall": 0.4975845410628019,
+      "f1-score": 0.4951923076923077,
+      "support": 207.0
+    },
+    "accuracy": 0.4827586206896552,
+    "macro avg": {
+      "precision": 0.48245209239064435,
+      "recall": 0.4824606122399437,
+      "f1-score": 0.4824446386946387,
+      "support": 406.0
+    },
+    "weighted avg": {
+      "precision": 0.4826564445899849,
+      "recall": 0.4827586206896552,
+      "f1-score": 0.4826958242906519,
+      "support": 406.0
+    }
+  },
+  "support": 406,
+  "run_id": "AAPL_20251224_164008",
+  "processed_csv": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/data/processed/AAPL_20251224_164008_features.csv",
+  "model_path": "/Users/johndoan/Documents/GitHub/Python/Python Project 3/Next-Day Direction Classifier with RAG (Stage 2)/runs/run_AAPL_20251224_164008/model.joblib",
+  "features_used": [
+    "ret_1",
+    "ret_5",
+    "ret_10",
+    "ret_1_ma_5",
+    "ret_1_ma_10",
+    "ret_1_ma_20",
+    "ret_1_vol_5",
+    "ret_1_vol_10",
+    "ret_1_vol_20",
+    "hl_range",
+    "oc_change",
+    "close_vs_ma_10",
+    "close_vs_ma_20",
+    "close_vs_ma_50",
+    "ma_10_20_diff",
+    "vol_chg_1",
+    "log_vol"
+  ],
+  "split": {
+    "train": 1899,
+    "val": 406,
+    "test": 408
+  }
+}
