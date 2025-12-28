@@ -44,3 +44,6 @@ ex2: cp -R "Next-Day Direction Classifier with RAG (Stage 1)" "Next-Day Directio
 ex: cd "Fake News Learning with Machine Learning (Stage 3)"
 rm -rf artifacts reports
 mkdir -p artifacts reports
+
+14. Move directory
+mv "source directory" "destination directory"
