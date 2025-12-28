@@ -76,6 +76,7 @@ pip install -r requirements.txt
 fastapi>=0.115.0
 uvicorn>=0.30.0
 pytest>=8.0.0
+pytest-cov>=5.0.0  # optional: coverage reports
 ```
 
 ---
@@ -277,6 +278,79 @@ pytest
 You should see both tests pass.
 
 ---
+
+```bash
+uvicorn toolkit.api:app --reload
+# open: http://127.0.0.1:8000/docs
+```
+
+---
+
+## Coverage (optional)
+
+Coverage flags come from **pytest-cov**.
+
+Install (if not already in your environment):
+
+```bash
+python -m pip install pytest-cov
+```
+
+Run coverage in the terminal:
+
+```bash
+python -m pytest --cov=toolkit --cov-report=term-missing
+```
+
+Optional HTML report:
+
+```bash
+python -m pytest --cov=toolkit --cov-report=html
+open htmlcov/index.html
+```
+
+---
+
+## Common issues / troubleshooting
+
+### `zsh: command not found: pytest`
+`pytest` is not installed in the active environment, or your shell is not using the expected venv.
+
+Fix:
+
+```bash
+source .venv/bin/activate
+python -m pip install pytest
+python -m pytest -q
+```
+
+### `pytest: error: unrecognized arguments: --cov=toolkit`
+You’re missing **pytest-cov**.
+
+Fix:
+
+```bash
+python -m pip install pytest-cov
+python -m pytest --cov=toolkit --cov-report=term-missing
+```
+
+### `which python` doesn’t point to `.venv`
+Your session is not using the venv interpreter.
+
+```bash
+which python
+source .venv/bin/activate
+hash -r
+which python
+```
+
+### `ModuleNotFoundError: toolkit`
+Make sure you’re running from the repo root and that tests are using the project root on `sys.path`.
+
+```bash
+pwd
+python -c "import toolkit; print(toolkit.__file__)"
+```
 
 ## Why this project exists
 

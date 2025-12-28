@@ -1,341 +1,149 @@
 # Customer Metrics Pipeline & API
+A small, reviewer-friendly project that:
+1) **builds a churn-style model** from a customer CSV via a simple ETL/feature pipeline, and  
+2) **serves predictions** through a **FastAPI** endpoint with saved artifacts.
 
-End-to-end example of a small **customer churn metrics pipeline** with a **production-style FastAPI scoring service**.
-
-- **Data science side**: generate / load customer features, train a simple classifier, and persist the model + feature metadata.
-- **Engineering side**: expose a **`/score_customer`** endpoint that validates input with Pydantic, loads the trained model, and returns a JSON score.
-
-This project is designed to be understandable in under an hour but still reflect patterns you would see in a production codebase.
+This repo is intentionally lightweight: clear run steps, visible outputs, and a simple API surface.
 
 ---
 
-## High-Level Architecture
+## What this project demonstrates
+- **ETL → features → model training → saved artifacts** (model + feature schema)
+- **FastAPI inference service** loading the saved artifacts
+- A reproducible, “easy to evaluate” workflow (single command to rebuild artifacts)
 
+---
+
+## Repository layout (as in this folder)
+```text
+Customer Metrics Pipeline & API/
+├─ customer_metrics/
+│  ├─ api/
+│  │  ├─ __init__.py
+│  │  └─ main.py
+│  ├─ pipeline/
+│  │  ├─ __init__.py
+│  │  ├─ ingest_customers.py
+│  │  ├─ build_features.py
+│  │  └─ train_model.py
+│  ├─ artifacts/
+│  │  ├─ customer_churn_model.joblib
+│  │  └─ feature_columns.json
+│  ├─ __init__.py
+│  └─ config.py
+├─ data/
+│  ├─ raw/
+│  │  └─ customers_raw.csv
+│  ├─ processed/
+│  │  └─ customers_features.csv
+│  └─ models/
+│     ├─ churn_model.joblib
+│     └─ feature_columns.json
+├─ README.md
+├─ requirements.txt
+└─ run_pipeline.py
+```
+
+> Note on artifacts: this project may write **two copies** of artifacts:
+> - `customer_metrics/artifacts/` (used by the API at runtime)
+> - `data/models/` (a convenient, “easy to find” export for reviewers)
+>
+> If you prefer only one location, keep `customer_metrics/artifacts/` as the source of truth and remove/ignore `data/models/`.
+
+---
+
+## Pipeline flow (Mermaid)
 ```mermaid
 flowchart TD
-    A[Raw customer CSVs]
-    B[Data cleaning and validation]
-    C[Feature engineering]
-    D[Train logistic regression model]
-    E[Persist model and feature schema]
-    F[FastAPI app loads artifacts]
-    G[POST /score_customer returns churn probability]
-    
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    F --> G
-```
-
-## Features
-
-- **Training pipeline**
-  - Reads customer-level data into pandas.
-  - Performs basic feature engineering & cleaning.
-  - Trains a **Logistic Regression** churn model using scikit-learn.
-  - Saves:
-    - `models/customer_churn_model.joblib` (or similar)  
-    - `models/feature_columns.json` (list of feature names and ordering).
-
-- **FastAPI scoring service**
-  - Starts a FastAPI app with a `/health` and `/score_customer` endpoint.
-  - On startup, loads the model + feature metadata.
-  - Validates input using a Pydantic `CustomerFeatures` schema.
-  - Builds a **single-row DataFrame in exactly the same column order** as used in training.
-  - Returns JSON with:
-    - `churn_probability` (0–1)
-    - `churn_label` (0 or 1, based on threshold 0.5)
-    - `feature_order` (for debugging / transparency).
-
----
-
-## Project Structure
-
-A typical layout (exact names may vary slightly depending on how you set it up):
-
-```text
-customer_metrics/
-├── customer_metrics/
-│   ├── __init__.py
-│   ├── config.py             # Paths (MODEL_PATH, FEATURE_COLUMNS_JSON, etc.)
-│   ├── data_pipeline.py      # (Optional) ETL / feature engineering helpers
-│   └── ...
-├── models/
-│   ├── customer_churn_model.joblib
-│   └── feature_columns.json
-├── data/
-│   └── customers_churn_synthetic.csv
-├── main.py                   # FastAPI app (this is where /score_customer lives)
-├── run_pipeline.py           # Script to train and persist model + metadata
-├── requirements.txt
-└── README.md
+  A[data/raw/customers_raw.csv] --> B[ingest_customers.py]
+  B --> C[build_features.py]
+  C --> D[train_model.py]
+  D --> E[customer_metrics/artifacts/customer_churn_model.joblib]
+  D --> F[customer_metrics/artifacts/feature_columns.json]
+  C --> G[data/processed/customers_features.csv]
+  D --> H[data/models/churn_model.joblib]
+  D --> I[data/models/feature_columns.json]
+  E --> J[FastAPI API service]
+  F --> J
 ```
 
 ---
 
-## Installation
+## Re-run everything (clean rebuild)
+These steps rebuild outputs from scratch and are the simplest “reviewer path.”
 
-1. **Clone the repository**
-
-```bash
-git clone https://github.com/your-username/customer-metrics-pipeline-api.git
-cd customer-metrics-pipeline-api
-```
-
-2. **Create and activate a virtual environment (recommended)**
-
+### 1) Create a virtual environment
 ```bash
 python -m venv .venv
-source .venv/bin/activate   # On Windows: .venv\Scripts\activate
+# Windows:
+# .venv\Scripts\activate
+# macOS/Linux:
+# source .venv/bin/activate
 ```
 
-3. **Install dependencies**
-
+### 2) Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-The main libraries used are:
-
-- `fastapi`
-- `uvicorn`
-- `pydantic`
-- `pandas`
-- `numpy`
-- `scikit-learn`
-- `joblib`
-
----
-
-## 1. Train the Model (Offline Pipeline)
-
-Before starting the API, run the training pipeline so that the model and feature metadata exist on disk.
-
+### 3) Rebuild artifacts (ETL → features → model)
 ```bash
 python run_pipeline.py
 ```
 
-What `run_pipeline.py` typically does:
-
-1. Loads raw / synthetic customer data from `data/customers_churn_synthetic.csv`.
-2. Selects and cleans the **feature columns** such as:
-   - `age`
-   - `tenure_months`
-   - `avg_monthly_spend`
-   - `num_support_tickets`
-   - `is_premium`
-3. Trains a **Logistic Regression** model to predict churn.
-4. Writes:
-   - `MODEL_PATH` – e.g. `models/customer_churn_model.joblib`
-   - `FEATURE_COLUMNS_JSON` – e.g. `models/feature_columns.json` with:
-
-      ```json
-      {
-          "feature_columns": [
-              "age",
-              "tenure_months",
-              "avg_monthly_spend",
-              "num_support_tickets",
-              "is_premium"
-          ]
-      }
-      ```
-
-If these files are missing, the API will refuse to start and will tell you to run the pipeline first.
+After the run, you should see:
+- `customer_metrics/artifacts/customer_churn_model.joblib`
+- `customer_metrics/artifacts/feature_columns.json`
+- `data/processed/customers_features.csv`
+- (optional export) `data/models/*`
 
 ---
 
-## 2. FastAPI Service (Online Scoring)
-
-### `main.py` (core idea)
-
-`main.py` exposes two endpoints using FastAPI:
-
-- `GET /health`
-- `POST /score_customer`
-
-The key pieces:
-
-```python
-# main.py (excerpt)
-import json
-from typing import List
-
-import joblib
-import pandas as pd
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
-
-from customer_metrics.config import MODEL_PATH, FEATURE_COLUMNS_JSON
-
-
-class CustomerFeatures(BaseModel):
-    age: int = Field(..., ge=0, le=120)
-    tenure_months: int = Field(..., ge=0)
-    avg_monthly_spend: float = Field(..., ge=0)
-    num_support_tickets: int = Field(..., ge=0)
-    is_premium: int = Field(..., ge=0, le=1)
-
-
-class ScoreResponse(BaseModel):
-    churn_probability: float
-    churn_label: int
-    feature_order: List[str]
-
-
-app = FastAPI(title="Customer Metrics Pipeline & API")
-
-_model = None
-_feature_columns: List[str] = []
-
-
-def load_artifacts() -> None:
-    global _model, _feature_columns
-
-    if not MODEL_PATH.exists():
-        raise RuntimeError(
-            f"Model file not found at {MODEL_PATH}. "
-            "Run the training pipeline first (python run_pipeline.py)."
-        )
-
-    _model = joblib.load(MODEL_PATH)
-
-    try:
-        with FEATURE_COLUMNS_JSON.open() as f:
-            meta = json.load(f)
-        _feature_columns = meta["feature_columns"]
-    except Exception as exc:
-        raise RuntimeError(f"Error loading feature metadata: {exc}") from exc
-
-
-@app.on_event("startup")
-def startup_event():
-    load_artifacts()
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok", "model_loaded": _model is not None}
-
-
-@app.post("/score_customer", response_model=ScoreResponse)
-def score_customer(customer: CustomerFeatures):
-    if _model is None:
-        raise HTTPException(status_code=500, detail="Model not loaded")
-
-    # Build a single-row DataFrame with the expected column order
-    data = {col: getattr(customer, col) for col in _feature_columns}
-    X = pd.DataFrame([data])
-
-    proba = float(_model.predict_proba(X)[0, 1])
-    label = int(proba >= 0.5)
-
-    return ScoreResponse(
-        churn_probability=round(proba, 4),
-        churn_label=label,
-        feature_order=_feature_columns,
-    )
-```
-
-### Start the API Server
-
+## Run the API locally
+### Start the server
 From the project root:
-
 ```bash
-uvicorn main:app --reload
+python -m uvicorn customer_metrics.api.main:app --reload
 ```
 
-- The API will start on `http://127.0.0.1:8000` (by default).
-- On startup it will call `load_artifacts()`, loading the model and feature metadata.
-
----
-
-## 3. Using the API
-
-### Health Check
-
+### Quick checks
+Health check:
 ```bash
 curl http://127.0.0.1:8000/health
 ```
 
-Example response:
+OpenAPI docs:
+- `http://127.0.0.1:8000/docs`
 
-```json
-{
-  "status": "ok",
-  "model_loaded": true
-}
-```
+---
 
-### Score a Single Customer
+## How to call `/predict`
+The API expects a JSON payload matching the feature schema used by the model.
 
+Recommended way to confirm the expected inputs:
+- Open `customer_metrics/artifacts/feature_columns.json`
+- Inspect the raw columns in `data/raw/customers_raw.csv`
+
+Example request (shape only — update keys to match your `feature_columns.json`):
 ```bash
-curl -X POST "http://127.0.0.1:8000/score_customer"      -H "Content-Type: application/json"      -d '{
-           "age": 42,
-           "tenure_months": 18,
-           "avg_monthly_spend": 120.50,
-           "num_support_tickets": 3,
-           "is_premium": 1
-         }'
+curl -X POST "http://127.0.0.1:8000/predict"   -H "Content-Type: application/json"   -d '{
+    "feature_1": 123,
+    "feature_2": "A",
+    "feature_3": 45.6
+  }'
 ```
-
-Example response:
-
-```json
-{
-  "churn_probability": 0.2371,
-  "churn_label": 0,
-  "feature_order": [
-    "age",
-    "tenure_months",
-    "avg_monthly_spend",
-    "num_support_tickets",
-    "is_premium"
-  ]
-}
-```
-
-- `churn_label` is 1 if `churn_probability >= 0.5`, otherwise 0.
-- `feature_order` is helpful for debugging and confirming that your training and serving pipelines are aligned.
 
 ---
 
-## Design Notes
-
-- **Strict schema validation**  
-  `CustomerFeatures` uses Pydantic with basic constraints (`ge`, `le`) so invalid requests are rejected early with clear error messages.
-
-- **Artifact-driven design**  
-  The API is intentionally *dumb* about feature engineering: it trusts whatever feature names and order are defined in `feature_columns.json`. This mirrors production patterns where models and metadata are owned by the ML pipeline.
-
-- **Single responsibility**  
-  The model training logic lives in the offline pipeline (`run_pipeline.py` and related modules). The FastAPI app is focused only on:
-  1. Validating input
-  2. Loading artifacts
-  3. Calling `predict_proba`
-  4. Formatting a response
+## What to review (fast evaluator guide)
+If you only have 2–3 minutes:
+1. `run_pipeline.py` — single entrypoint for rebuild
+2. `customer_metrics/pipeline/*` — ingestion → features → training
+3. `customer_metrics/api/main.py` — model loading + `/health` + `/predict`
+4. `customer_metrics/artifacts/` — saved model + schema
 
 ---
 
-## Extending the Project
-
-Here are some natural next steps:
-
-- **Batch scoring**: Add an endpoint to score a list of customers at once (e.g., `POST /score_customers` with an array of JSON objects).
-- **Custom thresholds**: Allow clients to send a custom decision threshold (e.g., `0.3` for more aggressive retention).
-- **Model versioning**: Store separate folders like `models/v1/`, `models/v2/` and add a query parameter or header for selecting the version.
-- **Authentication**: Wrap the scoring endpoint with an API key or OAuth2 for real-world deployment.
-
----
-
-## License
-
-Add your preferred license here (for example, MIT):
-
-```text
-MIT License
-Copyright (c) 2025 John Doan
-```
-
+## Notes / assumptions (honest scope)
+- This is a **portfolio-style** pipeline and inference service: the goal is clarity and reproducibility over production scale.
+- If you want to harden this further: add unit tests, schema validation on inputs, and a minimal CI workflow (lint + tests).
