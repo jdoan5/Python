@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Finance Spending Coach</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Simple, lightweight styling -->
+    <style>
+        :root{
+            --bg:#f5f7fb;
+            --card:#ffffff;
+            --accent:#2d545e;
+            --accent-soft:#e1edf2;
+            --danger:#c0392b;
+        }
+        body{
+            margin:0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
+            color:#1b2328;
+        }
+        .shell{
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem 2rem;
+        }
+        header{ text-align:center; margin-bottom:1.5rem; }
+        header h1{ margin-bottom:.25rem; }
+        header p{ margin-top:0; color:#5c6a73; }
+
+        .card{
+            background:var(--card);
+            border-radius:1rem;
+            padding:1.5rem 1.75rem;
+            box-shadow:0 .75rem 1.75rem rgba(0,0,0,.08);
+        }
+        .grid{
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap:1rem 1.5rem;
+        }
+        label{
+            display:block;
+            font-size:.85rem;
+            font-weight:600;
+            margin-bottom:.25rem;
+        }
+        input[type="number"]{
+            width:100%;
+            box-sizing:border-box;
+            padding:.4rem .5rem;
+            border-radius:.4rem;
+            border:1px solid #c4ced4;
+            font-size:.9rem;
+        }
+        input[type="number"]:focus{
+            outline:2px solid var(--accent-soft);
+            border-color:var(--accent);
+        }
+        .hint{
+            font-size:.75rem;
+            color:#6c7a84;
+        }
+        .actions{
+            margin-top:1rem;
+            display:flex;
+            flex-wrap:wrap;
+            gap:.75rem;
+            align-items:center;
+        }
+        button{
+            border:none;
+            border-radius:.4rem;
+            padding:.5rem 1.25rem;
+            background:var(--accent);
+            color:#fff;
+            font-weight:600;
+            cursor:pointer;
+        }
+        button:hover{
+            background:#193742;
+        }
+        button.secondary {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+        button.secondary:hover {
+            background: var(--accent-soft);
+        }
+        .pill{
+            display:inline-block;
+            border-radius:999px;
+            padding:.1rem .65rem;
+            font-size:.8rem;
+            background:var(--accent-soft);
+            color:#18333f;
+        }
+
+        .result{
+            margin-top:1.5rem;
+            padding:1rem 1.25rem;
+            border-radius:.85rem;
+            background: #f5faf6;
+            border:1px solid #c8e6c9;
+        }
+        .result h2{
+            margin-top:0;
+            font-size:1rem;
+        }
+        .result p{
+            margin:.25rem 0;
+        }
+        .risk-pill{
+            display:inline-block;
+            padding:.1rem .6rem;
+            border-radius:999px;
+            font-size:.75rem;
+            font-weight:600;
+        }
+        .risk-low{
+            background:#e2f3da;
+            color:#245b17;
+        }
+        .risk-medium{
+            background:#fff4ce;
+            color:#7d5a00;
+        }
+        .risk-high{
+            background:#fde0dd;
+            color:#b02a37;
+        }
+        .suggestions{
+            margin-top:.5rem;
+            padding-left:1.2rem;
+        }
+        .error{
+            margin-top:1rem;
+            color:var(--danger);
+            font-size:.85rem;
+        }
+        footer{
+            text-align:center;
+            margin-top:2rem;
+            font-size:.8rem;
+            color:#7a868f;
+        }
+    </style>
+</head>
+<body>
+<div class="shell">
+    <header>
+        <h1>Finance Spending Coach</h1>
+        <p>Enter a simple monthly profile. The service estimates overspending risk and suggests next steps.</p>
+    </header>
+
+    <main class="card">
+        <form id="profile-form">
+            <div class="grid">
+                <div>
+                    <label for="income">Monthly income ($)</label>
+                    <input type="number" id="income" min="0" step="50" required value="4000">
+                    <div class="hint">After tax / take-home.</div>
+                </div>
+                <div>
+                    <label for="housing">Housing ($)</label>
+                    <input type="number" id="housing" min="0" step="25" required value="1400">
+                </div>
+                <div>
+                    <label for="food">Food &amp; groceries ($)</label>
+                    <input type="number" id="food" min="0" step="25" required value="600">
+                </div>
+                <div>
+                    <label for="transport">Transport ($)</label>
+                    <input type="number" id="transport" min="0" step="25" required value="250">
+                </div>
+                <div>
+                    <label for="shopping">Shopping ($)</label>
+                    <input type="number" id="shopping" min="0" step="25" required value="300">
+                </div>
+                <div>
+                    <label for="entertainment">Entertainment ($)</label>
+                    <input type="number" id="entertainment" min="0" step="25" required value="200">
+                </div>
+                <div>
+                    <label for="other">Other ($)</label>
+                    <input type="number" id="other" min="0" step="25" required value="150">
+                </div>
+                <div>
+                    <label for="savings_rate">Savings rate (%)</label>
+                    <input type="number" id="savings_rate" min="0" max="100" step="1" value="10">
+                    <div class="hint">Approximate percentage of income saved.</div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit">Score my month</button>
+                <button type="reset" class="secondary">Reset</button>
+                <span class="pill">Calls <code>/score_profile</code> under the hood</span>
+            </div>
+        </form>
+
+        <div id="error" class="error" style="display:none;"></div>
+
+        <section id="result" class="result" style="display:none;">
+            <h2>Result</h2>
+            <p>
+                Overspending probability:
+                <strong id="probability">–</strong>
+                <span id="risk-pill" class="risk-pill"></span>
+            </p>
+            <p id="risk-text"></p>
+            <div>
+                <strong>Suggestions:</strong>
+                <ul id="suggestions" class="suggestions"></ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        Powered by FastAPI + a small logistic regression model. Swagger docs still available at
+        <a href="/docs" target="_blank" rel="noopener">/docs</a>.
+    </footer>
+</div>
+
+<script>
+    const form = document.getElementById("profile-form");
+    const errorBox = document.getElementById("error");
+    const resultBox = document.getElementById("result");
+
+    form.addEventListener("reset", () => {
+        errorBox.style.display = "none";
+        resultBox.style.display = "none";
+    });
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        errorBox.style.display = "none";
+        resultBox.style.display = "none";
+        errorBox.textContent = "";
+
+        function num(id) {
+            const val = parseFloat(document.getElementById(id).value || "0");
+            return isNaN(val) ? 0 : val;
+        }
+
+        const payload = {
+            income: num("income"),
+            housing: num("housing"),
+            food: num("food"),
+            transport: num("transport"),
+            shopping: num("shopping"),
+            entertainment: num("entertainment"),
+            other: num("other"),
+            savings_rate: num("savings_rate") / 100.0  // convert percent -> fraction
+        };
+
+        try {
+            const resp = await fetch("/score_profile", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (!resp.ok) {
+                const text = await resp.text();
+                throw new Error(`HTTP ${resp.status}: ${text}`);
+            }
+
+            const data = await resp.json();
+            // data: { overspend_probability, risk_level, suggestions: [] }
+
+            const p = data.overspend_probability ?? data.probability ?? 0;
+            const risk = (data.risk_level || "").toLowerCase();
+
+            document.getElementById("probability").textContent =
+                (p * 100).toFixed(1) + "%";
+
+            const pill = document.getElementById("risk-pill");
+            pill.textContent = risk ? risk.toUpperCase() : "";
+            pill.className = "risk-pill";
+            if (risk === "low") pill.classList.add("risk-low");
+            else if (risk === "medium") pill.classList.add("risk-medium");
+            else if (risk === "high") pill.classList.add("risk-high");
+
+            const riskText = document.getElementById("risk-text");
+            if (risk === "low") riskText.textContent = "Low risk of overspending. Nice work – keep your habits steady.";
+            else if (risk === "medium") riskText.textContent = "Medium risk of overspending. A few tweaks could make a big difference.";
+            else if (risk === "high") riskText.textContent = "High risk of overspending. It may be worth tightening non-essential categories this month.";
+            else riskText.textContent = "";
+
+            const list = document.getElementById("suggestions");
+            list.innerHTML = "";
+            (data.suggestions || []).forEach((s) => {
+                const li = document.createElement("li");
+                li.textContent = s;
+                list.appendChild(li);
+            });
+
+            resultBox.style.display = "block";
+        } catch (err) {
+            console.error(err);
+            errorBox.textContent = "Something went wrong: " + err.message;
+            errorBox.style.display = "block";
+        }
+    });
+</script>
+</body>
+</html>
