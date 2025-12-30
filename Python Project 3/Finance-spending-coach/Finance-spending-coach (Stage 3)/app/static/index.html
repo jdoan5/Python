@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Finance Spending Coach</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f3f5f7;
+      --card: #ffffff;
+      --border: #d0d7de;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-soft: #eff6ff;
+      --danger: #b91c1c;
+      --success-soft: #ecfdf3;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top left, #e5f0ff 0, transparent 50%),
+        radial-gradient(circle at bottom right, #fee2e2 0, transparent 55%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 32px auto 40px;
+      padding: 0 16px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0 0 8px;
+      font-size: 32px;
+      letter-spacing: 0.03em;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin-bottom: 32px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      box-shadow: var(--shadow-soft);
+      padding: 24px 24px 20px;
+    }
+
+    .inputs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .help {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      font-size: 14px;
+      background: #f9fafb;
+    }
+
+    input[type="number"]:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+      background: #ffffff;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      min-width: 140px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+      border-color: #1d4ed8;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #f3f4f6;
+    }
+
+    .chip {
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 3px 10px;
+      border: 1px dashed var(--border);
+      background: #f9fafb;
+      color: var(--muted);
+    }
+
+    .error {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--danger);
+      display: none;
+    }
+
+    .result-card,
+    .coach-card {
+      margin-top: 18px;
+      border-radius: 14px;
+      border: 1px solid #d1fae5;
+      background: #ecfdf3;
+      padding: 14px 16px 12px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .coach-card {
+      margin-top: 12px;
+      border-color: #e5e7eb;
+      background: #f9fafb;
+    }
+
+    .result-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .pill-low {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .pill-medium {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .pill-high {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    ul {
+      margin-top: 4px;
+      margin-bottom: 6px;
+      padding-left: 18px;
+    }
+
+    textarea {
+      width: 100%;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    textarea:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+      background: #ffffff;
+    }
+
+    .footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        margin-top: 20px;
+      }
+      .inputs-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .inputs-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="page">
+  <h1>Finance Spending Coach</h1>
+  <p class="subtitle">
+    Enter a simple monthly profile. The service estimates overspending risk, then an AI coach explains the result and suggests next steps.
+  </p>
+
+  <div class="card">
+    <form id="profile-form">
+      <div class="inputs-grid">
+        <div>
+          <label for="income">Monthly income ($)</label>
+          <input id="income" type="number" min="0" step="100" value="4000" />
+          <div class="help">After tax / take-home.</div>
+        </div>
+
+        <div>
+          <label for="housing">Housing ($)</label>
+          <input id="housing" type="number" min="0" step="50" value="1400" />
+        </div>
+
+        <div>
+          <label for="food">Food &amp; groceries ($)</label>
+          <input id="food" type="number" min="0" step="50" value="600" />
+        </div>
+
+        <div>
+          <label for="transport">Transport ($)</label>
+          <input id="transport" type="number" min="0" step="25" value="250" />
+        </div>
+
+        <div>
+          <label for="shopping">Shopping ($)</label>
+          <input id="shopping" type="number" min="0" step="25" value="300" />
+        </div>
+
+        <div>
+          <label for="entertainment">Entertainment ($)</label>
+          <input id="entertainment" type="number" min="0" step="25" value="200" />
+        </div>
+
+        <div>
+          <label for="other">Other ($)</label>
+          <input id="other" type="number" min="0" step="25" value="150" />
+        </div>
+
+        <div>
+          <label for="savings_rate">Savings rate (%)</label>
+          <input id="savings_rate" type="number" min="0" max="80" step="1" value="10" />
+          <div class="help">Approximate percentage of income saved.</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary" id="score-btn">
+          Score my month
+        </button>
+        <button type="button" class="btn btn-secondary" id="reset-btn">
+          Reset
+        </button>
+        <span class="chip">
+          Calls <code>/score_profile</code> or <code>/coach_profile</code> under the hood
+        </span>
+      </div>
+
+      <div id="error" class="error"></div>
+
+      <div id="result-card" class="result-card">
+        <div class="result-title">Result</div>
+        <div id="result-body"></div>
+      </div>
+
+      <div id="coach-card" class="coach-card">
+        <div class="result-title">AI coach</div>
+        <div id="coach-body"></div>
+        <div style="margin-top:6px; font-size:13px;">
+          <strong>Grounded tips from KB:</strong>
+          <ul id="kb-tips"></ul>
+        </div>
+      </div>
+
+      <div style="margin-top:18px; font-size:13px;">
+        <strong>Optional:</strong> ask the coach a question about this budget
+        <textarea id="coach-question"
+          placeholder="e.g. What should I cut first to save $200/month?"></textarea>
+        <button type="button" class="btn btn-primary" id="coach-btn" style="margin-top:10px;">
+          Ask AI coach
+        </button>
+      </div>
+    </form>
+
+    <div class="footer">
+      Powered by FastAPI + a small logistic regression model.
+      Stage 3 adds a local KB + retrieval layer on top of the score.
+      Swagger docs are still available at <a href="/docs">/docs</a>.
+    </div>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById("profile-form");
+  const errorBox = document.getElementById("error");
+  const resultCard = document.getElementById("result-card");
+  const resultBody = document.getElementById("result-body");
+  const coachCard = document.getElementById("coach-card");
+  const coachBody = document.getElementById("coach-body");
+  const kbTipsList = document.getElementById("kb-tips");
+  const questionInput = document.getElementById("coach-question");
+
+  const scoreBtn = document.getElementById("score-btn");
+  const resetBtn = document.getElementById("reset-btn");
+  const coachBtn = document.getElementById("coach-btn");
+
+  function getProfilePayload() {
+    const income = Number(document.getElementById("income").value || 0);
+    const housing = Number(document.getElementById("housing").value || 0);
+    const food = Number(document.getElementById("food").value || 0);
+    const transport = Number(document.getElementById("transport").value || 0);
+    const shopping = Number(document.getElementById("shopping").value || 0);
+    const entertainment = Number(document.getElementById("entertainment").value || 0);
+    const other = Number(document.getElementById("other").value || 0);
+    const savingsPct = Number(document.getElementById("savings_rate").value || 0);
+
+    return {
+      income,
+      housing,
+      food,
+      transport,
+      shopping,
+      entertainment,
+      other,
+      // API expects a rate (0–1)
+      savings_rate: savingsPct / 100.0,
+    };
+  }
+
+  function renderRiskPill(level) {
+    const span = document.createElement("span");
+    span.classList.add("pill");
+    if (level === "low") span.classList.add("pill-low");
+    else if (level === "medium") span.classList.add("pill-medium");
+    else span.classList.add("pill-high");
+    span.textContent = level.toUpperCase();
+    return span;
+  }
+
+  function renderScore(result) {
+    resultBody.innerHTML = "";
+
+    const p1 = document.createElement("div");
+    const pct = (result.overspend_probability * 100).toFixed(1);
+    p1.textContent = "Overspending probability: " + pct + "% ";
+    p1.appendChild(renderRiskPill(result.risk_level));
+
+    const p2 = document.createElement("div");
+    if (result.risk_level === "low") {
+      p2.textContent = "Low risk of overspending. Nice work – keep your habits steady.";
+    } else if (result.risk_level === "medium") {
+      p2.textContent = "Moderate risk of overspending. It may be worth reviewing non-essential categories.";
+    } else {
+      p2.textContent = "High risk of overspending. It may be worth tightening non-essential categories this month.";
+    }
+
+    const p3 = document.createElement("div");
+    p3.style.marginTop = "6px";
+    p3.innerHTML = "<strong>Suggestions:</strong>";
+
+    const ul = document.createElement("ul");
+    (result.suggestions || result.model_suggestions || []).forEach((s) => {
+      const li = document.createElement("li");
+      li.textContent = s;
+      ul.appendChild(li);
+    });
+
+    resultBody.appendChild(p1);
+    resultBody.appendChild(p2);
+    resultBody.appendChild(p3);
+    resultBody.appendChild(ul);
+    resultCard.style.display = "block";
+  }
+
+  async function callScoreOnly() {
+    errorBox.style.display = "none";
+    coachCard.style.display = "none";
+
+    const payload = getProfilePayload();
+
+    try {
+      const res = await fetch("/score_profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error("HTTP " + res.status + ": " + txt);
+      }
+
+      const data = await res.json();
+      renderScore(data);
+    } catch (err) {
+      console.error(err);
+      errorBox.textContent = "Something went wrong: " + err.message;
+      errorBox.style.display = "block";
+      resultCard.style.display = "none";
+      coachCard.style.display = "none";
+    }
+  }
+
+   async function callCoach() {
+    errorBox.style.display = "none";
+
+    const profile = getProfilePayload();
+    const question = questionInput.value.trim() || null;
+
+    try {
+      const res = await fetch("/coach_profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ profile, question }),
+      });
+
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error("HTTP " + res.status + ": " + txt);
+      }
+
+      const data = await res.json();
+      console.log("coach_profile response:", data);
+
+      // Reuse the same rendering for score
+      renderScore(data);
+
+      // ---- Coach answer (paragraphs) ----
+      const answer = data.answer || "(No extra explanation from coach.)";
+      coachBody.innerHTML = "";
+      answer.split(/\n{2,}/).forEach((chunk) => {
+        const trimmed = chunk.trim();
+        if (!trimmed) return;
+        const p = document.createElement("p");
+        p.style.margin = "0 0 6px 0";
+        p.textContent = trimmed;
+        coachBody.appendChild(p);
+      });
+
+      // ---- Grounded tips from KB ----
+      kbTipsList.innerHTML = "";
+
+      const tips = Array.isArray(data.kb_tips) ? data.kb_tips : [];
+      console.log("kb_tips to render:", tips);
+
+      tips.forEach((tip) => {
+        const li = document.createElement("li");
+        li.textContent = tip;
+        kbTipsList.appendChild(li);
+      });
+
+      coachCard.style.display = "block";
+    } catch (err) {
+      console.error(err);
+      errorBox.textContent = "Something went wrong (coach): " + err.message;
+      errorBox.style.display = "block";
+      coachCard.style.display = "none";
+    }
+  }
+
+  // Wire up buttons
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    callScoreOnly();
+  });
+
+  resetBtn.addEventListener("click", () => {
+    form.reset();
+    errorBox.style.display = "none";
+    resultCard.style.display = "none";
+    coachCard.style.display = "none";
+    kbTipsList.innerHTML = "";
+    coachBody.textContent = "";
+  });
+
+  coachBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    callCoach();
+  });
+</script>
+</body>
+</html>

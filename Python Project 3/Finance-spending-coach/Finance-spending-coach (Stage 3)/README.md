@@ -253,6 +253,17 @@ This repository is designed as a multi-stage learning / portfolio project.
 - Minimal HTML UI + Swagger testing
 - Docker packaging
 
+### Stage 2 (planned – RAG / assistant layer)
+
+- Add a small **knowledge base** of budgeting / spending best practices (Markdown, PDFs, or HTML notes)
+- Build an **embedding + retrieval** layer over that knowledge
+- Extend the API to return:
+  - Model-based risk probabilities
+  - RAG-based, doc-grounded explanations and tips
+- Optionally expose a simple chat-like UI where the user can ask:
+  - “Why is my risk high?”
+  - “What should I cut first to save $200/month?”
+
 ---
 
 ## 6. Tech stack (Stage 1)
