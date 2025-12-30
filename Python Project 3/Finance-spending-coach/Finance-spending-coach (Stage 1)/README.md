@@ -1,266 +1,216 @@
-# Finance Spending Coach — Stage 1 (ML API + UI)
+# Finance Spending Coach — Stage 1 (Core API)
 
-Stage 1 of a small **FastAPI + scikit-learn** project that scores a monthly spending profile for **overspending risk** and returns friendly coaching suggestions.
+Stage 1 is a small **FastAPI + scikit-learn** service that scores a monthly spending profile for **overspending risk**. It trains a simple logistic regression model on synthetic transaction data and exposes a JSON API (plus an optional minimal HTML UI).
 
-This stage focuses on:
+Stages 2 and 3 build on this:
 
-- Generating synthetic finance data
-- Training a simple classifier on monthly spending aggregates
-- Exposing a clean FastAPI endpoint to score a spending profile
-- Providing a minimal HTML front-end for non-technical users
-- Packaging everything into a Docker image
+- **Stage 2:** add a nicer front-end and “Ask AI coach” entry point.
+- **Stage 3:** add a small local knowledge base + retrieval layer (RAG-style coach).
 
-> **Stage 2 (planned):** Add a lightweight RAG / knowledge-based “coach” layer that pulls budgeting tips and explanations from a small curated corpus. Stage 1 lays the foundation: data, model, API, and UI.
+This folder is **Stage 1 only** – the minimal ML scoring service.
 
 ---
 
-## Features (Stage 1)
-
-- Synthetic transaction generator for toy finance data
-- Training script that builds a logistic-regression classifier from monthly spending aggregates
-- FastAPI backend with:
-  - `GET /health` – lightweight health check
-  - `POST /score_profile` – accepts a JSON spending profile and returns risk + suggestions
-- Static HTML UI (`app/static/index.html`) that calls the API and renders results
-- Dockerfile to build and run the whole app as a single container
-
----
-
-## High-level architecture (Stage 1)
-
-```mermaid
-flowchart TD
-    %% --- Client side ---
-    subgraph Client
-        browser["Browser UI
-(static/index.html)"]
-    end
-
-    %% --- API layer ---
-    subgraph API["FastAPI service
-(app/api.py)"]
-        endpoint["POST /score_profile"]
-        health["GET /health"]
-    end
-
-    %% --- Core logic ---
-    subgraph Core["Core logic"]
-        schema["SpendingProfile
-(Pydantic model)"]
-        features["Feature engineering
-(features.py)"]
-        model["ML model & scoring
-(model.py)"]
-    end
-
-    %% --- Data & artifacts ---
-    subgraph Data["Data & artifacts"]
-        monthly["transactions_monthly.csv"]
-        artifacts["model.pkl
-(data/model_artifacts/)"]
-    end
-
-    %% --- Flow ---
-    browser --> endpoint
-    endpoint --> schema
-    schema --> features
-    features --> model
-    monthly --> model
-    model --> endpoint
-    artifacts --- model
-    health --> model
-```
-
----
-
-## Project structure
+## Folder layout
 
 ```text
-Finance-spending-coach/
-├─ app/
-│  ├─ static/
-│  │  └─ index.html          # Small browser UI that calls /score_profile
-│  ├─ __init__.py
-│  ├─ api.py                 # FastAPI routes and startup
-│  ├─ features.py            # FEATURE_COLUMNS and profile_to_features()
-│  ├─ model.py               # Training, model loading, scoring
-│  └─ schemas.py             # Pydantic models (SpendingProfile, ScoreResponse)
-├─ data/
-│  ├─ transactions_raw.csv       # Row-level synthetic transactions
-│  └─ transactions_monthly.csv   # Monthly aggregates with overspend_flag
-├─ scripts/
-│  └─ generate_fake_transactions.py  # Build synthetic CSVs from scratch
-├─ Dockerfile
-├─ requirements.txt
-└─ README.md                 # This file
+Finance-spending-coach (Stage 1)/
+├── app/
+│   ├── static/
+│   │   └── index.html              # Optional simple front-end (served at "/")
+│   ├── __init__.py
+│   ├── api.py                     # FastAPI routes
+│   ├── features.py                # Feature engineering helpers
+│   ├── model.py                   # Train, load, and score the ML model
+│   └── schemas.py                 # Pydantic request/response models
+│
+├── data/
+│   ├── model_artifacts/
+│   │   └── model.pkl              # Trained logistic regression (created on first run)
+│   ├── transactions_monthly.csv   # Aggregated monthly profiles (training data)
+│   └── transactions_raw.csv       # Row-level synthetic transactions
+│
+├── scripts/
+│   └── generate_fake_transactions.py  # Utility to regenerate synthetic CSVs
+│
+├── Dockerfile
+├── README.md
+└── requirements.txt
 ```
-
-Stage 1 uses only local CSVs and an in-container model file; no external DB or cloud services are required.
 
 ---
 
-## 1. Setup & installation (local)
+## How it works
 
-### 1.1. Create and activate a virtual environment
+1. **Synthetic data**  
+   - `scripts/generate_fake_transactions.py` creates:
+     - `data/transactions_raw.csv` – individual fake transactions.
+     - `data/transactions_monthly.csv` – monthly aggregates with an `overspend_flag`.
 
-From the project root:
+2. **Model training & artifacts**  
+   - `app/model.py` reads `transactions_monthly.csv`, engineers features (via `features.py`),
+     trains a **logistic regression** classifier, and saves it to:
+     - `data/model_artifacts/model.pkl`.
+   - On startup, if `model.pkl` does not exist or fails to load, the app will **retrain**.
 
-```bash
-python -m venv .venv
-source .venv/bin/activate    # Windows: .venv\Scripts\activate
-pip install --upgrade pip
-pip install -r requirements.txt
-```
+3. **API layer**  
+   - `app/api.py` defines a FastAPI app with Pydantic models from `schemas.py`.
+   - Requests are validated, converted to feature vectors, and passed into the model.
+   - Responses return:
+     - `overspend_probability` (0–1),
+     - a simple `risk_level` (`low | medium | high`),
+     - a list of **rule-based suggestions**.
 
-### 1.2. Generate synthetic data
-
-If you want to recreate the data from scratch:
-
-```bash
-python scripts/generate_fake_transactions.py
-```
-
-This will create:
-
-- `data/transactions_raw.csv`
-- `data/transactions_monthly.csv`
-
-These files are used by `app/model.py` to train the overspending classifier.
+4. **Optional UI**  
+   - `app/static/index.html` is served at `/` and calls the JSON API under the hood.
+   - Swagger / OpenAPI docs are still available at `/docs`.
 
 ---
 
-## 2. Running the API locally (Stage 1)
+## Architecture (Stage 1)
 
-From the project root (with the virtual environment activated):
+```mermaid
+graph TD
+  ui["Browser UI / Swagger docs"]
+  api["FastAPI app (api.py)"]
+  model["ML model & scoring (model.py)"]
+  monthly["transactions_monthly.csv"]
+  raw["transactions_raw.csv"]
+  artifact["model.pkl (data/model_artifacts)"]
 
-```bash
-uvicorn app.api:app --reload
+  ui -->|"HTTP JSON"| api
+  api --> model
+  model --> monthly
+  model --> raw
+  model --> artifact
+
+  subgraph "Core logic"
+    api
+    model
+  end
+
+  subgraph "Data & artifacts"
+    monthly
+    raw
+    artifact
+  end
 ```
-
-Then open:
-
-- Swagger / OpenAPI docs: <http://127.0.0.1:8000/docs>
-- ReDoc docs (optional): <http://127.0.0.1:8000/redoc>
-- Simple HTML front-end: <http://127.0.0.1:8000/>
-
-On startup:
-
-- The app will attempt to load `data/model_artifacts/model.pkl`.
-- If it does not exist or is invalid, it will automatically train a new model from `data/transactions_monthly.csv` and save the artifact.
 
 ---
 
-## 3. Using the service
+## Running locally (Python)
 
-### 3.1. Via the HTML front-end
+From the **Stage 1** root directory:
 
-1. Visit <http://127.0.0.1:8000/> while the server is running.
-2. Enter monthly income and category-level spending:
-   - Housing
-   - Food
-   - Transport
-   - Shopping
-   - Entertainment
-   - Other
-   - (Optional) savings rate (% of income you aim to save)
-3. Click **Score profile**.
-4. The UI will display:
-   - Overspend probability (0–1)
-   - Risk level: `low`, `medium`, or `high`
-   - A small list of coaching suggestions.
+1. (Optional) create and activate a virtual environment:
 
-The front-end sends a `POST` to `/score_profile` with a JSON body that matches `SpendingProfile`.
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate   # macOS / Linux
+   # or: .venv\Scripts\activate  # Windows
+   ```
 
-### 3.2. Via Swagger UI
+2. Install dependencies:
 
-1. Visit <http://127.0.0.1:8000/docs>.
-2. Expand the **POST /score_profile** operation.
-3. Click **Try it out** and edit the example JSON, for example:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Generate synthetic data (only needed if the CSVs are missing or you want fresh data):
+
+   ```bash
+   python scripts/generate_fake_transactions.py
+   ```
+
+4. Run the API:
+
+   ```bash
+   uvicorn app.api:app --reload
+   ```
+
+5. Open in the browser:
+
+   - Main UI (if you keep `index.html` wired up):  
+     `http://127.0.0.1:8000/`
+   - Swagger / OpenAPI docs:  
+     `http://127.0.0.1:8000/docs`
+
+On first startup, the service will train the logistic regression model and write
+`data/model_artifacts/model.pkl`.
+
+---
+
+## Running via Docker
+
+From the **Stage 1** root:
+
+```bash
+# Build the image
+docker build -t finance-spending-coach-stage1 .
+
+# Run the container
+docker run --rm -p 8000:8000 finance-spending-coach-stage1
+```
+
+Then browse to `http://localhost:8000/docs` (and `/` for the simple UI if desired).
+
+---
+
+## API endpoints
+
+### `GET /health`
+
+Simple health check.
+
+**Response:**
 
 ```json
 {
-  "income": 5000,
-  "housing": 1800,
-  "food": 600,
-  "transport": 250,
-  "shopping": 400,
-  "entertainment": 250,
-  "other": 150,
-  "savings_rate": 0.1
+  "status": "ok"
 }
 ```
 
-4. Click **Execute** to see the JSON response.
+### `POST /score_profile`
 
-### 3.3. Example JSON response
+Scores a single monthly spending profile.
+
+**Request body (JSON):**
 
 ```json
 {
-  "overspend_probability": 0.62,
-  "risk_level": "high",
+  "income": 4000,
+  "housing": 1400,
+  "food": 600,
+  "transport": 250,
+  "shopping": 300,
+  "entertainment": 200,
+  "other": 150,
+  "savings_rate": 0.10
+}
+```
+
+> Note: `savings_rate` is a rate in **[0, 1]**, not a percent.
+
+**Response (example):**
+
+```json
+{
+  "overspend_probability": 0.18,
+  "risk_level": "medium",
   "suggestions": [
-    "High risk of overspending this month.",
-    "Set a hard cap on discretionary spending (shopping / entertainment).",
-    "You are not saving at all—consider a no-spend week."
+    "Your spending is a bit tight; review non-essential categories.",
+    "Try trimming 5–10% from shopping or entertainment.",
+    "Aim to build at least a 10% savings buffer."
   ]
 }
 ```
 
-(The exact numbers depend on the model fitted to your synthetic data.)
-
 ---
 
-## 4. Building & running with Docker
+## How Stage 1 fits into the full project
 
-Stage 1 also supports running as a single Dockerized service. This bundles:
+- **Stage 1 (this folder):** core ML scoring service + basic UI.
+- **Stage 2:** reuses this model, but adds a more polished front-end and a “coach” endpoint.
+- **Stage 3:** extends the coach with a small local knowledge base and retrieval layer (RAG flavor).
 
-- The FastAPI app
-- The training & scoring code
-- All required Python dependencies
-
-### 4.1. Build the image
-
-From the project root:
-
-```bash
-docker build -t finance-spending-coach .
-```
-
-### 4.2. Run the container
-
-```bash
-docker run --rm -p 8000:8000 finance-spending-coach
-```
-
-Then open the same URLs as before:
-
-- Swagger: <http://127.0.0.1:8000/docs>
-- HTML front-end: <http://127.0.0.1:8000/>
-
-The container runs `uvicorn` and will train/load the model on startup exactly as in local mode.
-
----
-
-## 5. Stage roadmap
-
-This repository is designed as a multi-stage learning / portfolio project.
-
-### Stage 1 (this README)
-
-- Synthetic finance data generator
-- Simple overspending classifier (logistic regression)
-- FastAPI service with `/score_profile`
-- Minimal HTML UI + Swagger testing
-- Docker packaging
-
----
-
-## 6. Tech stack (Stage 1)
-
-- **Backend:** FastAPI, Uvicorn
-- **Modeling:** scikit-learn, pandas, numpy
-- **Validation:** Pydantic v2
-- **Packaging:** Docker (Python 3.11-slim base image)
-- **Front-end:** Static HTML + small amount of JavaScript (`fetch`)
-
----
+This README is focused only on the **Stage 1** building block.
