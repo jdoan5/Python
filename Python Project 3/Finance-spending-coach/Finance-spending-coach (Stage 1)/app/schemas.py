@@ -1,35 +1,43 @@
-# app/schemas.py
-from typing import List
-from pydantic import BaseModel, Field, confloat
+# app/schemas.py  (Stage 1)
+
+from __future__ import annotations
+
+from typing import List, Optional
+
+from pydantic import BaseModel, Field
 
 
 class SpendingProfile(BaseModel):
     """
-    One month of spending for a single person/household.
+    Simple monthly spending profile.
 
-    These fields roughly match the columns in data/transactions_monthly.csv.
+    savings_rate is stored as a FRACTION (0–1), e.g.
+    0.10 == 10% of income saved.
     """
-    income: float = Field(..., gt=0, description="Net monthly income")
-    housing: float = Field(..., ge=0, description="Rent/mortgage + utilities")
-    food: float = Field(..., ge=0, description="Groceries + eating out")
-    transport: float = Field(..., ge=0, description="Public transport, fuel, etc.")
-    shopping: float = Field(..., ge=0, description="Shopping / retail")
-    entertainment: float = Field(..., ge=0, description="Entertainment & leisure")
-    other: float = Field(..., ge=0, description="Other variable spending")
 
-    savings_rate: confloat(ge=0, le=1) = Field(
+    income: float = Field(..., ge=0, description="Monthly take-home income.")
+    housing: float = Field(..., ge=0)
+    food: float = Field(..., ge=0, description="Food & groceries.")
+    transport: float = Field(..., ge=0)
+    shopping: float = Field(..., ge=0)
+    entertainment: float = Field(..., ge=0)
+    other: float = Field(..., ge=0)
+    savings_rate: float = Field(
         ...,
-        description="Savings as a fraction of income, e.g. 0.2 for 20%. "
-                    "The backend will sanity-check this against income and spending.",
+        ge=0.0,
+        le=0.8,
+        description="Fraction of income saved (0–1). Example: 0.10 == 10%.",
     )
 
 
 class ScoreResponse(BaseModel):
-    overspend_probability: float = Field(..., ge=0, le=1)
+    """
+    Response for /score_profile in Stage 1.
+
+    message is OPTIONAL so api.py does not have to set it.
+    """
+
+    overspend_probability: float = Field(..., ge=0.0, le=1.0)
     risk_level: str
-    message: str
     suggestions: List[str]
-
-
-class HealthResponse(BaseModel):
-    status: str
+    message: Optional[str] = None  # <— make this optional with a default

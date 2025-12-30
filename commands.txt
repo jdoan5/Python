@@ -50,3 +50,6 @@ mkdir -p artifacts reports
 
 14. Move directory
 mv "source directory" "destination directory"
+
+15. Run local FastAPI
+uvicorn app.api:app --reload
