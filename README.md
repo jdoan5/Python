@@ -1,4 +1,4 @@
-# Python Projects
+# Python Projects Portfolio
 
 This repository contains a collection of small-to-medium Python projects and practice examples.  
 It started as a place to experiment with core Python concepts and has grown to include GUIs, data
