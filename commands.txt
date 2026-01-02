@@ -1,3 +1,135 @@
+# commands.txt
+# Common terminal commands I use across projects (Mac/Linux). Windows equivalents noted where helpful.
+
+## 0) Navigation & inspection
+pwd
+ls -la
+cd "path/to/project"
+mkdir -p "new-folder"
+open .            # macOS Finder (Windows: start . | Linux: xdg-open .)
+code .            # Open VS Code in current folder (if installed)
+cat file.txt
+less file.txt
+head -n 20 file.txt
+tail -n 50 file.txt
+grep -n "search text" -R .
+find . -name "*.py" -maxdepth 3
+du -sh .          # Folder size
+df -h             # Disk usage
+
+---
+
+## 1) Virtual environment reset / rebuild (Python)
+# 1. Delete the existing virtual environment
+deactivate 2>/dev/null || true
+rm -rf .venv
+
+# 2. Create a new virtual environment
+python3 -m venv .venv
+
+# 3. Activate the virtual environment
+source .venv/bin/activate             # Windows: .venv\Scripts\activate
+
+# 4. Repair or upgrade pip
+python -m ensurepip --upgrade
+python -m pip install --upgrade pip setuptools wheel
+
+# 5. Install requirements
+python -m pip install -r requirements.txt
+# or
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# 6. Verify the correct interpreter is used
+python --version
+python -c "import sys; print(sys.executable)"
+python -m pip --version
+which python                          # Windows: where python
+
+---
+
+## 2) Python packaging helpers
+pip list
+pip freeze > requirements.txt         # Save exact versions (pin)
+python -m pip install -U pip
+python -m pip uninstall -y package_name
+
+---
+
+## 3) File operations (safe patterns)
+# Remove a single file
+rm -f "path/to/file"
+
+# Remove everything inside a directory (keep folder)
+rm -rf artifacts/* reports/*
+mkdir -p artifacts reports
+
+# Copy directories
+cp -R "source directory" "destination directory"
+# examples
+cp -R "Fake News Learning with Machine Learning (Stage 2)" "Fake News Learning with Machine Learning (Stage 3)"
+cp -R "Next-Day Direction Classifier with RAG (Stage 1)" "Next-Day Direction Classifier with RAG (Stage 2)"
+
+# Move/rename
+mv "old-name" "new-name"
+
+---
+
+## 4) Git (quick)
+git status
+git add .
+git commit -m "Message"
+git push
+git pull
+git log --oneline --decorate --graph -10
+git diff
+git checkout -b feature/my-branch
+
+---
+
+## 5) Streamlit (if applicable)
+streamlit cache clear
+streamlit run "app.py"
+
+---
+
+## 6) FastAPI / Uvicorn (if applicable)
+uvicorn app.api:app --reload
+
+---
+
+## 7) Mini Data Mart with DuckDB (project-specific)
+# From the project root (after venv + requirements install):
+python run.py
+
+# Run individual scripts
+python mini_data_mart.py
+python inspect_duckdb.py
+python export_to_csv.py
+python export_to_json.py
+python explore_mini_data_mart.py
+
+# Verify DuckDB is installed in Python
+python -c "import duckdb; print('duckdb', duckdb.__version__)"
+
+# Open the DuckDB database via DuckDB CLI (if installed)
+# (If duckdb CLI is not installed, you can install it via brew or use Python only.)
+duckdb mini_data_mart.duckdb
+
+# Inside DuckDB CLI (examples):
+# .tables
+# .schema
+# SELECT * FROM fact_sales LIMIT 10;
+# SELECT COUNT(*) FROM fact_sales;
+# .exit
+
+# Output folders (if you want to reset exports)
+rm -rf data/CSV-export/* data/JSON-export/*
+mkdir -p data/CSV-export data/JSON-export
+
+---
+
+## Legacy notes (from previous commands.txt)
 1. Delete the existing virtual environment
 deactivate 2>/dev/null || true
 rm -rf .venv
