@@ -34,7 +34,10 @@ con.execute("""
             INSERT INTO dim_customer
             VALUES (1, 'Alice', 'North'),
                    (2, 'Bob', 'South'),
-                   (3, 'Carol', 'East');
+                   (3, 'Carol', 'East'),
+                   (4, 'Dan', 'West'),
+                   (5, 'Eve', 'North');
+                
             """)
 
 con.execute("""
@@ -50,7 +53,9 @@ con.execute("""
             INSERT INTO dim_product
             VALUES (10, 'Laptop', 'Electronics'),
                    (11, 'Headphones', 'Electronics'),
-                   (12, 'Desk Chair', 'Furniture');
+                   (12, 'Desk Chair', 'Furniture'),
+                   (13, 'Energy Drink', 'Beverages'),
+                   (14, 'Coffee Maker', 'Appliances');
             """)
 
 con.execute("""
@@ -67,7 +72,9 @@ con.execute("""
             INSERT INTO dim_date
             VALUES ('2025-01-01', 2025, 1, 'Wednesday'),
                    ('2025-01-02', 2025, 1, 'Thursday'),
-                   ('2025-01-03', 2025, 1, 'Friday');
+                   ('2025-01-03', 2025, 1, 'Friday'),
+                   ('2026-01-01', 2026, 1, 'Monday'),
+                   ('2026-01-02', 2026, 1, 'Tuesday');
             """)
 
 # --- Create fact table ---
@@ -92,7 +99,9 @@ con.execute("""
             VALUES (1001, 1, 10, '2025-01-01', 1, 1200.00),
                    (1002, 1, 11, '2025-01-02', 1, 200.00),
                    (1003, 1, 12, '2025-01-03', 1, 300.00),
-                   (1004, 1, 11, '2025-01-03', 1, 200.00);
+                   (1004, 1, 11, '2025-01-03', 1, 200.00),
+                   (1005, 4, 13, '2026-01-01', 2, 150.00),
+                   (1006, 5, 14, '2026-01-02', 1, 100.00);
             """)
 
 # Verify tables
