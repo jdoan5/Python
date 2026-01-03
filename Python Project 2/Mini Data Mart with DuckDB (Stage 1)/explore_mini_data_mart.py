@@ -19,8 +19,8 @@ print(tables)
 
 # --- 2. View each table (first few rows) ---
 for (table_name,) in con.execute("SHOW TABLES;").fetchall():
-    print(f"\n== {table_name} (first 5 rows) ==")
-    df = con.execute(f"SELECT * FROM {table_name} LIMIT 5;").fetchdf()
+    print(f"\n== {table_name} (first 10 rows) ==")
+    df = con.execute(f"SELECT * FROM {table_name} LIMIT 10;").fetchdf()
     print(df)
 
 # --- 3. Example analytics query: revenue by customer and category ---
