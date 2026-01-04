@@ -179,5 +179,3 @@ python explore_mini_data_mart.py
 
 ---
 
-## Stage 2 idea (next)
-Stage 2 can switch from **hardcoded seed inserts** to loading the fact table (and/or dims) from **CSV inputs**, so updating input files automatically changes what gets loaded into DuckDB.

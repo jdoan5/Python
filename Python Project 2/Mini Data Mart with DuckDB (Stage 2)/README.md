@@ -1,207 +1,185 @@
-# Mini Data Mart with DuckDB (Python)
+# Mini Data Mart with DuckDB — Stage 2 (CSV-Driven Load)
 
-This project demonstrates how to build a small **star-schema mini data mart** using **DuckDB** and **Python** (works well in PyCharm or from the terminal).
+Stage 2 upgrades the mini data mart from **hardcoded seed inserts** (Stage 1) to a **repeatable CSV → DuckDB build**.
+When you update `fact_sales.csv`, you can rebuild the database and immediately see the changes in analytics queries.
 
-## Data note (important)
-All data used in this project is **synthetic / generated for learning purposes**.  
-It does **not** contain real customer data or production data.
-
----
-
-## What this project builds
-
-It creates:
-
-- A DuckDB database file: `mini_data_mart.duckdb`
-- Dimension tables: `dim_customer`, `dim_product`, `dim_date`
-- A fact table: `fact_sales`
-- Example analytics queries (e.g., revenue by customer and category)
-- Optional exports to:
-  - `data/CSV-export/` (CSV)
-  - `data/JSON-export/` (JSON)
+> **Data source:** Synthetic / generated dataset for learning and demonstration purposes (no real customer or production data).
 
 ---
 
-## Star schema overview
+## What Stage 2 adds
 
-- **Dimensions**
-  - `dim_customer` — who bought (customer name, region)
-  - `dim_product` — what was bought (product name, category)
-  - `dim_date` — when it was bought (date, year, month, day_of_week)
-- **Fact**
-  - `fact_sales` — measurable events (quantity, unit_price, sale_id)
+- **CSV-driven fact load** (and automatic dimension building)
+- **Rebuildable pipeline**: build → query → export
+- **Input validation** for dates and numeric fields
+- A **names-based CSV format** so you can edit the dataset without managing IDs manually
 
 ---
 
-## Project files (what to run)
+## Project structure
 
-Common scripts in this project:
-
-- `run.py`
-  - Recommended entry point (build + basic exploration).
-- `mini_data_mart.py`
-  - Builds the DuckDB file and creates/populates all tables (star schema).
-- `explore_mini_data_mart.py`
-  - Connects to the DuckDB file, shows sample rows, and runs analytics queries.
-- `export_to_csv.py` (optional)
-  - Exports tables to `data/CSV-export/`.
-- `export_to_json.py` (optional)
-  - Exports tables to `data/JSON-export/`.
-- `inspect_duckdb.py` (optional)
-  - Quick inspection helper (list tables, preview row counts, etc.).
-
-> Note: If you try to run `build_mini_data_mart.py` and it says “No such file”, that means your project uses the newer name: **`mini_data_mart.py`**.
+```
+Mini Data Mart with DuckDB (Stage 2)/
+├─ mini_data_mart.py              # Build script: reads CSV → creates star schema in DuckDB
+├─ explore_mini_data_mart.py      # Example analytics queries (reads DuckDB)
+├─ inspect_duckdb.py              # (Optional) quick schema/table inspection helper
+├─ fact_sales.csv                 # Your input data (edit this for new rows)
+├─ fact_sales.template.csv        # Template showing expected CSV columns
+├─ mini_data_mart.duckdb          # GENERATED (database file)
+└─ data/
+   ├─ CSV-export/                 # GENERATED (optional exporters)
+   └─ JSON-export/                # GENERATED (optional exporters)
+```
 
 ---
 
-## Quick start (terminal)
+## Requirements
 
-From the project folder:
+- Python 3.11+ recommended  
+- DuckDB Python package  
+- (Optional) Pandas, only if you keep exporters/scripts that use it
 
-### 1) Create and activate a virtual environment
+### Install (virtualenv recommended)
+
 ```bash
-python3 -m venv .venv
+python -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install duckdb
 ```
 
-### 2) Install dependencies
+If you maintain a `requirements.txt`, it can be as small as:
+
+```txt
+duckdb
+```
+
+---
+
+## Input CSV format (Stage 2)
+
+### Preferred: names-based CSV (recommended)
+
+Copy the template and start editing:
+
 ```bash
-pip install -r requirements.txt
+cp fact_sales.template.csv fact_sales.csv
 ```
 
-### 3) Build + run (recommended)
-```bash
-python run.py
+**Expected columns:**
+
+- `order_date` (YYYY-MM-DD)
+- `customer_name`
+- `region` (optional; defaults to `Unknown`)
+- `product_name`
+- `category` (optional; defaults to `Unknown`)
+- `quantity` (integer)
+- `unit_price` (number)
+
+Example:
+
+```csv
+order_date,customer_name,region,product_name,category,quantity,unit_price
+2025-01-01,Alice,North,Laptop,Electronics,1,1200.00
 ```
 
-Or run the steps explicitly:
+**How it loads:**
+- `mini_data_mart.py` reads your CSV into a staging table (`stg_sales`)
+- It builds:
+  - `dim_customer` from distinct `(customer_name, region)`
+  - `dim_product` from distinct `(product_name, category)`
+  - `dim_date` from distinct `order_date`
+- It loads `fact_sales` by joining the staging rows to those dimensions
+- `sale_id` is generated automatically (row number) unless you include it yourself in an ID-based format
+
+---
+
+## Run steps
+
+### 1) Build (creates/rebuilds the DuckDB star schema)
+
 ```bash
 python mini_data_mart.py
+```
+
+### 2) Explore (run analytics queries)
+
+```bash
 python explore_mini_data_mart.py
 ```
 
-### 4) Export outputs (optional)
-CSV:
+### 3) Optional: Inspect database quickly
+
 ```bash
-python export_to_csv.py
+python inspect_duckdb.py
 ```
 
-JSON:
+### 4) Optional: Export outputs
+
+If you have `export_to_csv.py` / `export_to_json.py` in the folder:
+
 ```bash
+python export_to_csv.py
 python export_to_json.py
 ```
 
----
+If you prefer DuckDB-native exports, you can also do:
 
-## Where outputs go
-
-- DuckDB database file:
-  - `mini_data_mart.duckdb`
-- CSV exports:
-  - `data/CSV-export/*.csv`
-- JSON exports:
-  - `data/JSON-export/*.json`
+```sql
+COPY (SELECT * FROM fact_sales) TO 'data/CSV-export/fact_sales.csv' (HEADER, DELIMITER ',');
+```
 
 ---
 
-## Reset / rebuild from scratch (recommended for a clean rerun)
+## Rebuild from scratch (clean reset)
 
-### Safe to delete (generated outputs)
-You can delete these at any time; they are recreated by the scripts:
+Use this when you want a “fresh start”:
 
-- `mini_data_mart.duckdb`  *(the DuckDB database file)*
-- `data/CSV-export/`       *(generated CSV exports)*
-- `data/JSON-export/`      *(generated JSON exports)*
-
-### Keep (source inputs + code)
-Do **not** delete these if you want to rebuild successfully:
-
-- `fact_sales.csv` *(the input fact data used to populate the mart)*
-- Python scripts: `mini_data_mart.py`, `run.py`, `explore_mini_data_mart.py`, etc.
-- `requirements.txt` (and `README.md`)
-
-### One-command reset (macOS/Linux)
-Run this from the project root:
 ```bash
 rm -f mini_data_mart.duckdb
 rm -rf data/CSV-export data/JSON-export
-```
-
-Then rebuild:
-```bash
 python mini_data_mart.py
 python explore_mini_data_mart.py
 ```
 
-Or just:
-```bash
-python run.py
-```
-
-> Common gotcha: If you paste lines that start with `#` into the terminal, `zsh` may treat them as commands (depending on how you pasted). When copying commands, paste only the command lines (no `# optional:` comments).
-
-### Full reset (optional)
-If you want a completely fresh environment too:
-```bash
-rm -rf .venv
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+Notes:
+- `mini_data_mart.py` also drops/recreates tables each run, so deleting the DB file is not strictly required.
+- Deleting the DB is helpful if you want to guarantee there is no leftover state.
 
 ---
 
-## Architecture diagram (Mermaid)
+## If you edit `fact_sales.csv`, what must you rerun?
 
-```mermaid
-graph TD
-    A[Python scripts] --> B[mini_data_mart.duckdb]
-
-    subgraph Star Schema in DuckDB
-        B --> F_FACT[fact_sales]
-        B --> C_DIM[dim_customer]
-        B --> P_DIM[dim_product]
-        B --> D_DIM[dim_date]
-
-        F_FACT --> C_DIM
-        F_FACT --> P_DIM
-        F_FACT --> D_DIM
-    end
-
-    B -- "COPY ... TO CSV" --> E_CSV[(data/CSV-export/*.csv)]
-    B -- "COPY ... TO JSON" --> E_JSON[(data/JSON-export/*.json)]
-```
+- To reflect CSV changes in DuckDB: **rerun `mini_data_mart.py`**
+- To see results after rebuild: rerun `explore_mini_data_mart.py`
 
 ---
 
-## Troubleshooting
+## Common errors and fixes
 
-### “ModuleNotFoundError: duckdb”
-Your venv may not be active, or dependencies aren’t installed.
-```bash
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-### “Table ... does not exist” in explore/export scripts
-That usually means the DB was deleted but not rebuilt yet.
+### `Table with name fact_sales does not exist`
+You ran the explore script before successfully building the database.
 
 Fix:
+
 ```bash
 python mini_data_mart.py
 python explore_mini_data_mart.py
 ```
 
-### Database not updating
-Delete the DB file and rebuild:
-```bash
-rm -f mini_data_mart.duckdb
-python mini_data_mart.py
-```
+### Binder error mentioning missing columns (e.g., `customer_id`)
+Your CSV columns do not match the expected Stage 2 names-based format.
+
+Fix:
+- Ensure `fact_sales.csv` includes `customer_name`, `product_name`, `order_date`, `quantity`, `unit_price`
+- Start from `fact_sales.template.csv`
 
 ---
 
-## Next enhancements
-- Add a synthetic-data generator script (to make the dataset reproducible)
-- Add basic tests (pytest) for build + export steps
-- Add a `requirements.txt` / `pyproject.toml` for reproducible installs
+## Next stage (idea)
+
+Stage 3 can add one or more of:
+- Multiple input CSVs (separate dimension CSVs + fact CSV)
+- Data quality checks (row counts, null checks, referential integrity checks)
+- Parameterized date ranges and richer analytics outputs
+- A simple CLI (e.g., `python -m mart build|explore|export`)

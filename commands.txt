@@ -32,7 +32,9 @@ source .venv/bin/activate             # Windows: .venv\Scripts\activate
 
 # 4. Repair or upgrade pip
 python -m ensurepip --upgrade
-python -m pip install --upgrade pip setuptools wheel
+
+# Now that pip exists, upgrade it to the latest version
+python -m pip install --upgrade pip
 
 # 5. Install requirements
 python -m pip install -r requirements.txt
@@ -142,6 +144,7 @@ source .venv/bin/activate
 
 4. Repair or upgrade pip
 python -m ensurepip --upgrade
+OR
 python -m pip install --upgrade pip setuptools wheel
 
 5. Install the requirements
@@ -150,16 +153,19 @@ or
 pip install --upgrade pip
 pip install -r requirements.txt
 
-6. Verify the correct interpreter is used
+6. Reinstalls a clean version of pip from the Python standard library
+python3 -m ensurepip --upgrade
+
+7. Verify the correct interpreter is used
 python --version
 python -c "import sys; print(sys.executable)"
 python -m pip --version
 
-7. Check sklearn version
+8. Check sklearn version
 which python
 python -c "import sklearn; print('sklearn', sklearn.__version__)"
 
-8. Remove the file (inside the directory)
+9. Remove the file (inside the directory)
 example 1: rm -f "artifacts/fake_news_tfidf_logreg.joblib"
 example 2: rm -f file/*
 
@@ -185,3 +191,30 @@ mv "source directory" "destination directory"
 
 15. Run local FastAPI
 uvicorn app.api:app --reload
+
+16. To re-create the .venv
+deactivate 2>/dev/null || true
+rm -rf .venv
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+python -m pip install --upgrade pip
+python -m pip install duckdb pandas numpy
+
+17. To verify
+python -m pip --version
+python -c "import duckdb, pandas, numpy; print('ok')"
+
+18. Repair pip inside the existing venv
+# confirm pip is missing
+python -m pip -V
+
+# install pip into the venv
+python -m ensurepip --upgrade
+
+# now upgrade pip tooling
+python -m pip install --upgrade pip setuptools wheel
+
+# install deps
+python -m pip install duckdb pandas numpy
