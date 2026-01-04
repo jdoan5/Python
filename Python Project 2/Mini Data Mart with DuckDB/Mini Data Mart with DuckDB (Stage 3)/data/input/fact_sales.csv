@@ -1,0 +1,15 @@
+sale_id,customer_name,region,product_name,category,order_date,quantity,unit_price
+1,Alice Regan,North,Laptop,Electronics,2025-01-01,1,1200.00
+2,Bobby Jamie,South,Desk Chair,Furniture,2025-01-02,2,300.00
+3,Jack Frank,North,Mouse,Electronics,2025-05-30,10,5
+4,Peter Nok,West,USB,Electronics,2025-02-15,100,0.99
+5,Jackson Bak,East,Energy Drink,Beverages,2025-03-11,200,2.99
+6,Steve Smith,East,Flash Light,Accessories,2025-05-30,50,10.00
+7,Jack Wick,Southwest,T-shirt (M),Cloths,2025-09-30,5,20.00
+8,Steve Smith,East,USB,Electronics,2025-12-30,500,0.99
+9,Thomas Edward,South,Name Tag,Supplies,2025-06-01,100,1.00
+10,Alice Regan,North,Pen,Supplies,2025-02-25,30,2.00
+11,Thomas Edward,South,Pen,Supplies,2025-03-01,100,2.00
+12, Lisa Winn, Northwest, Vaseline, Medicines,2025-04-01,60,10.00
+13, Mimie Smith, Southwest, Water Bottle, Beverages, 2025-05-01, 100, 1.50
+14, Amir Khan, East, Water Bottle, Beverages, 2025-06-01, 10, 1.50

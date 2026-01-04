@@ -7,6 +7,24 @@ When you update `fact_sales.csv`, you can rebuild the database and immediately s
 
 ---
 
+## Stage 2 pipeline (Mermaid)
+
+```mermaid
+flowchart TB
+  A[fact_sales.csv<br/>names-based input] --> B[mini_data_mart.py<br/>Build / ETL]
+  B --> C[DuckDB staging<br/>stg_sales]
+  C --> D[Build dimensions<br/>dim_customer / dim_product / dim_date]
+  D --> E[Load fact table<br/>fact_sales]
+  E --> F[mini_data_mart.duckdb<br/>Star schema ready]
+
+  F --> G[explore_mini_data_mart.py<br/>Analytics queries]
+  F --> H[inspect_duckdb.py<br/>Optional: quick schema check]
+  F --> I[export_to_csv.py / export_to_json.py<br/>Optional exports]
+  I --> J[data/CSV-export & data/JSON-export<br/>Generated outputs]
+```
+
+---
+
 ## What Stage 2 adds
 
 - **CSV-driven fact load** (and automatic dimension building)
@@ -42,9 +60,12 @@ Mini Data Mart with DuckDB (Stage 2)/
 ### Install (virtualenv recommended)
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
+
+python -m ensurepip --upgrade
 python -m pip install --upgrade pip
+
 pip install duckdb
 ```
 
@@ -90,7 +111,7 @@ order_date,customer_name,region,product_name,category,quantity,unit_price
   - `dim_product` from distinct `(product_name, category)`
   - `dim_date` from distinct `order_date`
 - It loads `fact_sales` by joining the staging rows to those dimensions
-- `sale_id` is generated automatically (row number) unless you include it yourself in an ID-based format
+- `sale_id` is generated automatically (row number)
 
 ---
 
@@ -99,19 +120,19 @@ order_date,customer_name,region,product_name,category,quantity,unit_price
 ### 1) Build (creates/rebuilds the DuckDB star schema)
 
 ```bash
-python mini_data_mart.py
+python3 mini_data_mart.py
 ```
 
 ### 2) Explore (run analytics queries)
 
 ```bash
-python explore_mini_data_mart.py
+python3 explore_mini_data_mart.py
 ```
 
 ### 3) Optional: Inspect database quickly
 
 ```bash
-python inspect_duckdb.py
+python3 inspect_duckdb.py
 ```
 
 ### 4) Optional: Export outputs
@@ -119,8 +140,8 @@ python inspect_duckdb.py
 If you have `export_to_csv.py` / `export_to_json.py` in the folder:
 
 ```bash
-python export_to_csv.py
-python export_to_json.py
+python3 export_to_csv.py
+python3 export_to_json.py
 ```
 
 If you prefer DuckDB-native exports, you can also do:
@@ -138,8 +159,9 @@ Use this when you want a “fresh start”:
 ```bash
 rm -f mini_data_mart.duckdb
 rm -rf data/CSV-export data/JSON-export
-python mini_data_mart.py
-python explore_mini_data_mart.py
+
+python3 mini_data_mart.py
+python3 explore_mini_data_mart.py
 ```
 
 Notes:
@@ -163,8 +185,8 @@ You ran the explore script before successfully building the database.
 Fix:
 
 ```bash
-python mini_data_mart.py
-python explore_mini_data_mart.py
+python3 mini_data_mart.py
+python3 explore_mini_data_mart.py
 ```
 
 ### Binder error mentioning missing columns (e.g., `customer_id`)
@@ -174,12 +196,13 @@ Fix:
 - Ensure `fact_sales.csv` includes `customer_name`, `product_name`, `order_date`, `quantity`, `unit_price`
 - Start from `fact_sales.template.csv`
 
----
+### `No module named pip` or `No module named duckdb`
+Your virtualenv is missing pip and/or packages.
 
-## Next stage (idea)
+Fix (inside the venv):
 
-Stage 3 can add one or more of:
-- Multiple input CSVs (separate dimension CSVs + fact CSV)
-- Data quality checks (row counts, null checks, referential integrity checks)
-- Parameterized date ranges and richer analytics outputs
-- A simple CLI (e.g., `python -m mart build|explore|export`)
+```bash
+python -m ensurepip --upgrade
+python -m pip install --upgrade pip
+pip install duckdb
+```
