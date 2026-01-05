@@ -1,11 +1,20 @@
-# Check the file path is true
-# if exists = false (connecting to a new, empty DB in a different folder)
+from __future__ import annotations
 
-import os, duckdb
+from mart.config import load_config
+from mart.build import build
+from mart.explore import explore
+from mart.export import export_all
+from mart.quality import run_checks
 
-print("Working dir:", os.getcwd())
-print("DB path:", os.path.abspath("mini_data_mart.duckdb"))
-print("Exists?", os.path.exists("mini_data_mart.duckdb"))
 
-con = duckdb.connect(os.path.abspath("mini_data_mart.duckdb"))
-con.execute("SHOW TABLES;").fetchdf()
+def main() -> int:
+    cfg = load_config()
+    build(cfg, reset=True)
+    explore(cfg)
+    export_all(cfg)
+    run_checks(cfg)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

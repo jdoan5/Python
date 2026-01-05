@@ -1,0 +1,39 @@
+{
+  "ts_utc": "2026-01-05T05:19:04.898889Z",
+  "db_path": "/Users/johndoan/Documents/GitHub/Python/Python Project 2/Mini Data Mart with DuckDB/Mini Data Mart with DuckDB (Stage 3)/mini_data_mart.duckdb",
+  "checks": [
+    {
+      "name": "row_counts",
+      "ok": true,
+      "details": {
+        "counts": {
+          "dim_customer": 11,
+          "dim_product": 11,
+          "dim_date": 12,
+          "fact_sales": 14
+        }
+      }
+    },
+    {
+      "name": "fact_nulls",
+      "ok": true,
+      "details": {
+        "null_customer_id": 0,
+        "null_product_id": 0,
+        "null_order_date": 0,
+        "null_quantity": 0,
+        "null_unit_price": 0
+      }
+    },
+    {
+      "name": "referential_integrity",
+      "ok": true,
+      "details": {
+        "missing_customer_fk": 0,
+        "missing_product_fk": 0,
+        "missing_date_fk": 0
+      }
+    }
+  ],
+  "ok": true
+}

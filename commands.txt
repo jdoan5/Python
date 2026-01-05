@@ -218,3 +218,15 @@ python -m pip install --upgrade pip setuptools wheel
 
 # install deps
 python -m pip install duckdb pandas numpy
+
+19. Show all files
+ls -R
+
+20. Show all files in a directory
+ls -R "directory name"
+
+21. Show all files in a directory (recursive)
+ls -Rah
+
+22. CLI help
+python -m mart -h
