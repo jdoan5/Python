@@ -1,0 +1,14 @@
+{"sale_id":1001,"customer_id":1,"product_id":10,"order_date":"2025-01-01","quantity":100,"unit_price":1200.0}
+{"sale_id":1002,"customer_id":1,"product_id":11,"order_date":"2025-01-05","quantity":333,"unit_price":200.0}
+{"sale_id":1009,"customer_id":3,"product_id":19,"order_date":"2025-01-08","quantity":100,"unit_price":1200.0}
+{"sale_id":1003,"customer_id":1,"product_id":12,"order_date":"2025-02-03","quantity":10,"unit_price":300.0}
+{"sale_id":1004,"customer_id":1,"product_id":11,"order_date":"2025-04-03","quantity":250,"unit_price":200.0}
+{"sale_id":1013,"customer_id":5,"product_id":15,"order_date":"2025-04-12","quantity":100,"unit_price":200.0}
+{"sale_id":1010,"customer_id":4,"product_id":14,"order_date":"2025-05-09","quantity":110,"unit_price":200.0}
+{"sale_id":1011,"customer_id":4,"product_id":12,"order_date":"2025-05-10","quantity":1110,"unit_price":300.0}
+{"sale_id":1005,"customer_id":2,"product_id":12,"order_date":"2025-06-04","quantity":1000,"unit_price":300.0}
+{"sale_id":1014,"customer_id":5,"product_id":12,"order_date":"2025-06-13","quantity":10,"unit_price":300.0}
+{"sale_id":1006,"customer_id":2,"product_id":15,"order_date":"2025-07-05","quantity":300,"unit_price":1200.0}
+{"sale_id":1007,"customer_id":3,"product_id":11,"order_date":"2025-08-06","quantity":1000,"unit_price":200.0}
+{"sale_id":1008,"customer_id":3,"product_id":18,"order_date":"2025-09-07","quantity":500,"unit_price":300.0}
+{"sale_id":1012,"customer_id":4,"product_id":10,"order_date":"2025-09-11","quantity":101,"unit_price":1200.0}

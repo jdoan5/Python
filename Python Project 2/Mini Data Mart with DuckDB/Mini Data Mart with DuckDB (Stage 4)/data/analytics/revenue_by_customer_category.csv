@@ -1,0 +1,12 @@
+customer_name,region,category,revenue
+Bob,South,Books,360000.0
+Dan,West,Furniture,355000.0
+Bob,South,Furniture,300000.0
+Alice,North,Electronics,236600.0
+Carol,East,Electronics,200000.0
+Carol,East,Books,150000.0
+Dan,West,Electronics,121200.0
+Carol,East,Food,120000.0
+Eve,North,Books,20000.0
+Eve,North,Furniture,3000.0
+Alice,North,Furniture,3000.0

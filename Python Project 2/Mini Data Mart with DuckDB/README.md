@@ -1,209 +1,255 @@
-# Mini Data Mart with DuckDB (Stages 1–3)
+# Mini Data Mart with DuckDB — Stage 4 (Multi-CSV + Optional UI)
 
-A staged data-platform learning project that builds a small **star-schema mini data mart** using **DuckDB + Python**.  
-Each stage adds one concrete capability: repeatable builds, analytics exploration, exports, and (next) data quality + richer inputs.
+Stage 4 extends Stage 3 by allowing **multiple input CSVs** (separate dimension CSVs + fact CSV), adding **stronger key-resolution rules**, and supporting an optional **UI layer** (Streamlit and/or a Tkinter desktop app).
 
-**Data source:** Synthetic / generated data for learning and demonstration (no real customer or production data).
-
----
-
-## What this project demonstrates
-
-- **Dimensional modeling (star schema):** `dim_customer`, `dim_product`, `dim_date` → `fact_sales`
-- **Repeatable local analytics:** DuckDB file on disk (`mini_data_mart.duckdb`)
-- **ETL patterns:** build step creates tables + loads data, explore step runs analytics queries
-- **Exports:** optional helpers write tables to `data/CSV-export/` and `data/JSON-export/`
+> **Data source:** Synthetic / generated data for learning and demonstration only (no real customer or production data).
 
 ---
 
-## Stages summary
+## What’s new in Stage 4 (vs Stage 3 / Stage 2 / Stage 1)
 
-### Stage 1 — Hardcoded seed data (baseline)
-**Goal:** Prove the end-to-end workflow with a small star schema.
-
-**What Stage 1 does**
-- Creates the star schema tables (`dim_*`, `fact_sales`)
-- Loads **seed data hardcoded in Python**
-- Runs sample analytics queries (via an explore script)
-- Optional exports to CSV/JSON
-
-**Key learning focus**
-- Schema design (facts vs. dimensions)
-- Joining fact → dims for analytics outputs
-- A clean, repeatable “build → explore → export” workflow
+- **Stage 1:** Hardcoded seed data inserted into DuckDB tables (dims + fact).
+- **Stage 2:** CSV-driven load (typically the fact table) so changing the CSV changes what gets loaded.
+- **Stage 3:** A simple **CLI** (`python -m mart ...`), plus **exports**, **analytics outputs**, and **quality checks**.
+- **Stage 4:** Multiple CSV inputs:
+  - `dim_customer.csv`, `dim_product.csv`, optional `dim_date.csv`, plus `fact_sales.csv`
+  - Build fails fast when keys cannot be resolved (unless you run in non-strict mode, if implemented)
 
 ---
 
-### Stage 2 — CSV-driven loads (fact table from CSV)
-**Goal:** Make the data mart respond to input changes without editing Python inserts.
-
-**What Stage 2 adds**
-- Loads **`fact_sales` from `fact_sales.csv`** (and optionally other inputs later)
-- Rebuilding the mart after editing CSV **updates DuckDB**
-- Adds simple validation patterns (e.g., required columns / referential checks)
-
-**Key learning focus**
-- Input-driven ETL (source files → staging → final tables)
-- Rebuildability and reproducibility
-- Separating “data” (CSV) from “logic” (ETL scripts)
-
----
-
-### Stage 3 — Next stage (planned)
-**Goal:** Move toward a more realistic “mini platform” workflow.
-
-Possible Stage 3 upgrades (pick 1–3 to start):
-- **Multiple input CSVs**: separate CSVs for dimensions + fact
-- **Data quality checks**:
-  - row counts
-  - null checks
-  - referential integrity checks
-  - duplicates / primary key checks
-- **Parameterized exploration**:
-  - date ranges
-  - richer analytic outputs
-- **Simple CLI wrapper**:
-  - `python -m mart build|explore|export|quality`
-- Optional: lightweight UI layer (Streamlit or Dash/Plotly)
-
----
-
-## Repository layout (recommended)
+## Folder layout (Stage 4)
 
 ```
-Mini Data Mart with DuckDB/
-├─ mini_data_mart.duckdb              # DuckDB database file (generated)
-├─ fact_sales.csv                     # Stage 2 input (source)
-├─ mini_data_mart.py                  # Build script (Stage 1/2)
-├─ explore_mini_data_mart.py          # Analytics exploration queries
-├─ export_to_csv.py                   # Optional export helper
-├─ export_to_json.py                  # Optional export helper
-├─ tools/
-│  └─ inspect_duckdb.py               # Utility script (optional)
-└─ data/
-   ├─ CSV-export/                     # Generated exports (optional)
-   ├─ JSON-export/                    # Generated exports (optional)
-   └─ quality/                        # Stage 3: generated quality reports
+<stage-4-root>/
+  mart/
+    __main__.py
+    build.py
+    explore.py
+    export.py
+    quality.py
+    config.py
+  ui/
+    streamlit_app.py
+  ui_desktop/
+    app_tk.py
+  data/
+    input/
+      dim_customer.csv
+      dim_product.csv
+      dim_date.csv        # optional (can be computed from fact)
+      fact_sales.csv
+    export/
+      CSV-export/
+      JSON-export/
+    analytics/
+    quality/
+  mini_data_mart.duckdb
 ```
+
+**Expected outputs**
+- `data/export/*` → written by `python -m mart export`
+- `data/analytics/*` → written by `python -m mart explore` (saved query outputs)
+- `data/quality/*` → optional logs/summaries written by `python -m mart quality`
+- `mini_data_mart.duckdb` → created by `python -m mart build`
 
 ---
 
-## How to run (general)
+## CSV schemas (choose ONE approach and stay consistent)
 
-### 1) Create and activate a virtual environment
+Your build step typically supports **ID-based** or **name-based** key resolution. Pick one pattern and use it consistently across dims + fact.
+
+### Option A: ID-based (recommended for “real” warehouse-style modeling)
+
+**dim_customer.csv**
+```csv
+customer_id,customer_name,region
+1,Alice Regan,North
+2,Bobby Jamie,South
+```
+
+**dim_product.csv**
+```csv
+product_id,product_name,category
+10,Laptop,Electronics
+12,Desk Chair,Furniture
+```
+
+**fact_sales.csv**
+```csv
+sale_id,customer_id,product_id,order_date,quantity,unit_price
+1001,1,10,2025-01-01,1,1200.00
+1002,2,12,2025-01-02,2,300.00
+```
+
+### Option B: Name-based (easy for learning; dims can be derived)
+
+If you prefer writing facts with business-friendly fields:
+
+**dim_customer.csv**
+```csv
+customer_name,region
+Alice Regan,North
+Bobby Jamie,South
+```
+
+**dim_product.csv**
+```csv
+product_name,category
+Laptop,Electronics
+Desk Chair,Furniture
+```
+
+**fact_sales.csv**
+```csv
+sale_id,customer_name,region,product_name,category,order_date,quantity,unit_price
+1,Alice Regan,North,Laptop,Electronics,2025-01-01,1,1200.00
+2,Bobby Jamie,South,Desk Chair,Furniture,2025-01-02,2,300.00
+```
+
+### Notes that prevent common build failures
+
+- **All CSVs must have a header row.**  
+  If you see: `Found: ['column0']` it usually means the file is missing headers (or was saved incorrectly).
+- Avoid leading/trailing spaces in headers and values (e.g., `" region"` vs `"region"`).
+- Dates should be `YYYY-MM-DD`.
+- If you remove `dim_date.csv`, the build may compute `dim_date` from the fact’s `order_date` (depending on implementation).
+
+---
+
+## Run from scratch (clean rebuild)
+
+Run these commands from the **Stage 4 root folder** (the folder that contains `mart/`).
+
+### 1) Activate venv and install dependencies
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python3 -m pip install --upgrade pip
-python3 -m pip install duckdb pandas numpy
+
+# If pip is missing:
+python -m ensurepip --upgrade
+
+python -m pip install --upgrade pip
+python -m pip install duckdb
+# Optional:
+python -m pip install streamlit
 ```
 
-### 2) Build the data mart
-```bash
-python3 mini_data_mart.py
-```
+### 2) Reset generated outputs (keep your input CSVs)
 
-### 3) Explore analytics
-```bash
-python3 explore_mini_data_mart.py
-```
-
-### 4) Optional exports
-```bash
-python3 export_to_csv.py
-python3 export_to_json.py
-```
-
-### 5) Optional inspection utility
-```bash
-python3 tools/inspect_duckdb.py
-```
-
----
-
-## Stage-specific run notes
-
-### Stage 1
-- Data is defined in `mini_data_mart.py` (hardcoded inserts).
-- If you want to add more rows, you update the Python inserts and rebuild:
-  ```bash
-  python3 mini_data_mart.py
-  python3 explore_mini_data_mart.py
-  ```
-
-### Stage 2
-- `fact_sales.csv` is the **source of truth** for the fact table.
-- After editing `fact_sales.csv`, rebuild:
-  ```bash
-  python3 mini_data_mart.py
-  python3 explore_mini_data_mart.py
-  ```
-- The database will only reflect CSV changes **after** the build step reloads the data.
-
----
-
-## Reset and rebuild from scratch
-
-Use this when you want a clean rebuild:
 ```bash
 rm -f mini_data_mart.duckdb
-rm -rf data/CSV-export data/JSON-export data/quality
-python3 mini_data_mart.py
-python3 explore_mini_data_mart.py
+rm -rf data/export/CSV-export data/export/JSON-export
+rm -rf data/analytics data/quality
 ```
 
----
+### 3) Build → quality → explore → export
 
-## Common pitfalls and fixes
-
-### “ModuleNotFoundError: No module named 'duckdb'”
-You’re running Python outside your venv or pip isn’t installed in that environment.
-
-Fix:
 ```bash
-source .venv/bin/activate
-python3 -m pip install duckdb pandas numpy
-python3 -c "import duckdb; print(duckdb.__version__)"
+python -m mart build
+python -m mart quality
+python -m mart explore
+python -m mart export
 ```
 
-### “pip: No module named pip”
-Your venv was created without pip. Recreate venv:
+If your build supports a non-strict mode (so unresolved rows are dropped instead of failing), use the flag defined in your Stage 4 CLI/build script.
+
+---
+
+## UI options
+
+### Streamlit (browser UI)
+
+If `streamlit` is not found, install it in your venv:
+
 ```bash
-deactivate 2>/dev/null || true
-rm -rf .venv
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m ensurepip --upgrade
-python3 -m pip install --upgrade pip
+python -m pip install streamlit
+```
+
+Run Streamlit from the project root:
+
+```bash
+python -m streamlit run ui/streamlit_app.py
+```
+
+### Tkinter (desktop app)
+
+Tkinter is part of the Python standard library. The most common error is:
+
+`ModuleNotFoundError: No module named 'mart'`
+
+Fix by running from the **project root** and setting `PYTHONPATH`:
+
+```bash
+PYTHONPATH=. python ui_desktop/app_tk.py
+```
+
+(Alternative: make `ui_desktop/` a package and run `python -m ui_desktop.app_tk`.)
+
+---
+
+## Mermaid flowchart
+
+```mermaid
+flowchart TD
+  %% Stage 4 — Multi-CSV inputs + DuckDB mart + CLI steps + optional UI
+
+  CLI["python -m mart (CLI)"]
+
+  subgraph Inputs["Inputs (data/input)"]
+    A1["dim_customer.csv"]
+    A2["dim_product.csv"]
+    A3["dim_date.csv (optional)"]
+    A4["fact_sales.csv"]
+  end
+
+  B["mart/build.py (build)"]
+  C[(mini_data_mart.duckdb)]
+
+  CLI -->|build| B
+  A1 -->|read| B
+  A2 -->|read| B
+  A3 -.->|read optional| B
+  A4 -->|read| B
+  B -->|write| C
+
+  Q["mart/quality.py (quality checks)"]
+  QO["data/quality/* (reports)"]
+  CLI -->|quality| Q
+  C -->|read| Q
+  Q -->|write| QO
+
+  E["mart/explore.py (analytics queries)"]
+  EO["data/analytics/* (query outputs)"]
+  CLI -->|explore| E
+  C -->|read| E
+  E -->|write| EO
+
+  X["mart/export.py (export tables)"]
+  XO["data/export/CSV-export + JSON-export"]
+  CLI -->|export| X
+  C -->|read| X
+  X -->|write| XO
+
+  U["ui/streamlit_app.py (optional UI)"]
+  C -->|UI reads DB| U
 ```
 
 ---
 
-## Screenshots to capture (portfolio-friendly)
+## Troubleshooting
 
-### Stage 1
-- Star schema / workflow diagram
-- DuckDB tables created (`SHOW TABLES`)
-- Example analytics output query result
-- Export output folders (`data/CSV-export`, `data/JSON-export`)
+### `python -m mart ui` fails
+The Stage 4 CLI subcommands are typically:
+- `build`, `quality`, `explore`, `export`
 
-### Stage 2
-- `fact_sales.csv` shown as the new input source
-- Build run output indicating CSV load succeeded
-- Table verification after build (counts / sample rows)
-- “Before vs after” query output after editing the CSV
-- Export output updated after rebuild
+UI is launched separately (Streamlit/Tkinter), not via the CLI unless you explicitly add a `ui` subcommand.
 
-### Stage 3 (future)
-- Quality report output (JSON/CSV)
-- Referential integrity violations report (if any)
-- CLI command demo (`build`, `quality`, `explore`)
+### `zsh: command not found: #`
+This happens when you paste lines starting with `#` into the terminal. Paste only the commands, or put them into a `.sh` script.
 
----
-
-## Next enhancements (Stage 3+)
-- Dim CSVs + fact CSVs (full input-driven star schema)
-- Stronger data quality layer with artifacts written to `data/quality/`
-- Date-range parameterized analytics outputs
-- CLI wrapper (`python -m mart ...`)
-- Optional dashboard (Streamlit / Dash) for interactive exploration
+### Build errors: “unresolved dimension keys”
+This means **fact rows cannot be matched to dimensions**. Fix by:
+- Making sure `dim_customer.csv` and `dim_product.csv` contain the keys/names referenced by `fact_sales.csv`
+- Using one consistent approach (ID-based or name-based)
+- Removing `dim_date.csv` if your build can compute dates from the fact file
