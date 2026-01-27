@@ -1,0 +1,29 @@
+digraph EIP {
+  rankdir=LR;
+  splines=true;
+  node [fontname=Helvetica];
+  edge [fontname=Helvetica];
+  n1 [label="route\nid=news_route_v1", shape=box];
+  n2 [label="from\nid=source_kaggle", shape=oval];
+  n3 [label="transform\nid=clean_text", shape=box];
+  n4 [label="filter\nid=min_length_filter", shape=diamond];
+  n5 [label="transform\nid=strip_html", shape=box];
+  n6 [label="choice\nid=lang_router", shape=diamond];
+  n7 [label="when\nid=en_branch", shape=box];
+  n8 [label="transform\nid=tfidf_vectorize", shape=box];
+  n9 [label="to\nid=model_predict", shape=oval];
+  n10 [label="otherwise\nid=non_en_branch", shape=box];
+  n11 [label="to\nid=reject_non_en", shape=oval];
+  n12 [label="to\nid=sink_scored", shape=oval];
+  n1 -> n2 [label="uri=file:data/inbox/news.csv"];
+  n1 -> n3 [label="ref=normalize_text_fn"];
+  n1 -> n4 [label="condition=len(Text) >= 50"];
+  n4 -> n5 [label="ref=strip_html_fn"];
+  n1 -> n6;
+  n6 -> n7 [label="expression=lang == 'en'"];
+  n7 -> n8 [label="ref=tfidf_vectorizer"];
+  n7 -> n9 [label="uri=model:best_model.joblib"];
+  n6 -> n10;
+  n10 -> n11 [label="uri=file:data/rejected/non_en.csv"];
+  n1 -> n12 [label="uri=file:data/outbox/preds_scored.csv"];
+}

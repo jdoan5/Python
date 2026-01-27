@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Sample “EIP-like” XML for testing the Graphviz script.
+It’s intentionally simple and schema-agnostic:
+- <route> contains a <from>, then steps like <filter>, <transform>, <choice>, and <to>.
+- Attributes like id/uri/ref are included so your script can display them.
+Save as: sample_eip.xml
+-->
+<route id="news_route_v1" name="FakeNewsPipeline">
+  <from id="source_kaggle" uri="file:data/inbox/news.csv"/>
+
+  <transform id="clean_text" type="normalize" ref="normalize_text_fn"/>
+
+  <filter id="min_length_filter" condition="len(Text) >= 50">
+    <transform id="strip_html" type="strip_html" ref="strip_html_fn"/>
+  </filter>
+
+  <choice id="lang_router">
+    <when id="en_branch" expression="lang == 'en'">
+      <transform id="tfidf_vectorize" type="tfidf" ref="tfidf_vectorizer"/>
+      <to id="model_predict" uri="model:best_model.joblib"/>
+    </when>
+
+    <otherwise id="non_en_branch">
+      <to id="reject_non_en" uri="file:data/rejected/non_en.csv"/>
+    </otherwise>
+  </choice>
+
+  <to id="sink_scored" uri="file:data/outbox/preds_scored.csv"/>
+</route>
