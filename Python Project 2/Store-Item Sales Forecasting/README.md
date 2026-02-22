@@ -147,6 +147,3 @@ Typical columns (examples):
   - feature engineering (lags, rolling means, store/item effects)
 
 ---
-
-## License
-MIT
