@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Python.iml" filepath="$PROJECT_DIR$/.idea/Python.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ai-agents.iml" filepath="$PROJECT_DIR$/.idea/ai-agents.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/python-cli-skeleton.iml" filepath="$PROJECT_DIR$/.idea/python-cli-skeleton.iml" />
     </modules>
   </component>
 </project>
