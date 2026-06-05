@@ -29,6 +29,14 @@ apps/
   job_copilot/               Project B — job application copilot
   paper_digest/              Project C — arXiv research digest
 
+ui/                          Streamlit UI (one page per app)
+  home.py                    landing page with setup state + cost note
+  github_triage.py           Project A page
+  job_copilot.py             Project B page (Apply + History tabs)
+  paper_digest.py            Project C page
+
+streamlit_app.py             multi-page entrypoint (`streamlit run`)
+desktop.py                   PyWebView wrapper for a native macOS window
 tests/                       pytest unit tests
 ```
 
@@ -42,12 +50,44 @@ back as `tool_result`s. The system prompt is cached via
 ## Setup
 
 ```bash
-cd "Python Project 6 - AI Agents"
+cd "Python Project 6"
 python3 -m venv .venv
 source .venv/bin/activate
+
+# CLI only
 pip install -e .
+
+# CLI + Streamlit UI
+pip install -e ".[ui]"
+
+# CLI + Streamlit UI + PyWebView desktop wrapper
+pip install -e ".[desktop]"
+
 cp .env.example .env   # then add your ANTHROPIC_API_KEY
 ```
+
+## Run as a web app (Streamlit)
+
+One command launches all three agents behind a sidebar nav:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Opens `http://localhost:8501`. Each page is a standalone module under
+`ui/` and shares an API-key guard + result renderer in `ui/_common.py`.
+
+## Run as a desktop app (PyWebView)
+
+Wraps the Streamlit app in a native macOS window with its own dock icon:
+
+```bash
+python desktop.py
+```
+
+`desktop.py` finds a free local port, launches Streamlit headlessly,
+waits for it to come up, then opens a PyWebView window pointing at it.
+Closing the window kills the Streamlit process.
 
 ## Project A — GitHub Issue Triage Agent
 

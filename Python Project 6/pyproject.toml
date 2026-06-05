@@ -12,6 +12,15 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+ui = [
+    "streamlit>=1.36.0",
+    "pandas>=2.0.0",
+]
+desktop = [
+    "streamlit>=1.36.0",
+    "pandas>=2.0.0",
+    "pywebview>=5.0.0",
+]
 dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
@@ -22,6 +31,14 @@ dev = [
 github-triage = "apps.github_triage.cli:app"
 job-copilot = "apps.job_copilot.cli:app"
 paper-digest = "apps.paper_digest.cli:app"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["agent_core*", "apps*", "ui*"]
+exclude = ["tests*", "evals*", ".venv*"]
 
 [tool.ruff]
 line-length = 100
