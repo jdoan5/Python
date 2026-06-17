@@ -1,123 +1,69 @@
+"""Command-line entry point for the XML -> flow-diagram visualizer.
+
+Examples:
+    python main.py sample_eip.xml                 # write eip.dot
+    python main.py sample_eip.xml --render png    # also render an image
+    python main.py route.xml -o out.dot --render svg --rankdir TB
+
+Rendering uses the hybrid backend (Graphviz if installed, matplotlib
+otherwise). DOT generation has no dependencies beyond the standard library.
+"""
+
 from __future__ import annotations
 
-import xml.etree.ElementTree as ET
-from collections import defaultdict
+import argparse
+import sys
 from pathlib import Path
 
-def strip_ns(tag: str) -> str:
-    return tag.split("}", 1)[-1] if "}" in tag else tag
+from converter import XMLConversionError, xml_to_dot
 
-def node_label(elem: ET.Element) -> str:
-    tag = strip_ns(elem.tag)
 
-    # Useful attributes often found in route-style XML
-    for key in ("id", "name", "uri", "ref", "endpoint", "channel", "type"):
-        if key in elem.attrib and elem.attrib[key].strip():
-            return f"{tag}\\n{key}={elem.attrib[key].strip()}"
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Convert EIP-style XML into a flow diagram.")
+    parser.add_argument("xml", help="Path to the input XML file.")
+    parser.add_argument("-o", "--out", default="eip.dot", help="DOT output path (default: eip.dot).")
+    parser.add_argument(
+        "--rankdir", choices=["LR", "TB"], default="LR",
+        help="Layout direction: LR (left-right) or TB (top-bottom).",
+    )
+    parser.add_argument(
+        "--render", choices=["png", "svg"], default=None,
+        help="Also render an image next to the DOT file.",
+    )
+    args = parser.parse_args(argv)
 
-    # Try text content if it’s short
-    txt = (elem.text or "").strip()
-    if 0 < len(txt) <= 40:
-        return f"{tag}\\n{txt}"
+    xml_path = Path(args.xml)
+    if not xml_path.exists():
+        print(f"error: file not found: {xml_path}", file=sys.stderr)
+        return 1
 
-    return tag
+    try:
+        dot_text, graph = xml_to_dot(xml_path, rankdir=args.rankdir)
+    except XMLConversionError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
 
-def shape_for(tag: str) -> str:
-    # Basic EIP-ish heuristics (customize this mapping)
-    tag = tag.lower()
-    if tag in {"from", "inbound", "consumer", "source"}:
-        return "oval"
-    if tag in {"to", "outbound", "producer", "sink"}:
-        return "oval"
-    if "filter" in tag:
-        return "diamond"
-    if "choice" in tag or "router" in tag:
-        return "diamond"
-    if "transform" in tag or "map" in tag:
-        return "box"
-    if "split" in tag or "aggregate" in tag:
-        return "box3d"
-    return "box"
+    out_path = Path(args.out)
+    out_path.write_text(dot_text, encoding="utf-8")
+    print(f"Wrote DOT: {out_path}  ({graph.node_count} nodes, {graph.edge_count} edges)")
 
-def build_graph(root: ET.Element):
-    """
-    Returns:
-      nodes: dict[node_id -> (label, shape)]
-      edges: list[(src_id, dst_id, edge_label)]
-    """
-    nodes = {}
-    edges = []
+    if args.render:
+        from render import render
 
-    # assign unique IDs to elements
-    ids = {}
-    counter = 0
+        image_path = out_path.with_suffix(f".{args.render}")
+        try:
+            info = render(dot_text, graph, image_path, fmt=args.render)
+            print(info.message)
+        except Exception as e:
+            print(f"error: render failed: {e}", file=sys.stderr)
+            return 1
+    else:
+        print("Render with Graphviz:")
+        print(f"  dot -Tpng {out_path} -o {out_path.with_suffix('.png')}")
+        print("Or render in-app:  python gui_app.py")
 
-    def get_id(e: ET.Element) -> str:
-        nonlocal counter
-        if e not in ids:
-            counter += 1
-            ids[e] = f"n{counter}"
-        return ids[e]
+    return 0
 
-    def walk(parent: ET.Element):
-        parent_id = get_id(parent)
-        parent_tag = strip_ns(parent.tag)
-        nodes[parent_id] = (node_label(parent), shape_for(parent_tag))
-
-        children = list(parent)
-        for child in children:
-            child_id = get_id(child)
-            child_tag = strip_ns(child.tag)
-            nodes[child_id] = (node_label(child), shape_for(child_tag))
-
-            # Edge label: use common attributes if present (uri/ref/condition)
-            edge_label = ""
-            for k in ("uri", "ref", "when", "condition", "expression"):
-                if k in child.attrib:
-                    edge_label = f"{k}={child.attrib[k]}"
-                    break
-
-            edges.append((parent_id, child_id, edge_label))
-            walk(child)
-
-    walk(root)
-    return nodes, edges
-
-def to_dot(nodes, edges) -> str:
-    lines = [
-        "digraph EIP {",
-        "  rankdir=LR;",
-        "  splines=true;",
-        "  node [fontname=Helvetica];",
-        "  edge [fontname=Helvetica];",
-    ]
-
-    for nid, (label, shape) in nodes.items():
-        safe_label = label.replace('"', '\\"')
-        lines.append(f'  {nid} [label="{safe_label}", shape={shape}];')
-
-    for src, dst, elabel in edges:
-        if elabel:
-            safe_elabel = elabel.replace('"', '\\"')
-            lines.append(f'  {src} -> {dst} [label="{safe_elabel}"];')
-        else:
-            lines.append(f"  {src} -> {dst};")
-
-    lines.append("}")
-    return "\n".join(lines)
-
-def main(xml_path: str, dot_out: str = "eip.dot"):
-    tree = ET.parse(xml_path)
-    root = tree.getroot()
-
-    nodes, edges = build_graph(root)
-    dot = to_dot(nodes, edges)
-
-    Path(dot_out).write_text(dot, encoding="utf-8")
-    print(f"Wrote DOT: {dot_out}")
-    print("Render with:")
-    print(f"  dot -Tpng {dot_out} -o eip.png")
-    print(f"  dot -Tsvg {dot_out} -o eip.svg")
 
 if __name__ == "__main__":
-    main("sample_eip.xml")
+    raise SystemExit(main())

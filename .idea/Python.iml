@@ -5,6 +5,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
       <excludeFolder url="file://$MODULE_DIR$/Python Project 2/Customer Churn Prediction/.venv" />
       <excludeFolder url="file://$MODULE_DIR$/Python Project 3/Fake News Learning with Machine Learning/Fake News Learning with Machine Learning (Stage 1)/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/Python Project 4/XML Visualization/.venv" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9 (Python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

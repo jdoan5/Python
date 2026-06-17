@@ -9,10 +9,10 @@ digraph EIP {
   n4 [label="filter\nid=min_length_filter", shape=diamond];
   n5 [label="transform\nid=strip_html", shape=box];
   n6 [label="choice\nid=lang_router", shape=diamond];
-  n7 [label="when\nid=en_branch", shape=box];
+  n7 [label="when\nid=en_branch", shape=diamond];
   n8 [label="transform\nid=tfidf_vectorize", shape=box];
   n9 [label="to\nid=model_predict", shape=oval];
-  n10 [label="otherwise\nid=non_en_branch", shape=box];
+  n10 [label="otherwise\nid=non_en_branch", shape=diamond];
   n11 [label="to\nid=reject_non_en", shape=oval];
   n12 [label="to\nid=sink_scored", shape=oval];
   n1 -> n2 [label="uri=file:data/inbox/news.csv"];
