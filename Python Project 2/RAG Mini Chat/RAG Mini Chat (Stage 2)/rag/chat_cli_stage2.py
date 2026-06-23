@@ -11,7 +11,7 @@ from retrieval import answer_question
 
 
 def main() -> None:
-    print("RAG Mini Chat (Stage 2)")
+    print("RAG Mini Chat(Stage 2)")
     print("Ask questions about the documents in data/source.")
     print("Type 'exit', 'quit', or 'q' to leave.\n")
 

@@ -32,7 +32,7 @@ def main():
     cfg = load_config()
     session_id = datetime.datetime.now().strftime("rag3_%Y%m%d_%H%M%S")
 
-    print("RAG Mini Chat (Stage 3)")
+    print("RAG Mini Chat(Stage 3)")
     print("Ask questions about the documents in data/source.")
     print("Commands: :config, :quit")
     print()
