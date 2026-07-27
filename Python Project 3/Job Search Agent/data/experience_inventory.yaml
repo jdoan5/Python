@@ -1,0 +1,87 @@
+# Your canonical experience inventory — the single source of truth the agent
+# retrieves against. REPLACE these sample entries with your real experience.
+#
+# Rules that make retrieval work well:
+#   - One achievement/skill per entry, written as a complete sentence.
+#   - Include real metrics where you have them (the drafter may only use
+#     metrics that appear here — it cannot invent numbers).
+#   - `tags` are extra retrieval keywords: tech names, synonyms, acronyms.
+#   - `id` must be unique; short slugs work best.
+#   - `kind`: achievement | skill | project | education
+
+entries:
+  - id: ats-pipeline
+    kind: project
+    context: "Personal project, 2025"
+    text: >
+      Built an ATS resume-tailoring pipeline in Node.js that parses job
+      descriptions, scores keyword coverage against a resume, and generates
+      ATS-safe formatted output.
+    tags: [node, nodejs, javascript, ats, resume, parsing, automation]
+
+  - id: agents-portfolio
+    kind: project
+    context: "Personal project, 2026"
+    text: >
+      Designed and shipped three Claude-powered agents (GitHub issue triage,
+      job application copilot, arXiv research digest) on a shared tool-use
+      loop with prompt caching, structured outputs, and an LLM-as-judge eval
+      harness; 17 unit tests.
+    tags: [python, llm, anthropic, claude, agents, tool-use, rag, evals, streamlit]
+
+  - id: churn-model
+    kind: project
+    context: "Personal project, 2024"
+    text: >
+      Trained a customer churn classifier with TF-IDF and logistic regression
+      on a synthetic automotive dataset, exposing train/predict CLIs for
+      scoring CSV files.
+    tags: [python, scikit-learn, sklearn, tfidf, classification, ml, pandas]
+
+  - id: fastapi-service
+    kind: project
+    context: "Personal project, 2025"
+    text: >
+      Deployed a production-style FastAPI service with app-factory pattern,
+      versioned routers, environment-based settings, centralized error
+      handling, and a /score_customer model-serving endpoint.
+    tags: [python, fastapi, rest, api, deployment, uvicorn, pydantic]
+
+  - id: xml-visualizer
+    kind: project
+    context: "Personal project, 2026"
+    text: >
+      Built a cross-platform desktop app (Tkinter) that converts EIP-style XML
+      into flow diagrams, with a hybrid Graphviz/matplotlib rendering backend
+      and PyInstaller packaging for macOS and Windows.
+    tags: [python, tkinter, graphviz, matplotlib, desktop, xml, packaging]
+
+  - id: dashboards
+    kind: achievement
+    context: "Personal project, 2024"
+    text: >
+      Cleaned and reshaped NYC baby-name public data and built a Looker Studio
+      dashboard tracking naming trends labeled New/Rising/Falling/Stable.
+    tags: [data-cleaning, looker, dashboard, visualization, pandas, etl]
+
+  - id: python-core
+    kind: skill
+    text: >
+      Python: 4+ years across CLI tools, GUIs (Tkinter), APIs (FastAPI),
+      ML pipelines (scikit-learn), LLM agents (Anthropic SDK), and pytest
+      test suites.
+    tags: [python, pytest, cli, typer]
+
+  - id: sql-sqlite
+    kind: skill
+    text: >
+      SQL with SQLite and Postgres basics: schema design, validated inserts,
+      aggregate reporting queries for application-tracking tooling.
+    tags: [sql, sqlite, postgres, database]
+
+  - id: git-workflow
+    kind: skill
+    text: >
+      Git/GitHub daily driver: feature branches, PR review flow, worktrees,
+      GitHub Desktop and CLI.
+    tags: [git, github, version-control, pr]
