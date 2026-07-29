@@ -295,7 +295,10 @@ def save_draft(
 ) -> Path:
     """Write the approved draft as markdown + a JSON sidecar. Only called post-approval."""
     result_dir.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    # Microseconds close the same-second collision window between processes
+    # (e.g. CLI and web UI approving simultaneously); the probe loop below
+    # remains as a second line of defense.
+    stamp = datetime.now().strftime("%Y-%m-%d_%H%M%S_%f")
     safe_company = "".join(c if c.isalnum() or c in "-_" else "_" for c in requirements.company)[:40]
     base = result_dir / f"{stamp}_{safe_company or 'unknown'}"
     # Same-second saves must never clobber an earlier draft.

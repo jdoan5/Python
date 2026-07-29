@@ -107,6 +107,13 @@ def test_load_inventory_missing_file(tmp_path: Path) -> None:
         load_inventory(tmp_path / "nope.yaml")
 
 
+def test_load_inventory_directory_path(tmp_path: Path) -> None:
+    # A directory (e.g. a blanked-out path field resolving to cwd) must raise
+    # InventoryError, not IsADirectoryError.
+    with pytest.raises(InventoryError, match="not found"):
+        load_inventory(tmp_path)
+
+
 def test_load_inventory_missing_text(tmp_path: Path) -> None:
     f = tmp_path / "inv.yaml"
     f.write_text("entries:\n  - id: x\n", encoding="utf-8")

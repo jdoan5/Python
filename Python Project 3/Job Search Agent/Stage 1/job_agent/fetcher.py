@@ -112,6 +112,10 @@ def fetch_posting(url: str) -> str:
         ) from e
     except httpx.HTTPError as e:
         raise FetchError(f"Network error fetching {current}: {e}") from e
+    except (httpx.InvalidURL, UnicodeError, ValueError) as e:
+        # Malformed URLs (bad ports, invalid IDNA hosts) raise outside the
+        # HTTPError hierarchy — normalize them into the FetchError contract.
+        raise FetchError(f"Invalid URL {current!r}: {e}") from e
 
     text = html_to_text(raw)
     if len(text) < 200:

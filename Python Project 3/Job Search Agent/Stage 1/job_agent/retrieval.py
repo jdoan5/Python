@@ -110,16 +110,16 @@ class Bm25Index:
 
 def load_inventory(path: Path) -> List[InventoryEntry]:
     """Load and validate the YAML experience inventory."""
-    if not path.exists():
+    if not path.is_file():
         raise InventoryError(
-            f"Inventory not found: {path}\n"
+            f"Inventory not found (or not a file): {path}\n"
             "Copy data/experience_inventory.yaml, fill in YOUR real experience, "
             "and point --inventory at it."
         )
     try:
         raw = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except yaml.YAMLError as e:
-        raise InventoryError(f"Invalid YAML in {path}: {e}") from e
+    except (yaml.YAMLError, OSError) as e:
+        raise InventoryError(f"Cannot read inventory {path}: {e}") from e
 
     if not isinstance(raw, dict) or not isinstance(raw.get("entries"), list):
         raise InventoryError(f"{path} must have a top-level 'entries:' list.")

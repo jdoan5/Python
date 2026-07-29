@@ -44,3 +44,12 @@ def test_html_to_text_strips_unterminated_script() -> None:
     text = html_to_text(raw)
     assert "Real job text" in text
     assert "secret" not in text
+
+
+def test_fetch_malformed_url_raises_fetch_error() -> None:
+    # Bad ports / invalid hosts raise outside httpx.HTTPError — they must
+    # still surface as FetchError, never a raw ValueError/InvalidURL.
+    with pytest.raises(FetchError):
+        fetch_posting("http://example.com:99999/")  # port out of range
+    with pytest.raises(FetchError):
+        fetch_posting("http://exa mple.com/job")    # space in host
