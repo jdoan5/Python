@@ -1,0 +1,23 @@
+.venv/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.env
+**/.env.*
+.DS_Store
+**/.DS_Store
+*.egg-info/
+**/*.egg-info/
+Stage 1/output/
+*.db
+**/*.db
+.git/
+# Personal data never ships in the image — mount it at /data/inventory.yaml.
+Stage 1/data/experience_inventory.yaml
+# Terraform state/providers must never enter the build context: tfstate can
+# hold sensitive values, and .terraform/ alone is ~750MB of providers.
+Stage 5/
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars

@@ -1,0 +1,8 @@
+# Copy to terraform.tfvars and adjust if needed. Defaults are sensible;
+# NEVER put secret values here — secrets are set via the AWS CLI (see README).
+
+aws_region = "us-east-1"
+app_name   = "job-search-agent"
+image_tag  = "latest"
+cpu        = "1024"   # 1 vCPU
+memory     = "2048"   # 2 GB

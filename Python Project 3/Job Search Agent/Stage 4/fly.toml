@@ -1,0 +1,44 @@
+# Fly.io deployment config for the Job Search Agent portal.
+#
+# One-time setup (from the project root):
+#   brew install flyctl
+#   fly auth signup                       # or: fly auth login
+#   fly launch --config "Stage 4/fly.toml" --dockerfile "Stage 4/Dockerfile" --no-deploy
+#   fly volumes create job_agent_data --size 1 --region iad
+#   fly secrets set ANTHROPIC_API_KEY=sk-ant-... APP_PASSWORD=choose-a-password
+#
+# Deploy (and every update):
+#   fly deploy --config "Stage 4/fly.toml" --dockerfile "Stage 4/Dockerfile"
+#
+# `app` must be globally unique — fly launch will offer to rename it.
+
+app = "job-search-agent"
+primary_region = "iad"   # US East, matches your AWS region choice
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 8501
+  force_https = true
+  auto_stop_machines = "stop"    # scale to zero when idle — near-free hosting
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[mounts]]
+  source = "job_agent_data"
+  destination = "/data"
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
+
+[checks]
+  [checks.health]
+    type = "http"
+    port = 8501
+    path = "/_stcore/health"
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "30s"

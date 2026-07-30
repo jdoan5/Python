@@ -42,8 +42,11 @@ from job_agent.pipeline import (
 from job_agent.retrieval import Bm25Index, InventoryError, load_inventory
 
 STAGE1_ROOT = Path(__file__).resolve().parent.parent / "Stage 1"
-DEFAULT_INVENTORY = STAGE1_ROOT / "data" / "experience_inventory.yaml"
-DEFAULT_OUTPUT = STAGE1_ROOT / "output"
+# Env overrides let a container point these at a mounted volume (Stage 4).
+DEFAULT_INVENTORY = Path(
+    os.environ.get("JOB_AGENT_INVENTORY", str(STAGE1_ROOT / "data" / "experience_inventory.yaml"))
+)
+DEFAULT_OUTPUT = Path(os.environ.get("JOB_AGENT_OUTPUT_DIR", str(STAGE1_ROOT / "output")))
 
 # Markdown specials that must be neutralized in model/posting-derived text.
 _MD_SPECIALS = "\\`*_{}[]()#!|~$<>"
@@ -54,7 +57,11 @@ def esc(text: object) -> str:
     return "".join("\\" + ch if ch in _MD_SPECIALS else ch for ch in str(text))
 
 
-st.set_page_config(page_title="Job Search Agent", page_icon="J", layout="wide")
+# Standalone: `streamlit run` executes this file with __name__ == "__main__".
+# Mounted as a page in the Stage 4 portal, Streamlit sets __name__ to
+# "__page__" and the portal owns the page config, so skip it here.
+if __name__ == "__main__":
+    st.set_page_config(page_title="Job Search Agent", page_icon="J", layout="wide")
 
 
 # ----- sidebar: configuration ------------------------------------------------
@@ -76,7 +83,10 @@ with st.sidebar:
         st.success("API key loaded")
     else:
         st.error("ANTHROPIC_API_KEY missing")
-        st.caption("Add it to `.env` in the project root, then restart the app.")
+        st.caption(
+            "Set the ANTHROPIC_API_KEY environment variable "
+            "(running locally: add it to `.env` in the project root), then restart."
+        )
 
     try:
         _entries_preview = load_inventory(inventory_path)

@@ -1,0 +1,8 @@
+# .terraform.lock.hcl is deliberately NOT ignored: committing the provider
+# lock file pins provider versions/hashes (supply-chain protection).
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
