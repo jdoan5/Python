@@ -1,1 +1,42 @@
+# ---- Secrets: never commit these ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+aws_credentials
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Virtual environments (all the common names)
+venv/
+.venv/
+env/
+ENV/
+
+# ---- Terraform ----
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform.tfstate.lock.info
+crash.log
+# NOTE: .terraform.lock.hcl is intentionally NOT ignored — committing it
+# pins provider versions and checksums (supply-chain protection).
+
+# ---- Local data / build artifacts ----
+*.db
+*.sqlite3
+build/
+dist/
+
+# ---- OS / editor ----
 .DS_Store
+Thumbs.db
