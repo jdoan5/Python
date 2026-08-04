@@ -1,0 +1,32 @@
+AI/Python Engineer — Applied AI Platform
+Northwind Data Systems · Remote (US)
+
+About the role
+We are hiring a Python engineer to build and ship LLM-powered features on our
+applied AI platform. You will own services end to end: retrieval, model
+integration, the APIs that expose them, and the tests that keep them honest.
+
+What you'll do
+- Build LLM-backed features using tool use / function calling, with retrieval
+  over an internal knowledge base (RAG).
+- Design and ship REST APIs in Python (FastAPI) with typed request/response
+  models and generated OpenAPI documentation.
+- Write evaluation harnesses so model changes are measured, not guessed —
+  regression suites, scoring, and reproducible run artifacts.
+- Work with SQL databases for application state and analytics queries.
+- Keep everything tested (pytest) and reviewed through Git/GitHub pull requests.
+
+Requirements
+- Strong Python: packaging, CLIs, and unit testing with pytest.
+- Hands-on experience integrating an LLM API (Anthropic Claude, OpenAI, or
+  similar), including structured output and tool-use loops.
+- Practical retrieval / RAG experience — chunking, ranking, and grounding
+  responses in retrieved context.
+- REST API development with FastAPI or an equivalent framework.
+- SQL (SQLite/Postgres) for querying and persistence.
+- Comfortable with Git-based collaboration and code review.
+
+Nice to have
+- Machine learning fundamentals: scikit-learn, TF-IDF, classification metrics.
+- Data cleaning and dashboarding/visualization experience.
+- Experience deploying containerized services.
