@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}History — Calorie Tracker{% endblock %}
+{% block content %}
+
+<div class="card">
+    <h2 style="margin-top:0; display:flex; justify-content:space-between; align-items:baseline;">
+        Daily history
+        <a class="day-link" style="font-size:.85rem; font-weight:normal;"
+           href="{% url 'meals:export_csv' %}">Download CSV</a>
+    </h2>
+    {% if days %}
+        {# The chart reads the same /api/meals/summary/ endpoint scripts use —
+           the page is now just another API client (session-authenticated). #}
+        <canvas id="trend" height="90" style="margin-bottom:1rem;"></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+        <script>
+        fetch("/api/meals/summary/", {credentials: "same-origin"})
+            .then(r => {
+                if (!r.ok) throw new Error("summary failed: " + r.status);
+                return r.json();
+            })
+            .then(rows => {
+                new Chart(document.getElementById("trend"), {
+                    type: "bar",
+                    data: {
+                        labels: rows.map(r => r.day),
+                        datasets: [{ label: "kcal / day (last 30 days with data)", data: rows.map(r => r.total),
+                                     backgroundColor: "#c89666" }],
+                    },
+                    options: { plugins: { legend: { display: false } },
+                               scales: { y: { beginAtZero: true } } },
+                });
+            })
+            /* Expired session (403) or CDN failure: hide the canvas instead of
+               a console-only TypeError and a mystery blank gap. */
+            .catch(() => { document.getElementById("trend").style.display = "none"; });
+        </script>
+        <table>
+            <thead><tr><th>Date</th><th class="num">Meals</th><th class="num">Total kcal</th></tr></thead>
+            <tbody>
+            {% for d in days %}
+                <tr>
+                    <td><a class="day-link" href="{% url 'meals:day_detail' d.day|date:'Y-m-d' %}">{{ d.day|date:"D, M j, Y" }}</a></td>
+                    <td class="num">{{ d.count }}</td>
+                    <td class="num">{{ d.total }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if is_paginated %}
+            <p class="muted">
+                {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Newer</a>{% endif %}
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Older</a>{% endif %}
+            </p>
+        {% endif %}
+    {% else %}
+        <p class="muted">No history yet. Log meals on the Today page, or run
+            <code>python manage.py seed_meals --username {{ user.username }}</code> for demo data.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

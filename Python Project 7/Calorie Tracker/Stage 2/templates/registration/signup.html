@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Sign up — Calorie Tracker{% endblock %}
+{% block content %}
+
+<div class="card" style="max-width:420px; margin:2rem auto;">
+    <h2 style="margin-top:0">Create an account</h2>
+    <form method="post" class="meal-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Sign up</button>
+    </form>
+    <p class="muted" style="margin-bottom:0">
+        Already registered? <a class="day-link" href="{% url 'login' %}">Sign in</a>
+    </p>
+</div>
+
+{% endblock %}

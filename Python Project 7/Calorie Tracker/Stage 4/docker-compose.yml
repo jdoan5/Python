@@ -1,0 +1,44 @@
+# Production-like local run: Django (gunicorn, prod settings) + Postgres.
+#
+#   cd "Stage 4"
+#   DJANGO_SECRET_KEY=$(python3 -c 'import secrets;print(secrets.token_urlsafe(50))') \
+#     docker compose up --build
+#
+# Then http://127.0.0.1:8000 — sign up and use the app backed by Postgres.
+# Meal data persists in the pgdata volume across rebuilds.
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: calorie_tracker
+      POSTGRES_USER: tracker
+      # Local-compose password; real deployments use managed-DB credentials
+      # via DATABASE_URL, never this file.
+      POSTGRES_PASSWORD: local-dev-only
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tracker -d calorie_tracker"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build: .
+    ports:
+      # Loopback only, same policy as the Job Search Agent compose.
+      - "127.0.0.1:8000:8000"
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?generate one and export it (see header comment)}
+      DATABASE_URL: postgres://tracker:local-dev-only@db:5432/calorie_tracker
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      # No TLS locally, so no SSL redirect; secure cookies stay on, which
+      # modern browsers accept for localhost.
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+    name: calorie_tracker_pgdata

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Today — Calorie Tracker{% endblock %}
+{% block content %}
+
+<div class="card">
+    <h2 style="margin-top:0">Today · {{ today }}</h2>
+    <p style="display:flex; justify-content:space-between; margin:.3rem 0;">
+        <span><strong>{{ total }}</strong> / {{ goal }} kcal</span>
+        <span class="muted">{{ percent }}% of daily goal</span>
+    </p>
+    <div class="progress{% if over_goal %} over{% endif %}">
+        <div style="width: {{ percent }}%"></div>
+    </div>
+    {% if over_goal %}
+        {# arithmetic belongs in the view — templates only display `over_by` #}
+        <p class="muted" style="color:#b3502d">Over goal by {{ over_by }} kcal — tomorrow is a new day.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3 style="margin-top:0">Log a meal</h3>
+    {# form.as_p renders each field wrapped in <p>; errors appear inline. #}
+    <form method="post" class="meal-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add meal</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3 style="margin-top:0">Meals today</h3>
+    {% if meals %}
+        <table>
+            <thead><tr><th>Meal</th><th>Type</th><th class="num">kcal</th><th>Time</th></tr></thead>
+            <tbody>
+            {% for meal in meals %}
+                <tr>
+                    <td>{{ meal.name }}</td>
+                    <td>{{ meal.get_meal_type_display }}</td>
+                    <td class="num">{{ meal.calories }}</td>
+                    <td class="muted">{{ meal.eaten_at|time:"g:i A" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="muted">Nothing logged yet — add your first meal above.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

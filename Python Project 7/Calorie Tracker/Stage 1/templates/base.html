@@ -1,0 +1,52 @@
+{# Base template: every page extends this and fills the `content` block. #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Calorie Tracker{% endblock %}</title>
+    <style>
+        :root { --brand:#2d545e; --accent:#c89666; --bg:#f6f5f2; --card:#fff; --text:#20323a; }
+        * { box-sizing: border-box; }
+        body { margin:0; font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+               background:var(--bg); color:var(--text); }
+        header { background:var(--brand); color:#fff; padding:.9rem 1.2rem;
+                 display:flex; gap:1.2rem; align-items:baseline; }
+        header h1 { font-size:1.05rem; margin:0; }
+        header a { color:#dff0f5; text-decoration:none; font-size:.92rem; }
+        header a:hover { text-decoration:underline; }
+        main { max-width: 760px; margin: 1.4rem auto; padding: 0 1rem; }
+        .card { background:var(--card); border:1px solid #ddd; border-radius:10px;
+                padding:1rem 1.2rem; margin-bottom:1rem; }
+        table { width:100%; border-collapse:collapse; }
+        th, td { text-align:left; padding:.45rem .5rem; border-bottom:1px solid #eee; font-size:.95rem; }
+        .num { text-align:right; font-variant-numeric: tabular-nums; }
+        .progress { background:#e8e4dc; border-radius:999px; height:14px; overflow:hidden; }
+        .progress > div { height:100%; background:var(--accent); }
+        .progress.over > div { background:#b3502d; }
+        .muted { color:#6b7b81; font-size:.88rem; }
+        form.meal-form p { margin:.5rem 0; }
+        form.meal-form label { display:block; font-size:.85rem; margin-bottom:.15rem; }
+        form.meal-form input, form.meal-form select, form.meal-form textarea {
+            width:100%; padding:.45rem; border:1px solid #ccc; border-radius:6px; font:inherit; }
+        button { background:var(--brand); color:#fff; border:0; border-radius:6px;
+                 padding:.55rem 1rem; font:inherit; cursor:pointer; }
+        button:hover { filter:brightness(1.1); }
+        .errorlist { color:#b3502d; margin:.2rem 0 0; padding-left:1.1rem; font-size:.85rem; }
+        a.day-link { color:var(--brand); }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Calorie Tracker</h1>
+    <nav>
+        <a href="{% url 'meals:today' %}">Today</a>
+        <a href="{% url 'meals:history' %}">History</a>
+        <a href="/admin/">Admin</a>
+    </nav>
+</header>
+<main>
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

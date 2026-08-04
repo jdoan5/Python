@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}History — Calorie Tracker{% endblock %}
+{% block content %}
+
+<div class="card">
+    <h2 style="margin-top:0">Daily history</h2>
+    {% if days %}
+        <table>
+            <thead><tr><th>Date</th><th class="num">Meals</th><th class="num">Total kcal</th></tr></thead>
+            <tbody>
+            {% for d in days %}
+                <tr>
+                    <td><a class="day-link" href="{% url 'meals:day_detail' d.day|date:'Y-m-d' %}">{{ d.day|date:"D, M j, Y" }}</a></td>
+                    <td class="num">{{ d.count }}</td>
+                    <td class="num">{{ d.total }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if is_paginated %}
+            <p class="muted">
+                {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Newer</a>{% endif %}
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Older</a>{% endif %}
+            </p>
+        {% endif %}
+    {% else %}
+        <p class="muted">No history yet. Log meals on the Today page, or run
+            <code>python manage.py seed_meals --username {{ user.username }}</code> for demo data.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
