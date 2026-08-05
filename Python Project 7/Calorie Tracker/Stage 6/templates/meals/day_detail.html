@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ day }} — Calorie Tracker{% endblock %}
+{% block content %}
+
+<div class="card">
+    <h2 style="margin-top:0">{{ day|date:"l, F j, Y" }}</h2>
+    <p><strong>{{ total }}</strong> kcal total · goal {{ goal }}</p>
+    <p class="muted"><a class="day-link" href="{% url 'meals:history' %}">&larr; Back to history</a></p>
+</div>
+
+<div class="card">
+    {% if meals %}
+        <table>
+            <thead><tr><th>Meal</th><th>Type</th><th class="num">kcal</th><th>Time</th><th>Notes</th></tr></thead>
+            <tbody>
+            {% for meal in meals %}
+                <tr>
+                    <td>{{ meal.name }}</td>
+                    <td>{{ meal.get_meal_type_display }}</td>
+                    <td class="num">{{ meal.calories }}</td>
+                    <td class="muted">{{ meal.eaten_at|time:"g:i A" }}</td>
+                    <td class="muted">{{ meal.notes|default:"—" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="muted">No meals logged on this date.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+meta {
+  name: Delete Meal
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/api/meals/{{mealId}}/
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Token {{token}}
+}
+
+assert {
+  res.status: eq 204
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Naive datetime rejected
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/meals/
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Token {{token}}
+}
+
+body:json {
+  {
+    "name": "No offset",
+    "meal_type": "snack",
+    "calories": 100,
+    "eaten_at": "2026-01-15T12:00:00"
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.eaten_at: isDefined
+}

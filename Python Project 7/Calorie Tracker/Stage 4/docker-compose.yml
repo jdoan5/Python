@@ -19,7 +19,10 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U tracker -d calorie_tracker"]
+      # -h forces TCP: postgres's first-boot initdb runs a TEMPORARY server on
+      # the unix socket only — socket pg_isready can report "healthy" moments
+      # before that temp server stops, starting web against a restarting DB.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U tracker -d calorie_tracker"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -33,8 +36,10 @@ services:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?generate one and export it (see header comment)}
       DATABASE_URL: postgres://tracker:local-dev-only@db:5432/calorie_tracker
       DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
-      # No TLS locally, so no SSL redirect; secure cookies stay on, which
-      # modern browsers accept for localhost.
+      # No TLS locally: skip the SSL redirect AND ship non-Secure cookies —
+      # Chrome/Firefox would accept Secure cookies on localhost, but Safari
+      # drops them over plain http, which silently breaks login.
+      DJANGO_SECURE_COOKIES: "0"
     depends_on:
       db:
         condition: service_healthy

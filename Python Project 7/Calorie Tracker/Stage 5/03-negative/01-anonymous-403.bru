@@ -1,0 +1,21 @@
+meta {
+  name: Anonymous request rejected
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/meals/
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 403
+}
+
+tests {
+  test("body is a clean JSON error, not an HTML page", function () {
+    expect(res.getBody()).to.have.property("detail");
+  });
+}

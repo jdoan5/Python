@@ -1,0 +1,20 @@
+meta {
+  name: Get Meal
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/meals/{{mealId}}/
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Token {{token}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.name: eq Bruno pho
+}

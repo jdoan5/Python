@@ -41,7 +41,8 @@ USER appuser
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=25s CMD \
-    python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/accounts/login/', timeout=4)"
+    python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz/', timeout=4)"
 
 ENTRYPOINT ["./entrypoint.sh"]
-CMD ["gunicorn", "config.wsgi", "--bind", "0.0.0.0:8000", "--workers", "2"]
+CMD ["gunicorn", "config.wsgi", "--bind", "0.0.0.0:8000", "--workers", "2", \
+     "--access-logfile", "-"]

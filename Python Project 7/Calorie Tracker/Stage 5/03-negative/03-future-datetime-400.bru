@@ -1,0 +1,33 @@
+meta {
+  name: Future meal rejected
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/meals/
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Token {{token}}
+}
+
+script:pre-request {
+  bru.setVar("futureAt", new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString());
+}
+
+body:json {
+  {
+    "name": "Tomorrow's lunch",
+    "meal_type": "lunch",
+    "calories": 500,
+    "eaten_at": "{{futureAt}}"
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.eaten_at: isDefined
+}

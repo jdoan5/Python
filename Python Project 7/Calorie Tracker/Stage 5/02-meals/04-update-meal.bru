@@ -1,0 +1,26 @@
+meta {
+  name: Update Meal (PATCH)
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/api/meals/{{mealId}}/
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Token {{token}}
+}
+
+body:json {
+  {
+    "calories": 610
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.calories: eq 610
+}

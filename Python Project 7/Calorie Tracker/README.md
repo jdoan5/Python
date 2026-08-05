@@ -19,5 +19,13 @@ against a calorie goal, and browse historical intake.
   Postgres via DATABASE_URL, WhiteNoise + gunicorn, hardened prod settings
   (clean `check --deploy`), Docker + compose with healthchecks. 44 tests.
 
-Each stage is a self-contained folder with its own venv and README, same as
-the other staged projects in this repo.
+- **Stage 5 (built)** — Bruno API collection: token-auth chaining, an
+  idempotent CRUD chain, negative tests — 21 assertions run headless via
+  `bru` CLI against the Stage 4 Docker stack.
+- **Stage 6 (built)** — serverless deploy: Django as a Vercel Python
+  function + Neon Postgres + CDN static files, $0/month. Deploy runbook in
+  the stage README (needs your Vercel/Neon accounts).
+
+Each stage is a self-contained folder with its own venv and README (Stage 5
+is a file-based API collection rather than an app copy), same as the other
+staged projects in this repo.

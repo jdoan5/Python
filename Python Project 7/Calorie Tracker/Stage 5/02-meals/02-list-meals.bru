@@ -1,0 +1,29 @@
+meta {
+  name: List Meals
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/meals/
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Token {{token}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.results: isDefined
+  res.body.count: gte 1
+}
+
+tests {
+  test("list is paginated (count/next/previous/results)", function () {
+    const body = res.getBody();
+    ["count", "next", "previous", "results"].forEach(k =>
+      expect(body).to.have.property(k));
+  });
+}

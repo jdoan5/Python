@@ -1,0 +1,32 @@
+meta {
+  name: Daily Summary
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/meals/summary/
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Token {{token}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("summary rows have day/total/count", function () {
+    const rows = res.getBody();
+    expect(rows).to.be.an("array").with.length.greaterThan(0);
+    ["day", "total", "count"].forEach(k =>
+      expect(rows[rows.length - 1]).to.have.property(k));
+  });
+  test("today's total includes the updated meal", function () {
+    const rows = res.getBody();
+    expect(rows[rows.length - 1].total).to.be.at.least(610);
+  });
+}

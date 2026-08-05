@@ -1,0 +1,33 @@
+meta {
+  name: Calorie bounds enforced
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/meals/
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Token {{token}}
+}
+
+script:pre-request {
+  bru.setVar("pastAt", new Date(Date.now() - 60 * 60 * 1000).toISOString());
+}
+
+body:json {
+  {
+    "name": "Impossible meal",
+    "meal_type": "snack",
+    "calories": 99999,
+    "eaten_at": "{{pastAt}}"
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.calories: isDefined
+}
