@@ -9,8 +9,8 @@
            href="{% url 'meals:export_csv' %}">Download CSV</a>
     </h2>
     {% if days %}
-        {# The chart reads the same /api/meals/summary/ endpoint scripts use —
-           the page is now just another API client (session-authenticated). #}
+        {# The chart reads the same /api/meals/summary/ endpoint scripts use — #}
+        {# the page is now just another API client (session-authenticated).   #}
         <canvas id="trend" height="90" style="margin-bottom:1rem;"></canvas>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
         <script>
