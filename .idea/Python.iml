@@ -12,6 +12,7 @@
       <excludeFolder url="file://$MODULE_DIR$/Python Project 7/Calorie Tracker/Stage 3/.venv" />
       <excludeFolder url="file://$MODULE_DIR$/Python Project 7/Calorie Tracker/Stage 4/.venv" />
       <excludeFolder url="file://$MODULE_DIR$/Python Project 7/Calorie Tracker/Stage 6/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/Python Project 3/Job Search Agent/Stage 5/.terraform" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9 (Python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

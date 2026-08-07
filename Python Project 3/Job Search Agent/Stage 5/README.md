@@ -107,11 +107,11 @@ terraform apply
 terraform output app_url
 ```
 
-Sign in with the password from step 4. Note the container ships **without
-your experience inventory** (personal data, dockerignored) — the tracker
-dashboard works immediately; the tailor page needs an inventory, which on
-AWS means either baking a sanitized sample into the image or treating
-Fly/local as the pipeline's home. See "Known limitation".
+Sign in with the password from step 4. The image bakes the **public sample
+inventory** (it is tracked in this repo) and the entrypoint seeds it to
+`/data/inventory.yaml` on first boot, so the tailor page works immediately
+on Fargate. A private inventory placed on a volume (Fly/local) is never
+overwritten. See "Known limitation" for state persistence.
 
 ## Updating the app
 

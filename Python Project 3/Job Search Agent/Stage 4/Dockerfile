@@ -10,10 +10,12 @@
 #     -v job_agent_data:/data \
 #     job-search-agent
 #
-# Everything mutable lives under /data (drafts, tracker DB, your real
-# inventory) so the container itself stays disposable. Your experience
-# inventory is deliberately NOT baked into the image (it is personal data) —
-# copy it onto the volume and it is picked up from /data/inventory.yaml:
+# Everything mutable lives under /data (drafts, tracker DB, inventory) so the
+# container itself stays disposable. The image bakes only the PUBLIC sample
+# inventory (tracked in the repo); the entrypoint seeds it to
+# /data/inventory.yaml when none exists, so volume-less hosts (ECS Fargate)
+# boot functional. To use a private inventory, put it on the volume — it is
+# never overwritten:
 #   docker cp my_inventory.yaml <container>:/data/inventory.yaml
 
 FROM python:3.12-slim

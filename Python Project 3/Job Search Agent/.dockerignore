@@ -12,8 +12,10 @@ Stage 1/output/
 *.db
 **/*.db
 .git/
-# Personal data never ships in the image — mount it at /data/inventory.yaml.
-Stage 1/data/experience_inventory.yaml
+# The sample inventory is tracked in the public repo (already public), so it
+# ships in the image as a seed; the entrypoint copies it to /data/inventory.yaml
+# only when no inventory exists there. A private inventory mounted or copied to
+# /data always wins and never enters the image.
 # Terraform state/providers must never enter the build context: tfstate can
 # hold sensitive values, and .terraform/ alone is ~750MB of providers.
 Stage 5/

@@ -7,6 +7,10 @@
 # with util-linux in python:3.12-slim.
 set -e
 mkdir -p /data/output
+# Seed the sample inventory (public, baked into the image) on first boot so
+# hosts without a pre-loaded volume — e.g. ECS Fargate — start functional.
+# Never overwrites: a real inventory on the volume always wins.
+[ -f /data/inventory.yaml ] || cp "/app/Stage 1/data/experience_inventory.yaml" /data/inventory.yaml
 chown -R appuser:appuser /data
 export HOME=/home/appuser
 exec setpriv --reuid=appuser --regid=appuser --init-groups "$@"
