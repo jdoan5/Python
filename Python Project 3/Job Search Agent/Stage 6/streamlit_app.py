@@ -31,7 +31,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 # Locally there is usually no secrets.toml; Streamlit raises on access, so
 # fall back to plain environment variables (same behavior as Stage 4).
 try:
-    for key in ("ANTHROPIC_API_KEY", "APP_PASSWORD", "ALLOW_UNAUTHENTICATED"):
+    # ALLOW_UNAUTHENTICATED is deliberately NOT bridged: it is a local-dev
+    # escape hatch, and a stray line in the cloud Secrets panel must never
+    # be able to silently open the app (and the API key) to the internet.
+    for key in ("ANTHROPIC_API_KEY", "APP_PASSWORD"):
         if key in st.secrets and key not in os.environ:
             os.environ[key] = str(st.secrets[key])
 except Exception:
@@ -51,7 +54,10 @@ def gate() -> bool:
 
     if not password:
         if os.environ.get("ALLOW_UNAUTHENTICATED") == "1":
-            return True  # explicit local-dev opt-out
+            # Loud, not silent: this state must be unmistakable if it ever
+            # appears anywhere but a laptop.
+            st.warning("UNAUTHENTICATED MODE — local development only.")
+            return True
         st.error(
             "APP_PASSWORD is not set (or is empty) — refusing to serve. "
             "On Community Cloud, add it in the app's Secrets settings."

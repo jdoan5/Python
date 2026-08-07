@@ -55,9 +55,9 @@ tailor page works on first boot.
 
 ## Known limitations
 
-- Community Cloud requires the repo to be **public** — true here already;
-  the inventory it ships is the public sample, secrets stay in the
-  dashboard, never in git.
+- This deploy path uses a **public repo** (the free tier allows unlimited
+  public apps but only one private-repo app) — fine here: the inventory it
+  ships is the public sample, secrets stay in the dashboard, never in git.
 - One small shared instance (1 GB): fine for a demo, not a fleet.
 - The wake-from-sleep pause is visible to the first visitor. A demo GIF on
   the portfolio card covers the impatient case.
