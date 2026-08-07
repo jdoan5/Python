@@ -8,9 +8,12 @@ persistent WebSocket server, Community Cloud provides exactly that for
 public repos, so the always-on demo costs **$0 in infrastructure**.
 
 ```
-streamlit_app.py   entry point: st.secrets → env bridge, sys.path bootstrap
-                   for job_agent, then Stage 4's gate + navigation
-requirements.txt   runtime deps (Community Cloud installs this)
+streamlit_app.py       entry point: st.secrets → env bridge, sys.path
+                       bootstrap for job_agent, then Stage 4's gate + nav
+../../requirements.txt runtime deps — at the REPO ROOT, not here: Community
+                       Cloud passes the requirements path to pip unquoted,
+                       so a path containing spaces ("Python Project 3/…")
+                       breaks the install. Root path has no spaces.
 ```
 
 Stages 1–4 are untouched — every platform difference lives in the entry
