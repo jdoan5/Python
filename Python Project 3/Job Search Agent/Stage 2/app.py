@@ -48,6 +48,25 @@ DEFAULT_INVENTORY = Path(
 )
 DEFAULT_OUTPUT = Path(os.environ.get("JOB_AGENT_OUTPUT_DIR", str(STAGE1_ROOT / "output")))
 
+# Deployed builds (Stage 4 container, Stage 6 cloud) set this. The sidebar path
+# boxes then render read-only AND any submitted value is discarded here, on the
+# server: `disabled=True` is a client-side hint a crafted websocket frame can
+# ignore, so the pinning below is what actually confines the filesystem.
+PATHS_LOCKED = os.environ.get("JOB_AGENT_LOCK_PATHS", "0") == "1"
+
+
+def pinned_path(raw: str, default: Path) -> Path:
+    """User-typed path -> Path; forced to `default` when paths are locked."""
+    if PATHS_LOCKED:
+        return default
+    raw = raw.strip()
+    if not raw:
+        return default
+    try:
+        return Path(raw).expanduser()
+    except (RuntimeError, ValueError):
+        return default
+
 # Markdown specials that must be neutralized in model/posting-derived text.
 _MD_SPECIALS = "\\`*_{}[]()#!|~$<>"
 
@@ -70,11 +89,15 @@ with st.sidebar:
     st.title("Job Search Agent")
     st.caption("Stage 2 — browser UI over the Stage 1 pipeline")
 
-    inventory_raw = st.text_input("Experience inventory", value=str(DEFAULT_INVENTORY))
-    inventory_path = Path(inventory_raw).expanduser() if inventory_raw.strip() else DEFAULT_INVENTORY
+    inventory_raw = st.text_input(
+        "Experience inventory", value=str(DEFAULT_INVENTORY), disabled=PATHS_LOCKED
+    )
+    inventory_path = pinned_path(inventory_raw, DEFAULT_INVENTORY)
 
-    output_raw = st.text_input("Output directory", value=str(DEFAULT_OUTPUT))
-    output_dir = Path(output_raw).expanduser() if output_raw.strip() else DEFAULT_OUTPUT
+    output_raw = st.text_input(
+        "Output directory", value=str(DEFAULT_OUTPUT), disabled=PATHS_LOCKED
+    )
+    output_dir = pinned_path(output_raw, DEFAULT_OUTPUT)
 
     model = st.text_input("Model", value=DEFAULT_MODEL).strip() or DEFAULT_MODEL
 

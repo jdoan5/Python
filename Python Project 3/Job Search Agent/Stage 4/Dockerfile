@@ -42,10 +42,14 @@ COPY ["Stage 4", "Stage 4"]
 RUN pip install --no-cache-dir "./Stage 1" \
     && chmod +x "Stage 4/entrypoint.sh"
 
+# JOB_AGENT_LOCK_PATHS pins the sidebar path boxes to the values above: this
+# image is the deployable artifact, so it defaults to confined. Override with
+# `-e JOB_AGENT_LOCK_PATHS=0` when running it purely locally.
 ENV JOB_AGENT_INVENTORY=/data/inventory.yaml \
     JOB_AGENT_OUTPUT_DIR=/data/output \
     JOB_TRACKER_OUTPUT_DIR=/data/output \
     JOB_TRACKER_DB=/data/tracker.db \
+    JOB_AGENT_LOCK_PATHS=1 \
     PYTHONUNBUFFERED=1
 
 EXPOSE 8501

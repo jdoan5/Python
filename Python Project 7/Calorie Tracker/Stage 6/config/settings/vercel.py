@@ -14,14 +14,36 @@ headers, stdout logging) and overrides only what serverless changes:
 
 from .prod import *  # noqa: F401,F403
 
-# Vercel deployment URLs are *.vercel.app; extras still come from env.
-ALLOWED_HOSTS = [".vercel.app", "localhost"] + [
+# Trust THIS deployment's own hostnames, not the whole vercel.app suffix:
+# anyone can register a free *.vercel.app subdomain, so blanket-trusting it
+# hands an attacker an origin Django treats as ours. Vercel injects both names
+# below into the function environment.
+_vercel_hosts = [
+    h
+    for h in (
+        os.environ.get("VERCEL_PROJECT_PRODUCTION_URL"),  # stable prod domain
+        os.environ.get("VERCEL_URL"),  # this specific deployment
+    )
+    if h
+]
+_env_hosts = [
     h.strip()
     for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
     if h.strip()
 ]
 
-CSRF_TRUSTED_ORIGINS = ["https://*.vercel.app"] + [
+# Host header: keep the suffix as a last-resort fallback so a missing system
+# var can never 400 the whole site. Vercel's edge only routes hostnames that
+# belong to this project, so the fallback is not the weak link CSRF would be.
+ALLOWED_HOSTS = (_vercel_hosts + _env_hosts or [".vercel.app"]) + [
+    "localhost",
+    "127.0.0.1",
+]
+
+# CSRF: no wildcard fallback, deliberately. An EMPTY list is the strict setting
+# — Django then requires the Origin to equal the request's own host — whereas
+# every entry here is an extra origin we bless for cross-origin POSTs.
+CSRF_TRUSTED_ORIGINS = [f"https://{h}" for h in _vercel_hosts] + [
     o.strip()
     for o in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
     if o.strip()

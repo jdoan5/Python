@@ -40,6 +40,12 @@ try:
 except Exception:
     pass  # no secrets file — environment variables rule, as in Stage 4
 
+# This deployment is internet-facing and its password is shared on request, so
+# the sidebar filesystem-path boxes are pinned to their defaults (see
+# pinned_path() in Stage 2/app.py). setdefault, not a hard assignment, so a
+# local `streamlit run` of this file can still opt out with =0.
+os.environ.setdefault("JOB_AGENT_LOCK_PATHS", "1")
+
 # job_agent lives in "Stage 1" as source; make it importable for the pages.
 stage1 = str(PROJECT_ROOT / "Stage 1")
 if stage1 not in sys.path:

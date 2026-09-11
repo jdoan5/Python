@@ -20,6 +20,7 @@ State notes (hard-won via review):
 
 from __future__ import annotations
 
+import os
 import sqlite3
 import sys
 from pathlib import Path
@@ -52,8 +53,19 @@ def esc(text: object) -> str:
     return "".join("\\" + ch if ch in _MD_SPECIALS else ch for ch in str(text))
 
 
+# Deployed builds set this; see the matching note in Stage 2/app.py. Pinning
+# happens here, server-side, because `disabled=True` alone is only a UI hint.
+PATHS_LOCKED = os.environ.get("JOB_AGENT_LOCK_PATHS", "0") == "1"
+
+
 def parse_path(raw: str, default: Path) -> Path:
-    """User-typed path -> Path, falling back to the default on any error."""
+    """User-typed path -> Path, falling back to the default on any error.
+
+    When paths are locked the submitted value is ignored entirely, so a
+    password-holding visitor cannot open or create a SQLite file anywhere.
+    """
+    if PATHS_LOCKED:
+        return default
     raw = raw.strip()
     if not raw:
         return default
@@ -73,10 +85,14 @@ with st.sidebar:
     st.title("Application Tracker")
     st.caption("Stage 3 — tracking + analytics over approved drafts")
     output_dir = parse_path(
-        st.text_input("Drafts directory", value=str(DEFAULT_OUTPUT_DIR)), DEFAULT_OUTPUT_DIR
+        st.text_input(
+            "Drafts directory", value=str(DEFAULT_OUTPUT_DIR), disabled=PATHS_LOCKED
+        ),
+        DEFAULT_OUTPUT_DIR,
     )
     db_path = parse_path(
-        st.text_input("Tracker database", value=str(DEFAULT_DB)), DEFAULT_DB
+        st.text_input("Tracker database", value=str(DEFAULT_DB), disabled=PATHS_LOCKED),
+        DEFAULT_DB,
     )
     if st.button("Re-scan drafts folder"):
         st.session_state.pop("sync_done", None)
