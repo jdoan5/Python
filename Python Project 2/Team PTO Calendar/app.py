@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
@@ -20,4 +22,7 @@ def index():
     return render_template("index.html", pto_list=pto_list)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Never default to debug=True: Werkzeug's debugger exposes an interactive
+    # console, so anyone who can reach the port gets code execution. Opt in
+    # locally with FLASK_DEBUG=1.
+    app.run(debug=os.environ.get("FLASK_DEBUG") == "1")

@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import html
 import re
 import sqlite3
 from contextlib import closing
+from html.parser import HTMLParser
 from pathlib import Path
 
 import httpx
@@ -15,13 +15,41 @@ MAX_RESUME_BYTES = 100_000
 DEFAULT_TIMEOUT = 10.0
 
 
+class _TextExtractor(HTMLParser):
+    # Script and style bodies are dropped, not just untagged: this text is handed to the
+    # model as if it were the job posting, so JS left behind reads as instructions.
+    _SKIP_CONTENT = ("script", "style")
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self._chunks: list[str] = []
+        self._skipping = False
+
+    def handle_starttag(self, tag: str, attrs: list) -> None:
+        if tag in self._SKIP_CONTENT:
+            self._skipping = True
+        self._chunks.append(" ")
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in self._SKIP_CONTENT:
+            self._skipping = False
+        self._chunks.append(" ")
+
+    def handle_data(self, data: str) -> None:
+        if not self._skipping:
+            self._chunks.append(data)
+
+    def get_text(self) -> str:
+        return "".join(self._chunks)
+
+
 def _html_to_text(html_str: str) -> str:
-    text = re.sub(r"<script\b[^>]*>.*?</script>", "", html_str, flags=re.DOTALL | re.IGNORECASE)
-    text = re.sub(r"<style\b[^>]*>.*?</style>", "", text, flags=re.DOTALL | re.IGNORECASE)
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = html.unescape(text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+    parser = _TextExtractor()
+    parser.feed(html_str)
+    # A script left unclosed keeps the parser in CDATA mode, so close() discards its body
+    # instead of flushing it as text.
+    parser.close()
+    return re.sub(r"\s+", " ", parser.get_text()).strip()
 
 
 def _init_db(db_path: Path) -> None:

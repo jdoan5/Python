@@ -22,6 +22,26 @@ def test_html_to_text_removes_scripts() -> None:
     assert ".a{}" not in result
 
 
+def test_html_to_text_removes_scripts_the_close_tag_regex_missed() -> None:
+    unclosed = _html_to_text("<p>visible</p><script>alert('leak')")
+    assert "visible" in unclosed
+    assert "alert" not in unclosed
+
+    spaced_close = _html_to_text("<p>visible</p><script>alert('leak')</script >")
+    assert "visible" in spaced_close
+    assert "alert" not in spaced_close
+
+    nested_open = _html_to_text("<p>visible</p><script>var a = '<script>'; alert('leak')</script>")
+    assert "visible" in nested_open
+    assert "alert" not in nested_open
+
+
+def test_html_to_text_ignores_angle_brackets_inside_attributes() -> None:
+    result = _html_to_text('<p title="5 > 3">Salary</p>')
+    assert "Salary" in result
+    assert '3"' not in result
+
+
 def test_save_and_list_applications(tmp_path: Path) -> None:
     resume = tmp_path / "resume.txt"
     resume.write_text("Senior backend engineer with 5 years of Python.")
