@@ -28,8 +28,14 @@ class FetchError(Exception):
     """Raised when a posting cannot be fetched or yields no usable text."""
 
 
-def _assert_public_host(url: str) -> None:
-    """Reject URLs whose host resolves to a private/loopback/link-local address."""
+def _assert_public_host(url: str) -> str:
+    """Reject URLs whose host resolves to a private/loopback/link-local address.
+
+    Returns the vetted address. The caller must connect to *that*, not to the
+    name again: httpx resolves independently, so a rebinding DNS server can
+    answer this check with a public address and the connection with an internal
+    one (169.254.169.254, 127.0.0.1) in the window between the two lookups.
+    """
     host = urlparse(url).hostname
     if not host:
         raise FetchError(f"URL has no host: {url}")
@@ -50,6 +56,7 @@ def _assert_public_host(url: str) -> None:
             raise FetchError(
                 f"Refusing to fetch {host!r}: resolves to a non-public address ({ip})."
             )
+    return infos[0][4][0]
 
 
 def html_to_text(html_str: str) -> str:
@@ -91,8 +98,16 @@ def fetch_posting(url: str) -> str:
         with httpx.Client(timeout=TIMEOUT_SECONDS, follow_redirects=False,
                           headers=headers) as client:
             for _ in range(MAX_REDIRECTS + 1):
-                _assert_public_host(current)
-                with client.stream("GET", current) as response:
+                pinned_ip = _assert_public_host(current)
+                target = httpx.URL(current)
+                # Dial the vetted address itself, but keep the real hostname in
+                # Host and SNI so certificate verification is unaffected.
+                with client.stream(
+                    "GET",
+                    target.copy_with(host=pinned_ip),
+                    headers={"Host": target.netloc.decode("ascii")},
+                    extensions={"sni_hostname": target.raw_host.decode("ascii")},
+                ) as response:
                     if response.is_redirect:
                         location = response.headers.get("location")
                         if not location:

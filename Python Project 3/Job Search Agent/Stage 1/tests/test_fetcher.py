@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import socket
+
+import httpx
 import pytest
 
 from job_agent.fetcher import FetchError, fetch_posting, html_to_text
@@ -53,3 +56,35 @@ def test_fetch_malformed_url_raises_fetch_error() -> None:
         fetch_posting("http://example.com:99999/")  # port out of range
     with pytest.raises(FetchError):
         fetch_posting("http://exa mple.com/job")    # space in host
+
+
+def test_fetch_connects_to_the_address_it_validated(monkeypatch: pytest.MonkeyPatch) -> None:
+    # DNS rebinding: a hostile resolver answers the SSRF check with a public
+    # address and the following lookup with the cloud metadata endpoint. The
+    # fetch must use the answer it actually vetted, and must still present the
+    # hostname in Host/SNI so TLS verification of real postings keeps working.
+    answers = [
+        [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0))],
+        [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("169.254.169.254", 0))],
+    ]
+
+    def rebinding_getaddrinfo(host, *args, **kwargs):
+        return answers.pop(0) if len(answers) > 1 else answers[0]
+
+    seen = {}
+
+    def handle_request(self, request):
+        seen["connect_host"] = request.url.host
+        seen["host_header"] = request.headers.get("host")
+        seen["sni_hostname"] = request.extensions.get("sni_hostname")
+        return httpx.Response(200, html="<p>" + "Senior Python Engineer. " * 40 + "</p>",
+                              request=request)
+
+    monkeypatch.setattr(socket, "getaddrinfo", rebinding_getaddrinfo)
+    monkeypatch.setattr(httpx.HTTPTransport, "handle_request", handle_request)
+
+    fetch_posting("https://jobs.example.com/posting/1")
+
+    assert seen["connect_host"] == "93.184.216.34"
+    assert seen["host_header"] == "jobs.example.com"
+    assert seen["sni_hostname"] == "jobs.example.com"
