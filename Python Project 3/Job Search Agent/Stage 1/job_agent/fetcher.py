@@ -8,10 +8,10 @@ first URL.
 
 from __future__ import annotations
 
-import html
 import ipaddress
 import re
 import socket
+from html.parser import HTMLParser
 from urllib.parse import urlparse
 
 import httpx
@@ -59,16 +59,54 @@ def _assert_public_host(url: str) -> str:
     return infos[0][4][0]
 
 
+class _TextExtractor(HTMLParser):
+    """Collect visible text, dropping <script>/<style> contents entirely.
+
+    A real parser rather than regexes: regex tag-stripping is defeated by
+    nested, malformed or truncated markup, and a fetched page is attacker-
+    influenced input whose leftovers would land in an LLM prompt. The parser
+    also handles an unterminated <script> for free — it stays in CDATA mode to
+    end of input, so nothing after it is ever emitted as text.
+    """
+
+    _SKIP = {"script", "style"}
+    _BREAK = {"br", "p", "div", "li", "tr", "h1", "h2", "h3", "h4", "h5", "h6"}
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)  # entities decoded for us
+        self._parts: list[str] = []
+        self._skip_depth = 0
+
+    def handle_starttag(self, tag: str, attrs: object) -> None:
+        if tag in self._SKIP:
+            self._skip_depth += 1
+        elif tag in self._BREAK:
+            self._parts.append("\n")
+
+    def handle_startendtag(self, tag: str, attrs: object) -> None:
+        if tag in self._BREAK:
+            self._parts.append("\n")
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in self._SKIP:
+            self._skip_depth = max(0, self._skip_depth - 1)
+        elif tag in self._BREAK:
+            self._parts.append("\n")
+
+    def handle_data(self, data: str) -> None:
+        if not self._skip_depth:
+            self._parts.append(data)
+
+    @property
+    def text(self) -> str:
+        return "".join(self._parts)
+
+
 def html_to_text(html_str: str) -> str:
-    # Paired script/style blocks first, then any unterminated tail (a truncated
-    # or malformed page would otherwise leak raw JS/CSS into the model prompt).
-    text = re.sub(r"<script\b[^>]*>.*?</script>", " ", html_str, flags=re.DOTALL | re.IGNORECASE)
-    text = re.sub(r"<style\b[^>]*>.*?</style>", " ", text, flags=re.DOTALL | re.IGNORECASE)
-    text = re.sub(r"<(?:script|style)\b[^>]*>.*$", " ", text, flags=re.DOTALL | re.IGNORECASE)
-    text = re.sub(r"<!--.*?-->", " ", text, flags=re.DOTALL)
-    text = re.sub(r"<(br|p|div|li|tr|h[1-6])\b[^>]*>", "\n", text, flags=re.IGNORECASE)
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = html.unescape(text)
+    parser = _TextExtractor()
+    parser.feed(html_str)
+    parser.close()
+    text = parser.text
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n\s*\n+", "\n\n", text)
     return text.strip()

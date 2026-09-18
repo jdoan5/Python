@@ -141,6 +141,17 @@ class App(ttk.Frame):
         pwd = self.var_password.get()
         if not pwd:
             messagebox.showinfo("Save", "Generate a password first."); return
+        # Writing a password to a plain .txt leaves it readable by every
+        # process and backup on this machine, so make that an informed choice
+        # rather than a side effect of clicking Save.
+        if not messagebox.askyesno(
+            "Save password in clear text?",
+            "This writes the password to an UNENCRYPTED text file that anyone "
+            "with access to this computer (or its backups) can read.\n\n"
+            "A password manager is the safer place to keep it.\n\nSave anyway?",
+            icon="warning",
+        ):
+            return
         fn = filedialog.asksaveasfilename(title="Save password", defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
         if fn:
             with open(fn, "a", encoding="utf-8") as f:

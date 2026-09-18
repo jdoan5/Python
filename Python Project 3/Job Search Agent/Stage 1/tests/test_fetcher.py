@@ -88,3 +88,30 @@ def test_fetch_connects_to_the_address_it_validated(monkeypatch: pytest.MonkeyPa
     assert seen["connect_host"] == "93.184.216.34"
     assert seen["host_header"] == "jobs.example.com"
     assert seen["sni_hostname"] == "jobs.example.com"
+
+
+def test_html_to_text_drops_script_and_style_bodies() -> None:
+    raw = (
+        "<p>Real job text</p>"
+        "<SCRIPT TYPE='text/javascript'>alsoHidden()</SCRIPT>"
+        "<style>body{color:red}</style>"
+    )
+    text = html_to_text(raw)
+    assert "Real job text" in text
+    for leaked in ("alsoHidden()", "color:red"):
+        assert leaked not in text
+
+
+def test_html_to_text_handles_angle_bracket_inside_attribute() -> None:
+    # The old `<[^>]+>` strip ended the tag at the '>' inside the attribute
+    # value, spilling `b">` into the prompt. A parser reads the quoting.
+    raw = '<div title="a > b">Salary &gt; 100k</div>'
+    text = html_to_text(raw)
+    assert text == "Salary > 100k"
+
+
+def test_html_to_text_ignores_comments_and_selfclosing_breaks() -> None:
+    raw = "<p>Alpha</p><!-- hidden note --><br/><p>Beta</p>"
+    text = html_to_text(raw)
+    assert "Alpha" in text and "Beta" in text
+    assert "hidden note" not in text
