@@ -1,0 +1,22 @@
+[project]
+name = "raglab"
+version = "0.2.0"
+description = "RAG Eval Lab, Stage 2 — a golden-set evaluation of chunking and lexical retrieval, with uncertainty and run manifests"
+requires-python = ">=3.10"
+dependencies = [
+    "scikit-learn>=1.7",
+    "numpy>=2.1",
+    "typer>=0.15",
+    "rich>=13.9",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3"]
+
+[tool.pytest.ini_options]
+# Each stage is run from its own folder (`python -m raglab ...`), not installed,
+# so later stages can carry their own copy of the package in one shared venv.
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = ["corpus: needs the fetched FastAPI corpus (skipped when it is absent)"]

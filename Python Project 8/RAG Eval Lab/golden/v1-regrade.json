@@ -1,0 +1,1680 @@
+{
+ "golden": "v1.yaml",
+ "method": "The first judging round showed each pooled section cut at 1,800 characters. Every section in that round whose body is longer (the 186 below, all from the top-5 pool; the target-page pool was judged on full text from the start) was judged again on its full text under the same rubric and protocol. Where that grade differed from the first, a third, blind judgment on full text broke the tie: the final grade is the median of the three. Applied with `raglab golden merge --regrade`.",
+ "items": [
+  {
+   "question": "q002",
+   "location": "advanced/openapi-callbacks#add-the-callback-router",
+   "body_chars": 1907,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q003",
+   "location": "tutorial/dependencies/classes-as-dependencies#classes-as-dependencies_1",
+   "body_chars": 3389,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q003",
+   "location": "tutorial/query-params#required-query-parameters",
+   "body_chars": 1814,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q007",
+   "location": "tutorial/response-model#response-model-parameter",
+   "body_chars": 2258,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q008",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs",
+   "body_chars": 2287,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q008",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs-for-static-files",
+   "body_chars": 2417,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q008",
+   "location": "tutorial/handling-errors#override-the-httpexception-error-handler",
+   "body_chars": 1831,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q009",
+   "location": "deployment/https#about-https",
+   "body_chars": 2985,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q009",
+   "location": "deployment/server-workers#multiple-workers",
+   "body_chars": 2420,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q009",
+   "location": "index#recap",
+   "body_chars": 3735,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 1,
+   "final": 1
+  },
+  {
+   "question": "q009",
+   "location": "tutorial/extra-data-types#example",
+   "body_chars": 1828,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q009",
+   "location": "tutorial/query-params#required-query-parameters",
+   "body_chars": 1814,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q011",
+   "location": "advanced/security/oauth2-scopes#declare-scopes-in-path-operations-and-dependencies",
+   "body_chars": 6954,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q011",
+   "location": "tutorial/dependencies/classes-as-dependencies#classes-as-dependencies_1",
+   "body_chars": 3389,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q011",
+   "location": "tutorial/dependencies/classes-as-dependencies#type-annotation-vs-depends",
+   "body_chars": 2159,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q011",
+   "location": "tutorial/security/index#openapi",
+   "body_chars": 1866,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q012",
+   "location": "advanced/security/http-basic-auth#check-the-username",
+   "body_chars": 2110,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#oauth2passwordrequestform",
+   "body_chars": 3740,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#return-the-token",
+   "body_chars": 3471,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#use-the-form-data",
+   "body_chars": 3089,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#why-use-password-hashing",
+   "body_chars": 2777,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q013",
+   "location": "benchmarks#benchmarks-and-speed",
+   "body_chars": 2996,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 0,
+   "final": 0
+  },
+  {
+   "question": "q014",
+   "location": "how-to/custom-request-and-route#accessing-the-request-body-in-an-exception-handler",
+   "body_chars": 2518,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q014",
+   "location": "how-to/custom-request-and-route#create-a-custom-gziproute-class",
+   "body_chars": 2355,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q014",
+   "location": "index#recap",
+   "body_chars": 3735,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q015",
+   "location": "advanced/behind-a-proxy#proxy-with-a-stripped-path-prefix",
+   "body_chars": 2490,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q017",
+   "location": "advanced/advanced-dependencies#use-cases-with-early-exit-code",
+   "body_chars": 3152,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q017",
+   "location": "alternatives#apistar-0-5",
+   "body_chars": 2507,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/bigger-applications#how-relative-imports-work",
+   "body_chars": 1865,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/oauth2-jwt#hash-and-verify-the-passwords",
+   "body_chars": 5600,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/simple-oauth2#return-the-token",
+   "body_chars": 3471,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/simple-oauth2#update-the-dependencies",
+   "body_chars": 3587,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q018",
+   "location": "advanced/dataclasses#dataclasses-in-nested-data-structures",
+   "body_chars": 3210,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q018",
+   "location": "tutorial/response-model#response-model-parameter",
+   "body_chars": 2258,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q020",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs",
+   "body_chars": 2287,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q020",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs-for-static-files",
+   "body_chars": 2417,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q021",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs",
+   "body_chars": 2287,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q021",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs-for-static-files",
+   "body_chars": 2417,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q022",
+   "location": "advanced/opentelemetry#configure-providers-and-exporters",
+   "body_chars": 2052,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q022",
+   "location": "deployment/server-workers#multiple-workers",
+   "body_chars": 2420,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q022",
+   "location": "fastapi-cli#fastapi-cli",
+   "body_chars": 1813,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q023",
+   "location": "tutorial/response-model#response-model-parameter",
+   "body_chars": 2258,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q024",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs",
+   "body_chars": 2287,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q024",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs-for-static-files",
+   "body_chars": 2417,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q025",
+   "location": "tutorial/server-sent-events#stream-sse-with-fastapi",
+   "body_chars": 1828,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q028",
+   "location": "advanced/advanced-dependencies#use-cases-with-early-exit-code",
+   "body_chars": 3152,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 1,
+   "final": 1
+  },
+  {
+   "question": "q029",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs",
+   "body_chars": 2287,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q029",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs-for-static-files",
+   "body_chars": 2417,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q029",
+   "location": "tutorial/bigger-applications#how-relative-imports-work",
+   "body_chars": 1865,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q030",
+   "location": "deployment/concepts#resource-utilization",
+   "body_chars": 1867,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q031",
+   "location": "deployment/server-workers#multiple-workers",
+   "body_chars": 2420,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q031",
+   "location": "fastapi-cli#fastapi-cli",
+   "body_chars": 1813,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/bigger-applications#an-example-file-structure",
+   "body_chars": 2280,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q032",
+   "location": "fastapi-cli#fastapi-cli",
+   "body_chars": 1813,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q032",
+   "location": "tutorial/index#install-fastapi",
+   "body_chars": 2104,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q033",
+   "location": "deployment/docker#dockerfile",
+   "body_chars": 2534,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q033",
+   "location": "index#opinions",
+   "body_chars": 1955,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q033",
+   "location": "tutorial/security/simple-oauth2#update-the-dependencies",
+   "body_chars": 3587,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q034",
+   "location": "deployment/https#certificate-renewal",
+   "body_chars": 1838,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q035",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs",
+   "body_chars": 2287,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q035",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs-for-static-files",
+   "body_chars": 2417,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q035",
+   "location": "tutorial/metadata#metadata-for-api",
+   "body_chars": 2532,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q036",
+   "location": "advanced/security/http-basic-auth#check-the-username",
+   "body_chars": 2110,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/simple-oauth2#oauth2passwordrequestform",
+   "body_chars": 3740,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/simple-oauth2#use-the-form-data",
+   "body_chars": 3089,
+   "first": 0,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/simple-oauth2#why-use-password-hashing",
+   "body_chars": 2777,
+   "first": 0,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q037",
+   "location": "advanced/events#async-context-manager",
+   "body_chars": 2187,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q037",
+   "location": "advanced/testing-events#testing-events-lifespan-and-startup-shutdown",
+   "body_chars": 2043,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 1,
+   "final": 1
+  },
+  {
+   "question": "q038",
+   "location": "advanced/settings#lru-cache-technical-details",
+   "body_chars": 2168,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q038",
+   "location": "deployment/docker#dockerfile",
+   "body_chars": 2534,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q038",
+   "location": "deployment/server-workers#multiple-workers",
+   "body_chars": 2420,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q038",
+   "location": "fastapi-cli#fastapi-cli",
+   "body_chars": 1813,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q038",
+   "location": "tutorial/bigger-applications#how-relative-imports-work",
+   "body_chars": 1865,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q039",
+   "location": "advanced/behind-a-proxy#additional-servers",
+   "body_chars": 2052,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q039",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs",
+   "body_chars": 2287,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q039",
+   "location": "tutorial/metadata#metadata-for-api",
+   "body_chars": 2532,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q039",
+   "location": "tutorial/security/first-steps#fastapis-oauth2passwordbearer",
+   "body_chars": 2567,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q040",
+   "location": "deployment/https#about-https",
+   "body_chars": 2985,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q040",
+   "location": "deployment/https#certificate-renewal",
+   "body_chars": 1838,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q041",
+   "location": "advanced/behind-a-proxy#additional-servers",
+   "body_chars": 2052,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q041",
+   "location": "advanced/dataclasses#dataclasses-in-nested-data-structures",
+   "body_chars": 3210,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q041",
+   "location": "advanced/generate-clients#preprocess-the-openapi-specification-for-the-client-generator",
+   "body_chars": 2458,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q042",
+   "location": "how-to/custom-request-and-route#create-a-custom-gziproute-class",
+   "body_chars": 2355,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q043",
+   "location": "tutorial/testing#extended-testing-file",
+   "body_chars": 2978,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q044",
+   "location": "advanced/websockets#handling-disconnections-and-multiple-clients",
+   "body_chars": 3467,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q044",
+   "location": "advanced/websockets#in-production",
+   "body_chars": 2204,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q045",
+   "location": "advanced/security/oauth2-scopes#declare-scopes-in-path-operations-and-dependencies",
+   "body_chars": 6954,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q045",
+   "location": "advanced/security/oauth2-scopes#global-view",
+   "body_chars": 5721,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q045",
+   "location": "advanced/security/oauth2-scopes#use-securityscopes",
+   "body_chars": 6101,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q046",
+   "location": "deployment/https#about-https",
+   "body_chars": 2985,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q046",
+   "location": "deployment/https#certificate-renewal",
+   "body_chars": 1838,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q047",
+   "location": "advanced/behind-a-proxy#additional-servers",
+   "body_chars": 2052,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q047",
+   "location": "advanced/dataclasses#dataclasses-in-nested-data-structures",
+   "body_chars": 3210,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q047",
+   "location": "advanced/path-operation-advanced-configuration#custom-openapi-path-operation-schema",
+   "body_chars": 1814,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q048",
+   "location": "tutorial/security/simple-oauth2#update-the-dependencies",
+   "body_chars": 3587,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q049",
+   "location": "tutorial/testing#extended-testing-file",
+   "body_chars": 2978,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q050",
+   "location": "advanced/settings#lru-cache-technical-details",
+   "body_chars": 2168,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q050",
+   "location": "index#recap",
+   "body_chars": 3735,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q050",
+   "location": "tutorial/query-params-str-validations#custom-validation",
+   "body_chars": 1854,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q051",
+   "location": "advanced/behind-a-proxy#proxy-with-a-stripped-path-prefix",
+   "body_chars": 2490,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q053",
+   "location": "advanced/behind-a-proxy#additional-servers",
+   "body_chars": 2052,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q053",
+   "location": "tutorial/index#install-fastapi",
+   "body_chars": 2104,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q055",
+   "location": "advanced/generate-clients#preprocess-the-openapi-specification-for-the-client-generator",
+   "body_chars": 2458,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q055",
+   "location": "advanced/openapi-callbacks#the-normal-fastapi-app",
+   "body_chars": 1874,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q055",
+   "location": "advanced/path-operation-advanced-configuration#custom-openapi-content-type",
+   "body_chars": 2695,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q055",
+   "location": "advanced/path-operation-advanced-configuration#custom-openapi-path-operation-schema",
+   "body_chars": 1814,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 1,
+   "final": 1
+  },
+  {
+   "question": "q056",
+   "location": "how-to/custom-request-and-route#create-a-custom-gziproute-class",
+   "body_chars": 2355,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/simple-oauth2#return-the-token",
+   "body_chars": 3471,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q058",
+   "location": "advanced/security/oauth2-scopes#dependency-tree-and-scopes",
+   "body_chars": 2093,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q058",
+   "location": "advanced/settings#lru-cache-technical-details",
+   "body_chars": 2168,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q058",
+   "location": "advanced/testing-dependencies#use-the-app-dependency-overrides-attribute",
+   "body_chars": 2576,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q059",
+   "location": "advanced/stream-data#simulate-a-file",
+   "body_chars": 5790,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q059",
+   "location": "tutorial/dependencies/dependencies-with-yield#sub-dependencies-with-yield",
+   "body_chars": 2216,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q059",
+   "location": "tutorial/security/simple-oauth2#return-the-token",
+   "body_chars": 3471,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q059",
+   "location": "tutorial/security/simple-oauth2#update-the-dependencies",
+   "body_chars": 3587,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q060",
+   "location": "advanced/openapi-callbacks#the-normal-fastapi-app",
+   "body_chars": 1874,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q061",
+   "location": "tutorial/bigger-applications#how-relative-imports-work",
+   "body_chars": 1865,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q061",
+   "location": "tutorial/server-sent-events#stream-sse-with-fastapi",
+   "body_chars": 1828,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 1,
+   "final": 1
+  },
+  {
+   "question": "q062",
+   "location": "advanced/advanced-dependencies#use-cases-with-early-exit-code",
+   "body_chars": 3152,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q062",
+   "location": "advanced/websockets#handling-disconnections-and-multiple-clients",
+   "body_chars": 3467,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q062",
+   "location": "tutorial/metadata#metadata-for-api",
+   "body_chars": 2532,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q062",
+   "location": "tutorial/query-params-str-validations#custom-validation",
+   "body_chars": 1854,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q063",
+   "location": "advanced/additional-responses#additional-response-with-model",
+   "body_chars": 5240,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 1,
+   "final": 1
+  },
+  {
+   "question": "q063",
+   "location": "advanced/additional-status-codes#additional-status-codes_1",
+   "body_chars": 1894,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q063",
+   "location": "tutorial/response-model#response-model-parameter",
+   "body_chars": 2258,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 1,
+   "final": 1
+  },
+  {
+   "question": "q064",
+   "location": "advanced/openapi-callbacks#add-the-callback-router",
+   "body_chars": 1907,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q064",
+   "location": "advanced/openapi-callbacks#create-the-callback-path-operation",
+   "body_chars": 2103,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q064",
+   "location": "advanced/openapi-callbacks#the-normal-fastapi-app",
+   "body_chars": 1874,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q064",
+   "location": "advanced/websockets#in-production",
+   "body_chars": 2204,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 1,
+   "final": 1
+  },
+  {
+   "question": "q065",
+   "location": "advanced/advanced-dependencies#use-cases-with-early-exit-code",
+   "body_chars": 3152,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q065",
+   "location": "async#concurrent-burgers",
+   "body_chars": 2912,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q065",
+   "location": "async#parallel-burgers",
+   "body_chars": 2395,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q065",
+   "location": "how-to/custom-request-and-route#custom-apiroute-class-in-a-router",
+   "body_chars": 2396,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q066",
+   "location": "tutorial/security/oauth2-jwt#handle-jwt-tokens",
+   "body_chars": 4919,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q068",
+   "location": "async#asynchronous-code",
+   "body_chars": 2200,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q069",
+   "location": "advanced/events#async-context-manager",
+   "body_chars": 2187,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q072",
+   "location": "advanced/opentelemetry#configure-providers-and-exporters",
+   "body_chars": 2052,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q072",
+   "location": "index#recap",
+   "body_chars": 3735,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q074",
+   "location": "advanced/advanced-dependencies#use-cases-with-early-exit-code",
+   "body_chars": 3152,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q074",
+   "location": "advanced/behind-a-proxy#additional-servers",
+   "body_chars": 2052,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q074",
+   "location": "advanced/openapi-callbacks#add-the-callback-router",
+   "body_chars": 1907,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q074",
+   "location": "advanced/openapi-callbacks#create-the-callback-path-operation",
+   "body_chars": 2103,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q074",
+   "location": "advanced/openapi-callbacks#the-normal-fastapi-app",
+   "body_chars": 1874,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q074",
+   "location": "tutorial/dependencies/classes-as-dependencies#shortcut",
+   "body_chars": 2220,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q074",
+   "location": "tutorial/metadata#metadata-for-api",
+   "body_chars": 2532,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q075",
+   "location": "advanced/websockets#in-production",
+   "body_chars": 2204,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q077",
+   "location": "advanced/path-operation-advanced-configuration#custom-openapi-content-type",
+   "body_chars": 2695,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q077",
+   "location": "index#recap",
+   "body_chars": 3735,
+   "first": 2,
+   "full_text": 2,
+   "tiebreak": null,
+   "final": 2
+  },
+  {
+   "question": "q077",
+   "location": "tutorial/metadata#metadata-for-api",
+   "body_chars": 2532,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/dependencies/classes-as-dependencies#classes-as-dependencies_1",
+   "body_chars": 3389,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/query-params#required-query-parameters",
+   "body_chars": 1814,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/bigger-applications#include-an-apirouter-with-a-custom-prefix-tags-responses-and-dependencies",
+   "body_chars": 2088,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q081",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs",
+   "body_chars": 2287,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q081",
+   "location": "tutorial/metadata#metadata-for-api",
+   "body_chars": 2532,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q082",
+   "location": "advanced/security/oauth2-scopes#declare-scopes-in-path-operations-and-dependencies",
+   "body_chars": 6954,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q082",
+   "location": "advanced/security/oauth2-scopes#global-view",
+   "body_chars": 5721,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q082",
+   "location": "advanced/security/oauth2-scopes#jwt-token-with-scopes",
+   "body_chars": 6018,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q082",
+   "location": "advanced/security/oauth2-scopes#oauth2-security-scheme",
+   "body_chars": 6010,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q082",
+   "location": "advanced/security/oauth2-scopes#use-securityscopes",
+   "body_chars": 6101,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q082",
+   "location": "advanced/security/oauth2-scopes#use-the-scopes",
+   "body_chars": 6285,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q082",
+   "location": "advanced/security/oauth2-scopes#verify-the-scopes",
+   "body_chars": 5794,
+   "first": 1,
+   "full_text": 2,
+   "tiebreak": 2,
+   "final": 2
+  },
+  {
+   "question": "q082",
+   "location": "tutorial/security/simple-oauth2#use-the-form-data",
+   "body_chars": 3089,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/metadata#metadata-for-api",
+   "body_chars": 2532,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q084",
+   "location": "deployment/docker#docker-cache",
+   "body_chars": 2018,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q084",
+   "location": "deployment/docker#dockerfile",
+   "body_chars": 2534,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q084",
+   "location": "tutorial/bigger-applications#an-example-file-structure",
+   "body_chars": 2280,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 1,
+   "final": 1
+  },
+  {
+   "question": "q085",
+   "location": "advanced/dataclasses#dataclasses-in-nested-data-structures",
+   "body_chars": 3210,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q086",
+   "location": "advanced/websockets#using-depends-and-others",
+   "body_chars": 3281,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q086",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs",
+   "body_chars": 2287,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q086",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs-for-static-files",
+   "body_chars": 2417,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q086",
+   "location": "tutorial/response-model#response-model-parameter",
+   "body_chars": 2258,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q088",
+   "location": "tutorial/dependencies/dependencies-with-yield#sub-dependencies-with-yield",
+   "body_chars": 2216,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q090",
+   "location": "advanced/additional-responses#additional-response-with-model",
+   "body_chars": 5240,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q090",
+   "location": "advanced/openapi-callbacks#the-normal-fastapi-app",
+   "body_chars": 1874,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q090",
+   "location": "fastapi-cli#fastapi-cli",
+   "body_chars": 1813,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q091",
+   "location": "deployment/server-workers#multiple-workers",
+   "body_chars": 2420,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q092",
+   "location": "tutorial/query-params-str-validations#custom-validation",
+   "body_chars": 1854,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q093",
+   "location": "advanced/path-operation-advanced-configuration#custom-openapi-path-operation-schema",
+   "body_chars": 1814,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q093",
+   "location": "how-to/custom-request-and-route#accessing-the-request-body-in-an-exception-handler",
+   "body_chars": 2518,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q093",
+   "location": "how-to/custom-request-and-route#create-a-custom-gziproute-class",
+   "body_chars": 2355,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q096",
+   "location": "advanced/openapi-callbacks#add-the-callback-router",
+   "body_chars": 1907,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/bigger-applications#an-example-file-structure",
+   "body_chars": 2280,
+   "first": 1,
+   "full_text": 1,
+   "tiebreak": null,
+   "final": 1
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/security/oauth2-jwt#handle-jwt-tokens",
+   "body_chars": 4919,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q098",
+   "location": "deployment/concepts#resource-utilization",
+   "body_chars": 1867,
+   "first": 0,
+   "full_text": 0,
+   "tiebreak": null,
+   "final": 0
+  },
+  {
+   "question": "q098",
+   "location": "fastapi-cli#fastapi-cli",
+   "body_chars": 1813,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 0,
+   "final": 0
+  },
+  {
+   "question": "q099",
+   "location": "alternatives#apistar-0-5",
+   "body_chars": 2507,
+   "first": 0,
+   "full_text": 1,
+   "tiebreak": 1,
+   "final": 1
+  }
+ ]
+}

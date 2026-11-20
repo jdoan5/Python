@@ -1,0 +1,6 @@
+scikit-learn>=1.7
+numpy>=2.1
+typer>=0.15
+rich>=13.9
+pyyaml>=6.0
+pytest>=8.3

@@ -1,0 +1,27 @@
+# Every package in the environment that produced results/ (Python 3.14.7, macOS arm64): a complete
+# closure, transitive dependencies included. requirements.txt states the minimums; to reproduce exactly:
+#   ../.venv/bin/pip install -r requirements-lock.txt
+annotated-doc==0.0.7
+annotated-types==0.8.0
+cloudpickle==3.1.3
+iniconfig==2.3.1
+joblib==1.6.0
+markdown-it-py==4.3.0
+mdurl==0.1.2
+narwhals==2.29.0
+numpy==2.5.5
+packaging==26.3
+pluggy==1.7.0
+pydantic==2.14.4
+pydantic_core==2.50.5
+Pygments==2.21.0
+pytest==9.2.0
+PyYAML==6.0.3
+rich==15.0.0
+scikit-learn==1.9.1
+scipy==1.18.1
+shellingham==1.5.4
+threadpoolctl==3.8.0
+typer==0.29.2
+typing-inspection==0.4.5
+typing_extensions==4.16.0

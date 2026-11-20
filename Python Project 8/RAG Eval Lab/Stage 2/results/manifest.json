@@ -1,0 +1,266 @@
+{
+ "schema": 3,
+ "run_id": "20261120-192624-639917a2",
+ "created_utc": "2026-11-20T19:26:24Z",
+ "code": {
+  "raglab_version": "0.2.0",
+  "package_sha256": "639917a2d7910caa943d1bd0747b2dcbfd40b86920cf2e439642083e7e39e50d",
+  "git_commit": "503b468e4177ab960b600308c80587a17be6c398",
+  "git_dirty": true
+ },
+ "corpus": {
+  "repo": "https://github.com/fastapi/fastapi.git",
+  "ref": "0.165.0",
+  "commit": "05e6df7e906c3decba377c37548019973f40bf15",
+  "fingerprint": "3ec279619717c72441c0b92ad7e7244145ee857b7d070e5b0028cc4b3f364315",
+  "files": 464
+ },
+ "golden": {
+  "path": "golden/v1.yaml",
+  "version": 1,
+  "sha256": "1dbaf9382e96cd0cb038a4fea7d0df200115b3503120829dcfaccadaa097599f",
+  "questions": 98
+ },
+ "robustness_inputs": {
+  "agreement_sha256": "9db58d737ef03802fd0d1431a45021a7a738e06a13b677331f4e9e6a1e373fab",
+  "unjudged_sample_sha256": "bfdf997251a1e115ba4b588eabdea84208bc676fb4fcf25452d230de9e3183b7",
+  "regrade_log_sha256": "4d8ed586d2e66fedb15172911b2365c2b5970526114b0033a9d8b98ff3394767",
+  "analysis_sha256": "325160a644c678c593ba8f831b0755ef1d43f4e0b55eea5c68753b5113a659da"
+ },
+ "configs": [
+  {
+   "name": "baseline (RAG Mini Chat)",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": false
+  },
+  {
+   "name": "paragraph+bm25",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": true
+  },
+  {
+   "name": "paragraph+bm25 (no breadcrumb)",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": false
+  },
+  {
+   "name": "paragraph+tfidf",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": true
+  },
+  {
+   "name": "fixed+bm25",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": true
+  },
+  {
+   "name": "fixed+bm25 (no breadcrumb)",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": false
+  },
+  {
+   "name": "fixed+tfidf",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": true
+  },
+  {
+   "name": "fixed+tfidf (no breadcrumb)",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": false
+  },
+  {
+   "name": "heading+bm25",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": true
+  },
+  {
+   "name": "heading+bm25 (no breadcrumb)",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": false
+  },
+  {
+   "name": "heading+tfidf",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": true
+  },
+  {
+   "name": "heading+tfidf (no breadcrumb)",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": false
+  }
+ ],
+ "baseline": "baseline (RAG Mini Chat)",
+ "scoring": {
+  "unit": "section (doc_id#anchor); a chunk retrieves a section when it holds at least min(min_overlap_chars, the section's body, all the section-body text the chunk holds) characters of that section's body",
+  "min_overlap_chars": 100,
+  "chunks_ranked": "every chunk with a positive score",
+  "rank_depth_sections": 10,
+  "k": [
+   1,
+   3,
+   5,
+   10
+  ],
+  "budgets_chars": [
+   1200,
+   2400,
+   4800,
+   9600
+  ],
+  "headline_budget_chars": 4800,
+  "gain": {
+   "1": 1.0,
+   "2": 3.0
+  }
+ },
+ "statistics": {
+  "bootstrap_resamples": 10000,
+  "confidence": 0.95,
+  "seed": 20261120,
+  "interval": "percentile bootstrap over questions; Wilson score interval for yes/no metrics",
+  "test": "paired sign-flip randomisation, two-sided; Holm-adjusted across configurations, per metric"
+ },
+ "environment": {
+  "python": "3.14.7",
+  "numpy": "2.5.5",
+  "scikit-learn": "1.9.1",
+  "pyyaml": "6.0.3",
+  "os": "Darwin arm64"
+ }
+}

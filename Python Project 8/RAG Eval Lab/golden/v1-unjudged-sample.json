@@ -1,0 +1,1384 @@
+{
+ "golden": "v1.yaml",
+ "method": "The (question, section) pairs that some configuration puts in its 4,800-character context but v1.yaml leaves unjudged, in two strata (analysis/samples.py). focused: every pair inside a heading or fixed configuration's context; all judged. scattered: pairs reached only by paragraph-family contexts; 200 judged, taken in order of sha256('20261120:unjudged:{question}:{location}'). Grades already given under the same protocol are reused when a pair is re-drawn; all are graded on full text under v1's rubric, with the question's known answers for reference. Kept out of v1.yaml so v1's construction stays the same for every configuration; used by analysis/unjudged_sensitivity.py.",
+ "population": {
+  "focused": 29,
+  "scattered": 3768
+ },
+ "items": [
+  {
+   "question": "q002",
+   "location": "deployment/https#proxy-forwarded-headers",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q011",
+   "location": "tutorial/response-model#add-an-output-model",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q014",
+   "location": "deployment/docker#check-it",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q014",
+   "location": "tutorial/path-params#check-the-docs",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q015",
+   "location": "tutorial/frontend#serve-a-frontend",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q024",
+   "location": "advanced/sub-applications#check-the-automatic-api-docs",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q024",
+   "location": "index#interactive-api-docs-upgrade",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q024",
+   "location": "tutorial/first-steps#openapi",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q025",
+   "location": "features#tested",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q027",
+   "location": "advanced/generate-clients#create-a-typescript-sdk",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "deployment/cloud#cloud-providers-sponsors",
+   "stratum": "focused",
+   "grade": 1
+  },
+  {
+   "question": "q047",
+   "location": "advanced/openapi-callbacks#documenting-the-callback",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q047",
+   "location": "advanced/openapi-callbacks#write-the-callback-documentation-code",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q047",
+   "location": "fastapi-cli#fastapi-dev-with-path-or-with-entrypoint-cli-option",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q047",
+   "location": "tutorial/first-steps#check-it",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q053",
+   "location": "tutorial/header-param-models#check-the-docs",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q053",
+   "location": "virtual-environments#learn-more",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q061",
+   "location": "advanced/stream-data#non-async-path-operation-functions",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q071",
+   "location": "advanced/opentelemetry#other-monitoring-services",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q071",
+   "location": "features#automatic-docs",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q071",
+   "location": "index#alternative-api-docs",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q071",
+   "location": "index#example-upgrade",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q071",
+   "location": "index#recap",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q071",
+   "location": "tutorial/body-multiple-params#multiple-body-parameters",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q071",
+   "location": "tutorial/header-param-models#check-the-docs",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q071",
+   "location": "tutorial/path-params#documentation",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q088",
+   "location": "tutorial/dependencies/index#share-annotated-dependencies",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q097",
+   "location": "index#dependencies",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q097",
+   "location": "index#performance",
+   "stratum": "focused",
+   "grade": 0
+  },
+  {
+   "question": "q001",
+   "location": "advanced/response-change-status-code#use-a-response-parameter",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q003",
+   "location": "how-to/separate-openapi-schemas#model-for-input",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q003",
+   "location": "tutorial/dependencies/sub-dependencies#using-the-same-dependency-multiple-times",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q004",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#return-values",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q004",
+   "location": "tutorial/server-sent-events#resuming-with-last-event-id",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q006",
+   "location": "advanced/settings#reading-a-env-file",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q007",
+   "location": "advanced/response-change-status-code#use-a-response-parameter",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q007",
+   "location": "advanced/response-change-status-code#use-case",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q007",
+   "location": "tutorial/path-params#path-parameters",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q007",
+   "location": "tutorial/response-model#use-the-response-model-exclude-unset-parameter",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q008",
+   "location": "tutorial/query-params-str-validations#add-query-to-annotated-in-the-q-parameter",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q008",
+   "location": "tutorial/query-params-str-validations#string-with-value-startswith",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q009",
+   "location": "advanced/events#shutdown-event",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q009",
+   "location": "tutorial/query-params#defaults",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q010",
+   "location": "advanced/response-headers#custom-headers",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q011",
+   "location": "advanced/response-headers#use-a-response-parameter",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q011",
+   "location": "tutorial/path-params-numeric-validations#recap",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q013",
+   "location": "tutorial/path-operation-configuration#tags-with-enums",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q014",
+   "location": "advanced/templates#more-details",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q014",
+   "location": "tutorial/handling-errors#override-the-httpexception-error-handler",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q014",
+   "location": "tutorial/query-params-str-validations#required-parameters-and-none",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q015",
+   "location": "tutorial/metadata#openapi-url",
+   "stratum": "scattered",
+   "grade": 1
+  },
+  {
+   "question": "q017",
+   "location": "advanced/websockets#in-production",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q018",
+   "location": "tutorial/server-sent-events#non-async-path-operation-functions",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q021",
+   "location": "deployment/concepts#we-make-mistakes",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q021",
+   "location": "tutorial/dependencies/dependencies-with-yield#dependencies-with-yield-and-httpexception",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q021",
+   "location": "tutorial/frontend#custom-404-page",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q023",
+   "location": "how-to/migrate-from-pydantic-v1-to-pydantic-v2#bump-pydantic",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q023",
+   "location": "tutorial/bigger-applications#another-module-with-apirouter",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q024",
+   "location": "advanced/dataclasses#dataclasses-in-nested-data-structures",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q024",
+   "location": "advanced/opentelemetry#other-monitoring-services",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q024",
+   "location": "tutorial/cookie-params#declare-cookie-parameters",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q025",
+   "location": "tutorial/schema-extra-example#extra-json-schema-data-in-pydantic-models",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q027",
+   "location": "tutorial/body#create-your-data-model",
+   "stratum": "scattered",
+   "grade": 1
+  },
+  {
+   "question": "q028",
+   "location": "advanced/events#lifespan-function",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q029",
+   "location": "tutorial/dependencies/index#declare-the-dependency-in-the-dependant",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q029",
+   "location": "tutorial/query-params-str-validations#deprecating-parameters",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "advanced/openapi-webhooks#an-app-with-webhooks",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "advanced/response-directly#returning-a-custom-response",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "advanced/response-headers#return-a-response-directly",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "advanced/security/oauth2-scopes#jwt-token-with-scopes",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "how-to/separate-openapi-schemas#model-for-output",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/body#import-pydantics-basemodel",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/cookie-param-models#optional-cookie-parameter-models",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/cookie-params#import-cookie",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/first-steps#step-1-import-fastapi",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/handling-errors#override-request-validation-exceptions",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/header-param-models#header-parameters-with-a-pydantic-model",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/path-params#path-convertor",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/path-params-numeric-validations#number-validations-greater-than-or-equal",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/query-params-str-validations#add-more-validations",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q031",
+   "location": "advanced/behind-a-proxy#providing-the-root-path",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "advanced/custom-response#redirectresponse",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "advanced/custom-response#streamingresponse",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "advanced/path-operation-advanced-configuration#custom-openapi-content-type",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "advanced/security/oauth2-scopes#use-the-scopes",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "advanced/websockets#using-depends-and-others",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "features#editor-support",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "how-to/custom-docs-ui-assets#test-the-static-files",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "how-to/custom-request-and-route#accessing-the-request-body-in-an-exception-handler",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "how-to/extending-openapi#cache-the-openapi-schema",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "tutorial/bigger-applications#import-fastapi",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "tutorial/body#import-pydantics-basemodel",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "tutorial/body#request-body-path-parameters",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "tutorial/body-multiple-params#mix-path-query-and-body-parameters",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "tutorial/body-nested-models#set-types",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#add-dependencies-to-the-path-operation-decorator",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "tutorial/frontend#client-side-routing",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "tutorial/handling-errors#override-the-httpexception-error-handler",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "tutorial/header-param-models#optional-header-parameter-models",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q032",
+   "location": "tutorial/middleware#create-a-middleware",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q033",
+   "location": "advanced/events#shutdown-event",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q037",
+   "location": "tutorial/security/oauth2-jwt#handle-jwt-tokens",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q039",
+   "location": "advanced/behind-a-proxy#proxy-with-a-stripped-path-prefix",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q041",
+   "location": "advanced/additional-responses#additional-response-with-model",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q041",
+   "location": "async#parallel-burgers",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q041",
+   "location": "reference/index#reference",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q041",
+   "location": "tutorial/sql-databases#herocreate-the-data-model-to-create-a-hero",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q042",
+   "location": "tutorial/schema-extra-example#extra-json-schema-data-in-pydantic-models",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q043",
+   "location": "advanced/json-base64-bytes#pydantic-bytes",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q043",
+   "location": "tutorial/security/get-current-user#other-models",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q044",
+   "location": "advanced/behind-a-proxy#enable-proxy-forwarded-headers",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q044",
+   "location": "advanced/middleware#gzipmiddleware",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q045",
+   "location": "advanced/behind-a-proxy#checking-the-current-root-path",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q046",
+   "location": "fastapi-cli#fastapi-run",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q047",
+   "location": "deployment/concepts#in-a-remote-server",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q047",
+   "location": "tutorial/middleware#before-and-after-the-response",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q047",
+   "location": "tutorial/path-operation-configuration#tags",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q048",
+   "location": "tutorial/response-model#return-the-same-input-data",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q049",
+   "location": "advanced/settings#run-the-server",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q049",
+   "location": "alternatives#uvicorn",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q050",
+   "location": "tutorial/server-sent-events#what-are-server-sent-events",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q052",
+   "location": "deployment/server-workers#server-workers-uvicorn-with-workers",
+   "stratum": "scattered",
+   "grade": 1
+  },
+  {
+   "question": "q053",
+   "location": "advanced/additional-responses#additional-response-with-model",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q053",
+   "location": "how-to/extending-openapi#cache-the-openapi-schema",
+   "stratum": "scattered",
+   "grade": 1
+  },
+  {
+   "question": "q053",
+   "location": "index#installation",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q053",
+   "location": "tutorial/security/first-steps#run-it",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q054",
+   "location": "advanced/custom-response#custom-response-class",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q056",
+   "location": "features#pydantic-features",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q057",
+   "location": "alternatives#pydantic",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q057",
+   "location": "deployment/versions#upgrading-the-fastapi-versions",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "advanced/events#shutdown-event",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "advanced/middleware#trustedhostmiddleware",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "advanced/stream-data#simulate-a-file",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/background-tasks#using-backgroundtasks",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/body#declare-it-as-a-parameter",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/cors#use-corsmiddleware",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/dependencies/classes-as-dependencies#classes-as-dependencies_1",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/dependencies/dependencies-with-yield#always-raise-in-dependencies-with-yield-and-except",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/path-params-numeric-validations#order-the-parameters-as-you-need",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/query-params-str-validations#add-query-to-annotated-in-the-q-parameter",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/query-params-str-validations#query-parameter-list-multiple-values",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/response-model#disable-response-model",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/schema-extra-example#using-the-openapi-examples-parameter",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q061",
+   "location": "advanced/json-base64-bytes#pydantic-bytes",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q062",
+   "location": "advanced/security/oauth2-scopes#use-securityscopes",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q062",
+   "location": "how-to/conditional-openapi#conditional-openapi-from-settings-and-env-vars",
+   "stratum": "scattered",
+   "grade": 1
+  },
+  {
+   "question": "q062",
+   "location": "tutorial/security/oauth2-jwt#about-jwt",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q063",
+   "location": "tutorial/sql-databases#create-with-herocreate-and-return-a-heropublic",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q063",
+   "location": "tutorial/stream-json-lines#stream-json-lines-with-fastapi",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q064",
+   "location": "advanced/testing-dependencies#use-the-app-dependency-overrides-attribute",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q065",
+   "location": "reference/status#status-codes",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q067",
+   "location": "deployment/docker#fastapi-in-containers-docker",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q067",
+   "location": "tutorial/handling-errors#override-request-validation-exceptions",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q067",
+   "location": "tutorial/schema-extra-example#technical-details",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q068",
+   "location": "advanced/advanced-dependencies#use-cases-with-early-exit-code",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q068",
+   "location": "tutorial/dependencies/classes-as-dependencies#use-it",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q069",
+   "location": "advanced/advanced-dependencies#a-callable-instance",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q069",
+   "location": "advanced/response-cookies#use-a-response-parameter",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/body-multiple-params#recap",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/dependencies/classes-as-dependencies#a-dict-from-the-previous-example",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/dependencies/global-dependencies#global-dependencies",
+   "stratum": "scattered",
+   "grade": 1
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/query-params-str-validations#query-parameter-list-multiple-values",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q071",
+   "location": "advanced/generate-clients#using-the-sdk",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q071",
+   "location": "advanced/path-operation-advanced-configuration#custom-openapi-content-type",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q072",
+   "location": "how-to/custom-docs-ui-assets#download-the-files",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q072",
+   "location": "tutorial/bigger-applications#configure-the-entrypoint-in-pyproject-toml",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q072",
+   "location": "tutorial/dependencies/dependencies-with-yield#sub-dependencies-with-yield",
+   "stratum": "scattered",
+   "grade": 1
+  },
+  {
+   "question": "q073",
+   "location": "tutorial/path-params#recap",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q074",
+   "location": "advanced/generate-clients#client-method-names",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q074",
+   "location": "deployment/docker#build-a-docker-image-with-a-single-file-fastapi",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q075",
+   "location": "tutorial/middleware#before-and-after-the-response",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q076",
+   "location": "advanced/dataclasses#dataclasses-in-nested-data-structures",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q077",
+   "location": "advanced/openapi-webhooks#openapi-webhooks",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q077",
+   "location": "advanced/settings#the-config-file",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/query-param-models#query-parameters-with-a-pydantic-model",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q079",
+   "location": "advanced/custom-response#return-a-response",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q079",
+   "location": "advanced/dataclasses#dataclasses-in-nested-data-structures",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q079",
+   "location": "advanced/middleware#httpsredirectmiddleware",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q079",
+   "location": "how-to/conditional-openapi#conditional-openapi-from-settings-and-env-vars",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/background-tasks#create-a-task-function",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/body-multiple-params#embed-a-single-body-parameter",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/body-updates#partial-updates-recap",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/cookie-params#declare-cookie-parameters",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/dependencies/classes-as-dependencies#type-annotation-vs-depends",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#raise-exceptions",
+   "stratum": "scattered",
+   "grade": 1
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/first-steps#step-4-define-the-path-operation-function",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q081",
+   "location": "how-to/custom-request-and-route#use-cases",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q081",
+   "location": "tutorial/query-params#query-parameters",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q082",
+   "location": "tutorial/body-multiple-params#multiple-body-params-and-query",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q082",
+   "location": "tutorial/sql-databases#create-a-hero",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/request-forms#boolean-form-fields",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/security/first-steps#check-it",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q086",
+   "location": "tutorial/first-steps#configure-the-app-entrypoint-in-pyproject-toml",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q087",
+   "location": "advanced/opentelemetry#choose-what-to-record",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q087",
+   "location": "deployment/server-workers#multiple-workers",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q088",
+   "location": "advanced/dataclasses#dataclasses-in-nested-data-structures",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q088",
+   "location": "tutorial/bigger-applications#dependencies",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q088",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#return-values",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q090",
+   "location": "advanced/behind-a-proxy#proxy-with-a-stripped-path-prefix",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q090",
+   "location": "advanced/sub-applications#top-level-application",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q090",
+   "location": "tutorial/bigger-applications#an-example-file-structure",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q090",
+   "location": "tutorial/body-nested-models#set-types",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q090",
+   "location": "tutorial/cookie-params#declare-cookie-parameters",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q090",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#add-dependencies-to-the-path-operation-decorator",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q090",
+   "location": "tutorial/first-steps#deploy-your-app-optional",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q090",
+   "location": "tutorial/handling-errors#raise-an-httpexception-in-your-code",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q090",
+   "location": "tutorial/path-operation-configuration#summary-and-description",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q090",
+   "location": "tutorial/response-model#response-model-encoding-parameters",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q092",
+   "location": "advanced/templates#using-jinja2templates",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q093",
+   "location": "advanced/templates#using-jinja2templates",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q095",
+   "location": "python-types#type-hints-in-fastapi",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "advanced/behind-a-proxy#redirects-with-https",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "advanced/custom-response#redirectresponse",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "advanced/dataclasses#dataclasses-in-response-model",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "advanced/generate-clients#fastapi-app-with-tags",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "advanced/sub-applications#mount-the-sub-application",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "how-to/authentication-error-status-code#use-old-403-authentication-error-status-codes",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "how-to/extending-openapi#override-the-method",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/background-tasks#add-the-background-task",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/background-tasks#using-backgroundtasks",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/body-multiple-params#multiple-body-params-and-query",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/dependencies/classes-as-dependencies#use-it",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/extra-models#multiple-models",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q097",
+   "location": "advanced/events#async-context-manager",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q097",
+   "location": "advanced/opentelemetry#choose-what-to-record",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q097",
+   "location": "fastapi-cli#fastapi-dev-with-path-or-with-entrypoint-cli-option",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q097",
+   "location": "reference/fastapi#fastapi-class",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q097",
+   "location": "tutorial/path-params#return-enumeration-members",
+   "stratum": "scattered",
+   "grade": 0
+  },
+  {
+   "question": "q099",
+   "location": "tutorial/response-model#return-type-and-data-filtering",
+   "stratum": "scattered",
+   "grade": 0
+  }
+ ]
+}

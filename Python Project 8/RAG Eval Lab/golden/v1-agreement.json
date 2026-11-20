@@ -1,0 +1,1692 @@
+{
+ "golden": "v1.yaml",
+ "method": "A second, independent judge (a separate Claude instance) re-graded a stratified sample of v1's final labels blind: it saw only the question and the section's full text under the same rubric, with no first-pass grade, no reference answer, and no sign of which item is a question's target. Strata: up to 80 pooled sections graded 2, 60 graded 1, 60 graded 0, and 40 targets, each taken in order of sha256('20261120:agreement:{question}:{location}') and presented in order of sha256('20261120:order:{question}:{location}') (analysis/samples.py). `population` counts each stratum in v1, so agreement can be reweighted to the whole label set. When the label set grew, the sample was re-drawn by the same rule and only newly drawn items were judged; second-judge grades for items drawn before are reused. Labels were not changed as a result of this study.",
+ "population": {
+  "answers": 171,
+  "related": 519,
+  "rejected": 2473,
+  "targets": 98
+ },
+ "items": [
+  {
+   "question": "q022",
+   "location": "advanced/opentelemetry#configure-providers-and-exporters",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q060",
+   "location": "advanced/wsgi#using-wsgimiddleware",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q071",
+   "location": "tutorial/schema-extra-example#declare-request-example-data",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q041",
+   "location": "advanced/path-operation-advanced-configuration#using-the-path-operation-function-name-as-the-operationid",
+   "first": 2,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q066",
+   "location": "advanced/security/oauth2-scopes#use-securityscopes",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q081",
+   "location": "advanced/behind-a-proxy#checking-the-current-root-path",
+   "first": 1,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/dependencies/global-dependencies#global-dependencies",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q097",
+   "location": "virtual-environments#create-a-project",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q066",
+   "location": "advanced/security/oauth2-scopes#global-view",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q001",
+   "location": "tutorial/body-nested-models#nested-models",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q070",
+   "location": "tutorial/query-params-str-validations#query-as-the-default-value-or-in-annotated",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/bigger-applications#include-an-apirouter-with-a-custom-prefix-tags-responses-and-dependencies",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q059",
+   "location": "advanced/security/oauth2-scopes#oauth2-security-scheme",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q045",
+   "location": "tutorial/dependencies/dependencies-with-yield#scope-for-sub-dependencies",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q021",
+   "location": "how-to/custom-docs-ui-assets#create-a-path-operation-to-test-it",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q042",
+   "location": "how-to/custom-request-and-route#create-a-custom-gziprequest-class",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q033",
+   "location": "features#automatic-docs",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q023",
+   "location": "async#path-operation-functions",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q018",
+   "location": "tutorial/response-model#response-model-priority",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q027",
+   "location": "how-to/separate-openapi-schemas#same-schema-for-input-and-output-models-in-docs",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/header-params#declare-header-parameters",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/testing#fastapi-app-file",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q021",
+   "location": "how-to/custom-docs-ui-assets#disable-the-automatic-docs",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#add-dependencies-to-the-path-operation-decorator",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q070",
+   "location": "tutorial/query-params-str-validations#add-query-to-annotated-in-the-q-parameter",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q044",
+   "location": "tutorial/request-forms-and-files#request-forms-and-files",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q071",
+   "location": "tutorial/schema-extra-example#body-with-examples",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q042",
+   "location": "how-to/custom-request-and-route#handling-custom-request-body-encodings",
+   "first": 2,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q081",
+   "location": "tutorial/metadata#metadata-for-api",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q053",
+   "location": "tutorial/metadata#metadata-for-api",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q084",
+   "location": "deployment/docker#create-the-fastapi-code",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#update-the-dependencies",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q063",
+   "location": "advanced/response-cookies#return-a-response-directly",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q068",
+   "location": "advanced/opentelemetry#inspect-errors",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q049",
+   "location": "tutorial/testing#testing",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q084",
+   "location": "deployment/docker#fastapi-in-containers-docker",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q080",
+   "location": "advanced/advanced-dependencies#dependencies-with-yield-and-scope",
+   "first": 1,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#scope",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q057",
+   "location": "advanced/settings#settings-in-a-dependency",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q060",
+   "location": "advanced/wsgi#including-wsgi-flask-django-others",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q062",
+   "location": "advanced/settings#types-and-validation",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q100",
+   "location": "project-generation#full-stack-fastapi-template",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q039",
+   "location": "advanced/openapi-callbacks#the-normal-fastapi-app",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q024",
+   "location": "tutorial/security/index#fastapi-utilities",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q091",
+   "location": "deployment/server-workers#multiple-workers",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/simple-oauth2#update-the-dependencies",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q066",
+   "location": "tutorial/security/oauth2-jwt#update-the-token-path-operation",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/oauth2-jwt#hash-and-verify-the-passwords",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q010",
+   "location": "advanced/custom-response#return-a-response",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/bigger-applications#configure-the-entrypoint-in-pyproject-toml",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q099",
+   "location": "python-types#python-types-intro",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q010",
+   "location": "advanced/response-cookies#use-a-response-parameter",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/bigger-applications#include-a-path-operation",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q062",
+   "location": "environment-variables#environment-variables",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q003",
+   "location": "tutorial/path-params-numeric-validations#order-the-parameters-as-you-need-tricks",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q037",
+   "location": "advanced/events#startup-and-shutdown-together",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#why-use-password-hashing",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q097",
+   "location": "index#without-standard-dependencies",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q011",
+   "location": "advanced/response-headers#return-a-response-directly",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q041",
+   "location": "advanced/generate-clients#preprocess-the-openapi-specification-for-the-client-generator",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q035",
+   "location": "advanced/templates#using-jinja2templates",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/first-steps#deploy-to-other-cloud-providers",
+   "first": 0,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q028",
+   "location": "tutorial/dependencies/dependencies-with-yield#dependencies-with-yield-httpexception-except-and-background-tasks",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q092",
+   "location": "tutorial/query-params-str-validations#custom-validation",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q022",
+   "location": "advanced/opentelemetry#trace-request-operations",
+   "first": 0,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q072",
+   "location": "tutorial/dependencies/index#simple-usage",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q032",
+   "location": "advanced/events#lifespan-events",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q059",
+   "location": "advanced/security/oauth2-scopes#use-securityscopes",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q028",
+   "location": "tutorial/dependencies/dependencies-with-yield#a-database-dependency-with-yield",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q095",
+   "location": "tutorial/first-steps#first-steps",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q020",
+   "location": "how-to/conditional-openapi#conditional-openapi-from-settings-and-env-vars",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/bigger-applications#import-fastapi",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q099",
+   "location": "index#recap",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/first-steps#recap",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q070",
+   "location": "tutorial/query-params-str-validations#default-values",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q019",
+   "location": "tutorial/request-forms-and-files#define-file-and-form-parameters",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q048",
+   "location": "tutorial/handling-errors#add-custom-headers",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/oauth2-jwt#oauth2-with-password-and-hashing-bearer-with-jwt-tokens",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q063",
+   "location": "advanced/response-directly#notes",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q029",
+   "location": "tutorial/cookie-param-models#check-the-docs",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q076",
+   "location": "tutorial/request-files#what-is-form-data",
+   "first": 1,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/bigger-applications#import-the-apirouter",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q059",
+   "location": "how-to/conditional-openapi#conditional-openapi",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q043",
+   "location": "tutorial/body-updates#partial-updates-recap",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q027",
+   "location": "how-to/separate-openapi-schemas#model-for-output-response-data",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q049",
+   "location": "advanced/sub-applications#check-the-automatic-api-docs",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q001",
+   "location": "tutorial/cookie-param-models#forbid-extra-cookies",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q003",
+   "location": "tutorial/path-params-numeric-validations#order-the-parameters-as-you-need",
+   "first": 2,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q031",
+   "location": "advanced/async-tests#example",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q006",
+   "location": "advanced/request-body-limits#what-counts-toward-the-limit",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#return-the-token",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q009",
+   "location": "index#performance",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q001",
+   "location": "tutorial/request-form-models#pydantic-models-for-forms",
+   "first": 1,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q065",
+   "location": "how-to/custom-request-and-route#custom-apiroute-class-in-a-router",
+   "first": 2,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q040",
+   "location": "deployment/concepts#multiple-processes-workers",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/first-steps#fastapis-oauth2passwordbearer",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q021",
+   "location": "how-to/custom-docs-ui-assets#custom-docs-ui-static-assets-self-hosting",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q026",
+   "location": "python-types#type-hints-in-fastapi",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q038",
+   "location": "tutorial/debugging#call-uvicorn",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q055",
+   "location": "advanced/path-operation-advanced-configuration#openapi-operationid",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q098",
+   "location": "deployment/concepts#multiple-processes-an-example",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q024",
+   "location": "advanced/security/oauth2-scopes#oauth2-scopes-and-openapi",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q068",
+   "location": "alternatives#flask",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q099",
+   "location": "python-types#type-hints-with-metadata-annotations",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q018",
+   "location": "tutorial/response-model#response-model-parameter",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q055",
+   "location": "advanced/path-operation-advanced-configuration#custom-openapi-path-operation-schema",
+   "first": 1,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q009",
+   "location": "tutorial/security/get-current-user#other-models",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/first-steps#security-first-steps",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/first-steps#deploy-your-app-optional",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q057",
+   "location": "advanced/settings#lru-cache-technical-details",
+   "first": 2,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q067",
+   "location": "deployment/versions#pin-your-fastapi-version",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q024",
+   "location": "tutorial/security/index#openapi",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q043",
+   "location": "tutorial/body-updates#update-replacing-with-put",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q037",
+   "location": "advanced/events#lifespan-events",
+   "first": 0,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q055",
+   "location": "advanced/openapi-callbacks#the-normal-fastapi-app",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q047",
+   "location": "fastapi-cli#fastapi-cli",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q001",
+   "location": "tutorial/cookie-param-models#optional-cookie-parameter-models",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q089",
+   "location": "alternatives#flask",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q084",
+   "location": "deployment/docker#multiple-containers",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q027",
+   "location": "how-to/separate-openapi-schemas#model-for-input-and-output-in-docs",
+   "first": 2,
+   "second": 1,
+   "is_target": true
+  },
+  {
+   "question": "q097",
+   "location": "index#standard-dependencies",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#authenticate",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q088",
+   "location": "async#sub-dependencies",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/first-steps#run-it",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q088",
+   "location": "async#in-a-hurry",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q085",
+   "location": "async#is-concurrency-better-than-parallelism",
+   "first": 0,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q051",
+   "location": "advanced/behind-a-proxy#check-the-responses",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q056",
+   "location": "advanced/security/oauth2-scopes#use-securityscopes",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q092",
+   "location": "advanced/opentelemetry#other-monitoring-services",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q042",
+   "location": "how-to/custom-request-and-route#create-a-custom-gziproute-class",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q071",
+   "location": "tutorial/body#automatic-docs",
+   "first": 0,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q029",
+   "location": "how-to/custom-docs-ui-assets#test-it",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/header-param-models#disable-convert-underscores",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q039",
+   "location": "advanced/openapi-callbacks#the-callback-path-expression",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q043",
+   "location": "tutorial/encoder#using-the-jsonable-encoder",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q034",
+   "location": "deployment/https#domain-name",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q023",
+   "location": "tutorial/security/first-steps#what-it-does",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q024",
+   "location": "reference/security/index#security-tools",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q022",
+   "location": "advanced/opentelemetry#inspect-errors",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q033",
+   "location": "features#pydantic-features",
+   "first": 1,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q029",
+   "location": "how-to/custom-docs-ui-assets#test-the-static-files",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q052",
+   "location": "deployment/docker#what-is-a-container",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q087",
+   "location": "advanced/settings#install-pydantic-settings",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q100",
+   "location": "project-generation#full-stack-fastapi-template-technology-stack-and-features",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q030",
+   "location": "help-fastapi#try-fastapi-cloud",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/request-form-models#combine-form-models",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q038",
+   "location": "tutorial/debugging#about-name-main",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q007",
+   "location": "tutorial/path-params-numeric-validations#number-validations-greater-than-and-less-than-or-equal",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q065",
+   "location": "tutorial/header-params#automatic-conversion",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q075",
+   "location": "deployment/docker#dockerfile",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q059",
+   "location": "advanced/security/oauth2-scopes#declare-scopes-in-path-operations-and-dependencies",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q058",
+   "location": "advanced/settings#settings-and-testing",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#dependency-requirements",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q075",
+   "location": "fastapi-cli#fastapi-dev",
+   "first": 2,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q082",
+   "location": "advanced/security/oauth2-scopes#use-the-scopes",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q014",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#dependency-requirements",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/bigger-applications#include-the-same-router-multiple-times-with-different-prefix",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q039",
+   "location": "advanced/openapi-callbacks#create-the-callback-path-operation",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q077",
+   "location": "features#pydantic-features",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q096",
+   "location": "advanced/settings#creating-the-settings-only-once-with-lru-cache",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q018",
+   "location": "tutorial/response-model#response-model-encoding-parameters",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q050",
+   "location": "advanced/dataclasses#learn-more",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q061",
+   "location": "tutorial/stream-json-lines#what-is-a-stream",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q090",
+   "location": "alternatives#requests",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q025",
+   "location": "tutorial/stream-json-lines#stream-json-lines",
+   "first": 0,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q065",
+   "location": "tutorial/middleware#before-and-after-the-response",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/first-steps#create-main-py",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q014",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#add-dependencies-to-the-path-operation-decorator",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/simple-oauth2#get-the-username-and-password",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q093",
+   "location": "tutorial/schema-extra-example#pydantic-and-fastapi-examples",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q049",
+   "location": "tutorial/testing#testing-file",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q044",
+   "location": "tutorial/request-forms-and-files#recap",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q048",
+   "location": "tutorial/handling-errors#the-resulting-response",
+   "first": 0,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q048",
+   "location": "tutorial/security/simple-oauth2#update-the-dependencies",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/bigger-applications#include-a-path-operation",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q073",
+   "location": "tutorial/request-forms-and-files#define-file-and-form-parameters",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/bigger-applications#avoid-name-collisions",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/get-current-user#inject-the-current-user",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q070",
+   "location": "tutorial/query-params-str-validations#add-more-validations",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q033",
+   "location": "alternatives#django-rest-framework",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/sql-databases#heropublic-the-public-data-model",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#recap",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q032",
+   "location": "advanced/middleware#adding-asgi-middlewares",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q052",
+   "location": "deployment/docker#what-is-a-container-image",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q059",
+   "location": "how-to/conditional-openapi#about-security-apis-and-docs",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/simple-oauth2#oauth2passwordrequestform",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q019",
+   "location": "tutorial/request-files#define-file-parameters",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q086",
+   "location": "tutorial/dependencies/classes-as-dependencies#use-it",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/simple-oauth2#oauth2passwordrequestform",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q009",
+   "location": "deployment/fastapicloud#fastapi-cloud",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q036",
+   "location": "advanced/security/oauth2-scopes#jwt-token-with-scopes",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q074",
+   "location": "advanced/openapi-callbacks#create-a-callback-apirouter",
+   "first": 1,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q021",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#return-values",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q040",
+   "location": "deployment/https#about-https",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q054",
+   "location": "tutorial/request-forms#boolean-form-fields",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q040",
+   "location": "deployment/https#certificate-renewal",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/request-form-models#summary",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q026",
+   "location": "alternatives#flask-rest-frameworks",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q067",
+   "location": "advanced/events#alternative-events-deprecated",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q033",
+   "location": "features#based-on-open-standards",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q075",
+   "location": "ai-development#run-your-app",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/first-steps#the-password-flow",
+   "first": 1,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#use-the-form-data",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#oauth2passwordrequestform",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q063",
+   "location": "advanced/response-directly#return-a-response",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q001",
+   "location": "tutorial/query-param-models#summary",
+   "first": 2,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q060",
+   "location": "advanced/wsgi#check-it",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q006",
+   "location": "tutorial/request-files#uploadfile-with-additional-metadata",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q067",
+   "location": "deployment/versions#upgrading-the-fastapi-versions",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q095",
+   "location": "history-design-future#requirements",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q084",
+   "location": "fastapi-cli#fastapi-cli",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q001",
+   "location": "tutorial/cookie-param-models#combine-parameter-models",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/header-param-models#combine-parameter-models",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q006",
+   "location": "tutorial/request-files#multiple-file-uploads-with-additional-metadata",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q074",
+   "location": "advanced/openapi-callbacks#add-the-callback-router",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q036",
+   "location": "advanced/security/http-basic-auth#simple-http-basic-auth",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q059",
+   "location": "advanced/security/oauth2-scopes#verify-the-scopes",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q059",
+   "location": "tutorial/security/oauth2-jwt#advanced-usage-with-scopes",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q059",
+   "location": "advanced/security/oauth2-scopes#dependency-tree-and-scopes",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q028",
+   "location": "tutorial/dependencies/dependencies-with-yield#scope-for-sub-dependencies",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/header-param-models#optional-header-parameter-models",
+   "first": 0,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q047",
+   "location": "tutorial/body#editor-support",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q086",
+   "location": "tutorial/dependencies/classes-as-dependencies#a-dict-from-the-previous-example",
+   "first": 2,
+   "second": 1,
+   "is_target": true
+  },
+  {
+   "question": "q027",
+   "location": "how-to/separate-openapi-schemas#model-for-output-in-docs",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q015",
+   "location": "advanced/generate-clients#open-source-sdk-generators",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q068",
+   "location": "advanced/opentelemetry#run-the-app",
+   "first": 1,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q063",
+   "location": "advanced/response-directly#using-the-jsonable-encoder-in-a-response",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q080",
+   "location": "advanced/advanced-dependencies#use-the-instance-as-a-dependency",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q088",
+   "location": "tutorial/dependencies/index#to-async-or-not-to-async",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q066",
+   "location": "advanced/security/oauth2-scopes#jwt-token-with-scopes",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q022",
+   "location": "deployment/server-workers#multiple-workers",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q095",
+   "location": "history-design-future#future",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q077",
+   "location": "features#starlette-features",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q032",
+   "location": "advanced/events#technical-details",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q025",
+   "location": "tutorial/server-sent-events#server-sent-events-sse",
+   "first": 2,
+   "second": 2,
+   "is_target": true
+  },
+  {
+   "question": "q094",
+   "location": "tutorial/background-tasks#create-a-task-function",
+   "first": 0,
+   "second": 1,
+   "is_target": false
+  },
+  {
+   "question": "q013",
+   "location": "alternatives#flask-rest-frameworks",
+   "first": 0,
+   "second": 0,
+   "is_target": false
+  },
+  {
+   "question": "q073",
+   "location": "tutorial/request-forms#about-form-fields",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/bigger-applications#avoid-name-collisions",
+   "first": 2,
+   "second": 2,
+   "is_target": false
+  }
+ ]
+}

@@ -1,2 +1,8 @@
 # The fetched FastAPI docs: third-party content, reproducible from corpus.lock.json.
 data/
+# Ad-hoc evaluation runs (`raglab eval run`); the run each README quotes lives in that stage's results/.
+runs/
+# Local environment and caches (don't rely on the parent repository to ignore them).
+.venv/
+__pycache__/
+.pytest_cache/
