@@ -1,8 +1,13 @@
-# The fetched FastAPI docs: third-party content, reproducible from corpus.lock.json.
+# The fetched FastAPI docs and model caches: reproducible from corpus.lock.json and
+# the pinned model revisions. `data` and `.venv` may be symlinks to *.nosync
+# folders (which iCloud Drive doesn't sync), so they're ignored as files too.
 data/
+/data
+*.nosync/
 # Ad-hoc evaluation runs (`raglab eval run`); the run each README quotes lives in that stage's results/.
 runs/
 # Local environment and caches (don't rely on the parent repository to ignore them).
 .venv/
+/.venv
 __pycache__/
 .pytest_cache/
