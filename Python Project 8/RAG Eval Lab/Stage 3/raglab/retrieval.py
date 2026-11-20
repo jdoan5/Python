@@ -1,8 +1,8 @@
 """The lexical retrievers, and the registry of every retriever Stage 3 measures.
 
-Stage 3 adds three neural retrievers (dense, hybrid, hybrid+rerank) in
-neural.py. They are imported only when one is built, so the lexical path never
-loads PyTorch. The two lexical ones live here:
+Stage 3 adds four neural retrievers (dense, hybrid, bm25+rerank and
+hybrid+rerank) in neural.py. They are imported only when one is built, so the
+lexical path never loads PyTorch. The two lexical ones live here:
 
 - tfidf: RAG Mini Chat's retriever, reproduced exactly — scikit-learn's
   TfidfVectorizer(ngram_range=(1, 2), stop_words="english") scored by cosine.
@@ -45,7 +45,9 @@ class Hit:
 
 
 class Retriever(Protocol):
-    name: ClassVar[str]
+    name: str
+    chunks: list[Chunk]   # what it indexes, in corpus order
+    with_context: bool    # whether it indexes each chunk with its heading breadcrumb
 
     def search(self, query: str, k: int = 10) -> list[Hit]: ...
 
@@ -73,11 +75,13 @@ class TfidfRetriever:
         except ValueError as e:  # scikit-learn's "empty vocabulary"
             raise RetrievalError(f"nothing indexable: {e}") from e
 
-    def search(self, query: str, k: int = 10) -> list[Hit]:
+    def scores(self, query: str) -> np.ndarray:
         query_vec = self.vectorizer.transform([query])
         # Rows and query are L2-normalised, so the dot product is the cosine.
-        scores = (self.matrix @ query_vec.T).toarray().ravel()
-        return _rank(scores, self.chunks, k)
+        return (self.matrix @ query_vec.T).toarray().ravel()
+
+    def search(self, query: str, k: int = 10) -> list[Hit]:
+        return _rank(self.scores(query), self.chunks, k)
 
 
 class Bm25Retriever:
@@ -115,7 +119,7 @@ class Bm25Retriever:
         avg_len = lengths.mean() or 1.0
         self._length_norm = k1 * (1 - b + b * lengths / avg_len)
 
-    def search(self, query: str, k: int = 10) -> list[Hit]:
+    def scores(self, query: str) -> np.ndarray:
         scores = np.zeros(len(self.chunks))
         # A repeated query term counts each time, as in the Job Search Agent.
         for term in self.analyzer(query):
@@ -124,11 +128,14 @@ class Bm25Retriever:
                 continue
             idx, tf = posting
             scores[idx] += self._idf[term] * tf * (self.k1 + 1) / (tf + self._length_norm[idx])
-        return _rank(scores, self.chunks, k)
+        return scores
+
+    def search(self, query: str, k: int = 10) -> list[Hit]:
+        return _rank(self.scores(query), self.chunks, k)
 
 
 RETRIEVERS: dict[str, type] = {r.name: r for r in (Bm25Retriever, TfidfRetriever)}
-NEURAL = ("dense", "hybrid", "hybrid+rerank")  # built by raglab.neural
+NEURAL = ("dense", "hybrid", "bm25+rerank", "hybrid+rerank")  # built by raglab.neural
 # Every retriever, in report order: Stage 2's two (as Stage 2 ordered them), then Stage 3's three.
 RETRIEVER_NAMES: tuple[str, ...] = (*sorted(RETRIEVERS), *NEURAL)
 
@@ -137,7 +144,7 @@ def _unknown(name: str) -> ValueError:
     return ValueError(f"unknown retriever {name!r}; choose from {', '.join(RETRIEVER_NAMES)}")
 
 
-def retriever_config(name: str) -> dict:
+def retriever_config(name: str, variant: dict | None = None) -> dict:
     """Parameters for run manifests: everything that decides a retriever's scores."""
     if name == "bm25":
         return {"name": name, "k1": K1, "b": B, "idf_floor": IDF_FLOOR, "analyzer": "scikit-learn word, english stop words"}
@@ -146,7 +153,7 @@ def retriever_config(name: str) -> dict:
     if name in NEURAL:
         from raglab.neural import neural_config
 
-        return neural_config(name)
+        return neural_config(name, variant)
     raise _unknown(name)
 
 
@@ -154,7 +161,7 @@ def build_retriever(name: str, chunks: Sequence[Chunk], with_context: bool = Tru
     if name in RETRIEVERS:
         return RETRIEVERS[name](chunks, with_context=with_context)
     if name in NEURAL:
-        from raglab.neural import NEURAL_RETRIEVERS
+        from raglab.neural import build_neural
 
-        return NEURAL_RETRIEVERS[name](chunks, with_context=with_context)
+        return build_neural(name, chunks, with_context)
     raise _unknown(name)

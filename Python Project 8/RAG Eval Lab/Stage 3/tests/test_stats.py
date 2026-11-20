@@ -133,3 +133,39 @@ def test_wilson_interval_stays_honest_at_the_edges():
     assert mean == 0.5 and lo < 0.5 < hi
     with pytest.raises(ValueError, match="0/1"):
         wilson_ci([0.5, 1.0])
+
+
+# --- Stage 3: groups of different questions, and target-page clusters ---------------------------
+
+
+def test_two_groups_of_different_questions_get_a_stratified_interval_and_a_permutation_test():
+    from raglab.stats import permutation_pvalue, two_group_diff_ci
+
+    a, b = np.array([1.0, 0.8, 0.9, 1.0, 0.7] * 6), np.array([0.1, 0.0, 0.2, 0.1, 0.0] * 6)
+    diff, lo, hi = two_group_diff_ci(a, b, resamples=2000, seed=1)
+    assert diff == pytest.approx(a.mean() - b.mean()) and lo <= diff <= hi and lo > 0
+    assert permutation_pvalue(a, b, resamples=2000, seed=1) == pytest.approx(1 / 2001)  # never exactly 0
+    assert permutation_pvalue(a, a.copy(), resamples=2000, seed=1) == 1.0
+    noise = np.random.default_rng(3)
+    assert permutation_pvalue(noise.random(30), noise.random(30), resamples=2000, seed=1) > 0.05
+    with pytest.raises(ValueError):
+        two_group_diff_ci([], [1.0])
+
+
+def test_page_clusters_flip_and_resample_together():
+    from raglab.stats import cluster_bootstrap_ci, cluster_sign_flip_pvalue, sign_flip_pvalue
+
+    # 20 pages, two questions each; the two questions on a page always move together.
+    pages = [f"p{i // 2}" for i in range(40)]
+    d = np.repeat(np.random.default_rng(5).normal(0.15, 0.3, 20), 2)
+    per_question = sign_flip_pvalue(d, 5000, 7)
+    per_page = cluster_sign_flip_pvalue(d, pages, 5000, 7)
+    assert per_page > per_question  # pairs that agree look twice as convincing when counted twice
+    mean, lo, hi = cluster_bootstrap_ci(d, pages, 5000, 7)
+    assert mean == pytest.approx(d.mean()) and lo <= mean <= hi
+    # with every question on its own page, the cluster test is the plain test
+    singletons = [f"p{i}" for i in range(40)]
+    assert cluster_sign_flip_pvalue(d, singletons, 5000, 7) == pytest.approx(per_question, abs=0.02)
+    assert cluster_sign_flip_pvalue(np.zeros(4), ["a", "a", "b", "b"]) == 1.0
+    with pytest.raises(ValueError, match="one cluster label"):
+        cluster_sign_flip_pvalue(d, pages[:-1])

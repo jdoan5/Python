@@ -21,7 +21,7 @@ This is the project that closes both.
 |---|---|---|
 | [1](Stage%201/) | Pinned corpus, three chunking strategies, BM25 and TF-IDF retrievers | ✅ done |
 | [2](Stage%202/) | Golden set of 98 questions labelled by section; recall@k, MRR, nDCG, answer coverage, each with 95% intervals; paired tests; versioned run manifests | ✅ done |
-| 3 | Dense embeddings, hybrid fusion, reranking — each measured against Stage 2 | next |
+| [3](Stage%203/) | Dense embeddings, hybrid fusion, reranking — each measured against Stage 2 | in progress ([analysis plan](Stage%203/PLAN.md)) |
 | 4 | Answers with enforced citations; LLM-as-judge faithfulness; model cost/quality trade-offs | |
 | 5 | GitHub Actions regression gate: retrieval evals on every PR, LLM-judged evals nightly | |
 | 6 | Live demo: ask the docs, with clickable citations and an experiments leaderboard | |
@@ -31,8 +31,9 @@ This is the project that closes both.
 ```
 RAG Eval Lab/
   corpus.lock.json   the pinned corpus: FastAPI tag, commit, SHA-256 per file (kept in git)
+  models.lock.json   the pinned models: Hugging Face repo, revision, SHA-256 and size per file (kept in git)
   golden/            the questions every stage is scored against, with graded section labels
-  data/              the fetched docs (git-ignored; rebuilt from the lock)
+  data/              the fetched docs, models and caches (git-ignored; rebuilt from the locks)
   .venv/             one environment shared by every stage (git-ignored)
   Stage N/           a self-contained snapshot of the project at that stage
 ```

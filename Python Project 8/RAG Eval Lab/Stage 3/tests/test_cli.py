@@ -163,7 +163,7 @@ def golden_home(home) -> Path:
             {"id": "q002", "question": "Where is the Swagger UI docs page?", "style": "keyword",
              "target": DOCS, "judgments": {DOCS: 2}},
         ],
-    }, home / "golden" / "v1.yaml")
+    }, home / "golden" / "v2.yaml")
     return home
 
 
@@ -174,7 +174,7 @@ def test_golden_validate_summarises_a_good_set(golden_home):
 
 
 def test_golden_validate_rejects_labels_for_another_corpus(golden_home):
-    path = golden_home / "golden" / "v1.yaml"
+    path = golden_home / "golden" / "v2.yaml"
     fingerprint = CorpusLock.load(golden_home / "corpus.lock.json").fingerprint
     path.write_text(path.read_text(encoding="utf-8").replace(fingerprint, "f" * 64), encoding="utf-8")
     result = run("golden", "validate")

@@ -32,6 +32,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from raglab.corpus import CorpusLock, default_corpus_dir, default_lock_path, load_corpus  # noqa: E402
 from raglab.experiments import FACTORIAL, build_retrievers  # noqa: E402
+
+# v1's draws were defined over Stage 2's twelve configurations, the lexical cells of Stage 3's factorial.
+STAGE2_CONFIGS = tuple(c for c in FACTORIAL if c.retriever in ("bm25", "tfidf"))
 from raglab.golden import default_golden_path, load_golden  # noqa: E402
 from raglab.metrics import HEADLINE_BUDGET, pack  # noqa: E402
 from raglab.sections import SectionIndex  # noqa: E402
@@ -50,7 +53,7 @@ def rank(*parts: object) -> str:
 def load():
     lock = CorpusLock.load(default_lock_path())
     docs = list(load_corpus(default_corpus_dir(lock.ref), lock=lock).documents)
-    return docs, SectionIndex(docs), load_golden(default_golden_path())
+    return docs, SectionIndex(docs), load_golden(default_golden_path(1))
 
 
 def agreement_draw(golden) -> list[tuple[str, str, int, bool]]:
@@ -68,9 +71,9 @@ def agreement_draw(golden) -> list[tuple[str, str, int, bool]]:
 
 def unjudged_population(docs, index, golden) -> dict[tuple[str, str], str]:
     """Every unjudged pair inside some configuration's headline-budget context -> its stratum."""
-    retrievers = build_retrievers(docs, FACTORIAL)
+    retrievers = build_retrievers(docs, STAGE2_CONFIGS)
     configs_by_pair: dict[tuple[str, str], set[str]] = {}
-    for config in FACTORIAL:
+    for config in STAGE2_CONFIGS:
         for q in golden.questions:
             hits = retrievers[config.name].search(q.text, len(retrievers[config.name].chunks))
             spans = [(h.chunk.doc_id, h.chunk.start, h.chunk.end) for h in hits]
@@ -113,7 +116,7 @@ def main() -> None:
     parser.add_argument("--out", type=Path, help="folder for worksheets (agreement, unjudged)")
     args = parser.parse_args()
     docs, index, golden = load()
-    folder = default_golden_path().parent
+    folder = default_golden_path(1).parent
 
     if args.what == "agreement":
         draw = agreement_draw(golden)

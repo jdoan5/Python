@@ -7,8 +7,10 @@ A run:
    largest budget is filled whenever the retriever has enough to fill it, and
    scores the ranking (metrics.py);
 3. summarises them. That means a bootstrap interval on every mean, paired
-   differences against the baseline with Holm-adjusted p-values, and the
-   average effect of each switch in the factorial;
+   differences against the baseline with Holm-adjusted p-values, the average
+   effect of each switch in the factorial, and the analysis plan's
+   confirmatory family: one primary test, then a Holm-adjusted secondary
+   family that counts only if the primary test passes;
 4. writes the run to a directory:
    - manifest.json: what produced the numbers (code, corpus, golden set,
      every parameter, library versions);
@@ -26,7 +28,8 @@ import hashlib
 import json
 import platform
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from statistics import NormalDist
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Mapping, Sequence
@@ -37,7 +40,7 @@ import yaml
 
 from raglab import __version__
 from raglab.corpus import CorpusLock, Document, project_root
-from raglab.experiments import BASELINE, RetrievalConfig, build_retrievers
+from raglab.experiments import BASELINE, CHAIN, CHALLENGER, EXPLORATORY_PAIRS, INCUMBENT, RetrievalConfig, build_retrievers
 from raglab.golden import STYLES, GoldenSet, Question
 from raglab.metrics import (
     BINARY_METRICS, BUDGETS, GAIN, HEADLINE_BUDGET, HEADLINE_METRICS, K_VALUES, METRICS, RANK_DEPTH, Span, pack, score,
@@ -45,22 +48,45 @@ from raglab.metrics import (
 from raglab.retrieval import Retriever
 from raglab.sections import MIN_OVERLAP_CHARS, SectionIndex
 from raglab.stats import (
-    CONFIDENCE, RESAMPLES, SEED, bootstrap_indices, holm, mean_ci, paired_diff_ci, sign_flip_pvalue, wilson_ci,
+    CONFIDENCE, RESAMPLES, SEED, bootstrap_indices, cluster_bootstrap_ci, cluster_sign_flip_pvalue, holm, mean_ci,
+    paired_diff_ci, permutation_pvalue, sign_flip_pvalue, two_group_diff_ci, wilson_ci,
 )
 
-SCHEMA = 3  # 3: best coverage, Wilson intervals for yes/no rates, robustness-file hashes in the manifest
+SCHEMA = 4  # 4: neural retrievers, the confirmatory family, models, numerics and the plan in the manifest
 # Switch effects cover every metric the README's tables show.
 EFFECT_METRICS = (
-    "success@5", "recall@5", "mrr@10", "ndcg@10",
+    "success@5", "recall@5", "mrr@10", "ndcg@10", "ndcg_answers@10",
     *(f"{m}@{HEADLINE_BUDGET}" for m in ("budget_success", "budget_recall", "coverage", "best_coverage")),
 )
 
 # The factorial's switches: position in RetrievalConfig.cell, and the comparisons reported.
+# Retriever switches are matched over the six chunker x breadcrumb cells. Chunker and breadcrumb
+# effects are computed within each retriever family, never pooled across families that work differently.
 FACTORS: tuple[tuple[str, int, tuple[tuple[object, object], ...]], ...] = (
     ("chunker", 0, (("paragraph", "heading"), ("paragraph", "fixed"), ("fixed", "heading"))),
-    ("retriever", 1, (("tfidf", "bm25"),)),
+    ("retriever", 1, (("tfidf", "bm25"), ("bm25", "dense"), ("bm25", "hybrid"), ("dense", "hybrid"),
+                      ("hybrid", "hybrid+rerank"),
+                      # the control exists only at heading chunks with the breadcrumb: one matched pair each
+                      ("bm25", "bm25+rerank"), ("bm25+rerank", "hybrid+rerank"))),
     ("breadcrumb", 2, ((False, True),)),
 )
+RETRIEVER_FAMILIES: dict[str, tuple[str, ...]] = {
+    "lexical": ("bm25", "tfidf"), "dense": ("dense",), "hybrid": ("hybrid",),
+    "bm25+rerank": ("bm25+rerank",), "hybrid+rerank": ("hybrid+rerank",),
+}
+
+# The analysis plan's confirmatory tests (PLAN.md). The CHAIN is tested in order on PRIMARY_METRIC, each
+# link at ALPHA and only if every earlier link was significant; its first link is the headline. The
+# headline pair's SUPPORTING_METRICS are Holm-adjusted together and claimed only if the headline holds.
+PRIMARY_METRIC = "mrr@10"
+ALPHA = 0.05
+SUPPORTING_METRICS = ("success@5", "ndcg_answers@10", "ndcg@10", "recall@5", f"coverage@{HEADLINE_BUDGET}",
+                      f"budget_recall@{HEADLINE_BUDGET}")
+# The style interaction (descriptive): dense - BM25 on paraphrase questions minus the same on keyword questions.
+INTERACTION_PAIR = ("heading+bm25", "heading+dense")
+INTERACTION_STYLES = ("paraphrase", "keyword")
+INTERACTION_METRICS = ("ndcg_answers@10", "recall@5")  # the first is the pre-specified one
+_Z80 = NormalDist().inv_cdf(1 - ALPHA / 2) + NormalDist().inv_cdf(0.80)  # two-sided alpha, 80% power
 
 
 @dataclass(frozen=True)
@@ -69,6 +95,11 @@ class QuestionResult:
     ranking: tuple[str | None, ...]  # top sections; None = a chunk that retrieved no section
     top5_chars: int                  # how much text the first five chunks are
     in_budget: frozenset[str] = frozenset()  # sections retrieved inside the headline budget
+    in_budgets: Mapping[int, frozenset[str]] = field(default_factory=dict)  # ...and inside every budget
+    rerank_depth: int | None = None  # how many first-stage chunks a reranker re-scored
+    window_chunks: Mapping[int, int] = field(default_factory=dict)  # chunks packed into each budget
+    tie_in_top5: bool = False        # an exact score tie set the order of two of the first five chunks
+    near_tie_in_top10: bool = False  # two adjacent scores among the first ten chunks differ by under 1e-6
 
 
 RunResults = dict[str, list[QuestionResult]]  # config name -> one result per question, in golden order
@@ -99,14 +130,23 @@ def run_configs(
         retriever = retrievers[config.name]
         per_question = []
         for q in questions:
-            spans = ranked_spans(retriever, q.text)
+            hits = retriever.search(q.text, len(retriever.chunks))
+            spans = [(h.chunk.doc_id, h.chunk.start, h.chunk.end) for h in hits]
             values, ranking = score(spans, q.primary, q.judgments, index)
-            in_budget = frozenset(
-                ref.location for doc_id, start, end in pack(spans, HEADLINE_BUDGET)
-                for ref, _ in index.retrieved_by(doc_id, start, end)
-            )
+            windows = {
+                budget: frozenset(ref.location for doc_id, start, end in pack(spans, budget)
+                                  for ref, _ in index.retrieved_by(doc_id, start, end))
+                for budget in BUDGETS
+            }
+            depth = None
+            if hasattr(retriever, "depth_for"):
+                depth = retriever.depth_for(retriever.first_stage.search(q.text, len(retriever.chunks)))
+            top = [h.score for h in hits[:RANK_DEPTH]]
             per_question.append(QuestionResult(
-                values, tuple(ranking), sum(end - start for _, start, end in spans[:5]), in_budget,
+                values, tuple(ranking), sum(end - start for _, start, end in spans[:5]), windows[HEADLINE_BUDGET],
+                windows, depth, {budget: len(pack(spans, budget)) for budget in BUDGETS},
+                tie_in_top5=any(top[i] == top[i + 1] for i in range(min(5, len(top)) - 1)),
+                near_tie_in_top10=any(0 < abs(top[i] - top[i + 1]) < 1e-6 for i in range(len(top) - 1)),
             ))
         results[config.name] = per_question
     return results
@@ -127,6 +167,22 @@ def unjudged(
         for name, per_question in results.items():
             for location in per_question[i].ranking[:depth]:
                 if location is not None and location not in q.judgments:
+                    pool.setdefault(q.id, {}).setdefault(location, []).append(name)
+    return pool
+
+
+def unjudged_in_windows(
+    questions: Sequence[Question], results: RunResults, budget: int = HEADLINE_BUDGET,
+    configs: Sequence[str] | None = None,
+) -> dict[str, dict[str, list[str]]]:
+    """For each question: sections inside some configuration's `budget` window that nobody has judged yet."""
+    pool: dict[str, dict[str, list[str]]] = {}
+    for i, q in enumerate(questions):
+        for name, per_question in results.items():
+            if configs is not None and name not in configs:
+                continue
+            for location in sorted(per_question[i].in_budgets.get(budget, per_question[i].in_budget)):
+                if location not in q.judgments:
                     pool.setdefault(q.id, {}).setdefault(location, []).append(name)
     return pool
 
@@ -188,19 +244,35 @@ def summarize(
 
     diagnostics = {}
     for name in names:
-        judged, judged_budget, sections_budget, empty = [], [], [], []
+        judged, empty = [], []
+        judged_budget: dict[int, list[float]] = {b: [] for b in BUDGETS}
         for q, r in zip(questions, results[name]):
             found = [loc for loc in r.ranking if loc is not None]
             judged.append(sum(loc in q.judgments for loc in found) / len(found) if found else 1.0)
-            judged_budget.append(sum(loc in q.judgments for loc in r.in_budget) / len(r.in_budget) if r.in_budget else 1.0)
-            sections_budget.append(len(r.in_budget))
+            for b in BUDGETS:
+                window = r.in_budgets.get(b, r.in_budget if b == HEADLINE_BUDGET else frozenset())
+                judged_budget[b].append(sum(loc in q.judgments for loc in window) / len(window) if window else 1.0)
             empty.append(sum(loc is None for loc in r.ranking) / RANK_DEPTH)
+        depths = [r.rerank_depth for r in results[name] if r.rerank_depth is not None]
+        related = [sum(q.judgments.get(loc) == 1 for loc in r.ranking if loc is not None) / RANK_DEPTH
+                   for q, r in zip(questions, results[name])]
+        unreranked = {
+            str(b): float(np.mean([max(0, r.window_chunks[b] - r.rerank_depth) / r.window_chunks[b]
+                                   if r.window_chunks.get(b) else 0.0 for r in results[name]]))
+            for b in BUDGETS
+        } if depths else None
         diagnostics[name] = {
             "judged@10": float(np.mean(judged)),
-            f"judged_in_budget@{HEADLINE_BUDGET}": float(np.mean(judged_budget)),
-            f"sections_in_budget@{HEADLINE_BUDGET}": float(np.mean(sections_budget)),
+            f"judged_in_budget@{HEADLINE_BUDGET}": float(np.mean(judged_budget[HEADLINE_BUDGET])),
+            f"sections_in_budget@{HEADLINE_BUDGET}": float(np.mean([len(r.in_budget) for r in results[name]])),
             "empty_slots@10": float(np.mean(empty)),
             "top5_chars": float(np.mean([r.top5_chars for r in results[name]])),
+            "judged_in_budget": {str(b): float(np.mean(v)) for b, v in judged_budget.items()},
+            "rerank_depth": {"mean": float(np.mean(depths)), "max": int(max(depths))} if depths else None,
+            "unreranked_share_of_window": unreranked,  # chunks in each budget window that lie below the rerank depth
+            "related_share@10": float(np.mean(related)),  # top-10 slots holding a section judged merely related
+            "tie_in_top5": float(np.mean([r.tie_in_top5 for r in results[name]])),
+            "near_tie_in_top10": float(np.mean([r.near_tie_in_top10 for r in results[name]])),
         }
 
     return {
@@ -214,7 +286,144 @@ def summarize(
         "effects": factor_effects(configs, matrix, idx, resamples, seed),
         "by_style": by_style,
         "diagnostics": diagnostics,
+        "confirmatory": confirmatory(questions, matrix, idx, resamples, seed),
+        "by_style_paired": by_style_paired(questions, matrix, resamples, seed),
+        "interaction": interaction(questions, matrix, resamples, seed),
     }
+
+
+def _verdict(delta: float, hi: float, p: float, predicted: int) -> str:
+    """How a test reads against its prediction: supported, contradicted, or inconclusive."""
+    if p < ALPHA:
+        if predicted == 0:
+            return "difference: higher" if delta > 0 else "difference: lower"
+        return "supported" if delta * predicted > 0 else "contradicted"
+    return "contradicted" if predicted > 0 and hi < 0 else "inconclusive"
+
+
+def confirmatory(
+    questions: Sequence[Question], matrix: Mapping[str, Mapping[str, np.ndarray]], idx: np.ndarray,
+    resamples: int = RESAMPLES, seed: int = SEED,
+) -> dict | None:
+    """The analysis plan's confirmatory tests, or None when their configurations weren't run.
+
+    The CHAIN is a fixed sequence on PRIMARY_METRIC: each link is tested at
+    ALPHA (two-sided paired sign-flip) only if every earlier link was
+    significant, which keeps the chance of any false claim at ALPHA. The
+    headline pair's SUPPORTING_METRICS are Holm-adjusted together and claimed
+    only if the headline (the first link) is significant. Every test is also
+    run at the level of target pages (questions from the same page flip and
+    resample together); a result that holds only per question is fragile.
+    """
+    needed = {c.name for a, b, _ in CHAIN for c in (a, b)}
+    if any(name not in matrix for name in needed):
+        return None
+    n = len(questions)
+    pages = [q.target.split("#", 1)[0] for q in questions]
+
+    def test(a: str, b: str, metric: str, predicted: int) -> dict:
+        d = matrix[b][metric] - matrix[a][metric]
+        delta, lo, hi = paired_diff_ci(matrix[a][metric], matrix[b][metric], idx)
+        _, page_lo, page_hi = cluster_bootstrap_ci(d, pages, resamples, seed)
+        p = sign_flip_pvalue(d, resamples, seed + 1)
+        page_p = cluster_sign_flip_pvalue(d, pages, resamples, seed + 1)
+        return {"from": a, "to": b, "metric": metric, "predicted": predicted, "delta": delta, "lo": lo, "hi": hi,
+                "p": p, "page_level": {"lo": page_lo, "hi": page_hi, "p": page_p},
+                "fragile": bool(p < ALPHA <= page_p),
+                "resolvable": float(_Z80 * d.std(ddof=1) / np.sqrt(n)) if n > 1 else None}
+
+    chain, reached = [], True
+    for a, b, predicted in CHAIN:
+        t = test(a.name, b.name, PRIMARY_METRIC, predicted)
+        t["tested"] = reached
+        if reached:
+            t["significant"] = t["p"] < ALPHA
+            t["verdict"] = _verdict(t["delta"], t["hi"], t["p"], predicted)
+            reached = t["significant"]
+        else:
+            t["significant"] = None
+            t["verdict"] = "not reached: an earlier link was not significant, so this is exploratory"
+        chain.append(t)
+    headline = chain[0]
+    supporting = [test(INCUMBENT.name, CHALLENGER.name, m, 1) for m in SUPPORTING_METRICS]
+    for t, p_holm in zip(supporting, holm([t["p"] for t in supporting])):
+        t["p_holm"] = p_holm
+        t["verdict"] = (_verdict(t["delta"], t["hi"], p_holm, 1) if headline["significant"]
+                        else "exploratory: the headline was not significant")
+    graded, answers = (next(t for t in supporting if t["metric"] == m) for m in ("ndcg@10", "ndcg_answers@10"))
+    incumbent, challenger = matrix[INCUMBENT.name]["success@5"], matrix[CHALLENGER.name]["success@5"]
+    return {
+        "alpha": ALPHA,
+        "procedure": "chain tested in order on the primary metric, each link only if all earlier links were "
+                     "significant; supporting metrics Holm-adjusted, claimed only if the headline is significant",
+        "chain": chain,
+        "supporting": supporting,
+        "ndcg_versions_agree": bool(np.sign(graded["delta"]) == np.sign(answers["delta"])),
+        "exploratory": [test(a.name, b.name, PRIMARY_METRIC, 0) for a, b in EXPLORATORY_PAIRS
+                        if a.name in matrix and b.name in matrix],
+        "success@5_changes": {
+            "fixed": int(np.count_nonzero((incumbent == 0) & (challenger == 1))),
+            "broken": int(np.count_nonzero((incumbent == 1) & (challenger == 0))),
+            "both_found": int(np.count_nonzero((incumbent == 1) & (challenger == 1))),
+            "both_missed": int(np.count_nonzero((incumbent == 0) & (challenger == 0))),
+        },
+    }
+
+
+def by_style_paired(
+    questions: Sequence[Question], matrix: Mapping[str, Mapping[str, np.ndarray]],
+    resamples: int = RESAMPLES, seed: int = SEED,
+) -> dict:
+    """Paired differences within each question style: the headline pair on every metric the tables
+    show, and every other chain link and exploratory pair on the primary metric. Descriptive: no tests."""
+    pairs = [(INCUMBENT.name, CHALLENGER.name, EFFECT_METRICS)] + [
+        (a.name, b.name, (PRIMARY_METRIC,)) for a, b, _ in CHAIN[1:]
+    ] + [(a.name, b.name, (PRIMARY_METRIC,)) for a, b in EXPLORATORY_PAIRS]
+    out: dict = {}
+    for style in STYLES:
+        mask = np.array([q.style == style for q in questions])
+        if not mask.any():
+            continue
+        idx = bootstrap_indices(int(mask.sum()), resamples, seed)
+        rows = {}
+        for a, b, metrics in pairs:
+            if a in matrix and b in matrix:
+                rows[f"{a} -> {b}"] = {
+                    m: dict(zip(("delta", "lo", "hi"), paired_diff_ci(matrix[a][m][mask], matrix[b][m][mask], idx)))
+                    for m in metrics
+                }
+        out[style] = {"n": int(mask.sum()), "pairs": rows}
+    return out
+
+
+def interaction(
+    questions: Sequence[Question], matrix: Mapping[str, Mapping[str, np.ndarray]],
+    resamples: int = RESAMPLES, seed: int = SEED,
+) -> dict | None:
+    """Descriptive: is dense retrieval's gain over BM25 larger on paraphrase than on keyword questions?
+
+    The two styles hold different questions, so the interval resamples within
+    each style and the p-value shuffles style labels between them.
+    """
+    a, b = INTERACTION_PAIR
+    if a not in matrix or b not in matrix:
+        return None
+    first, second = INTERACTION_STYLES
+    in_first = np.array([q.style == first for q in questions])
+    in_second = np.array([q.style == second for q in questions])
+    if not in_first.any() or not in_second.any():
+        return None
+    out = {"pair": f"{a} -> {b}", "styles": [first, second], "pre_specified_metric": INTERACTION_METRICS[0],
+           "metrics": {}}
+    for m in INTERACTION_METRICS:
+        d = matrix[b][m] - matrix[a][m]
+        diff, lo, hi = two_group_diff_ci(d[in_first], d[in_second], resamples, seed)
+        out["metrics"][m] = {
+            f"{first}_mean": float(d[in_first].mean()), f"{second}_mean": float(d[in_second].mean()),
+            "difference": diff, "lo": lo, "hi": hi,
+            "p": permutation_pvalue(d[in_first], d[in_second], resamples, seed + 2),
+        }
+    return out
 
 
 def factor_effects(
@@ -224,7 +433,7 @@ def factor_effects(
     resamples: int = RESAMPLES,
     seed: int = SEED,
 ) -> list[dict]:
-    """What flipping one switch is worth, averaged over every setting of the other two.
+    """What flipping one switch is worth, averaged over the matched settings of the others.
 
     For a switch going a -> b, each pair of configurations identical except for
     that switch gives a per-question difference. The effect is the average of
@@ -235,28 +444,32 @@ def factor_effects(
     """
     by_cell = {c.cell: c.name for c in configs}
     effects = []
-    for factor, position, pairs in FACTORS:
-        for a, b in pairs:
-            matched = []
-            for cell, name in by_cell.items():
-                if cell[position] == a:
-                    other = cell[:position] + (b,) + cell[position + 1:]
-                    if other in by_cell:
-                        matched.append((name, by_cell[other]))
-            if not matched:
-                continue
-            for m in EFFECT_METRICS:
-                per_pair = [matrix[nb][m] - matrix[na][m] for na, nb in matched]
-                delta, lo, hi = mean_ci(np.mean(per_pair, axis=0), idx)
-                pvalues = [sign_flip_pvalue(d, resamples, seed + 1) for d in per_pair]
-                pairs = {}
-                for (na, nb), d, pv, ph in zip(matched, per_pair, pvalues, holm(pvalues)):
-                    d_mean, d_lo, d_hi = paired_diff_ci(np.zeros_like(d), d, idx)
-                    pairs[f"{na} -> {nb}"] = {"delta": d_mean, "lo": d_lo, "hi": d_hi, "p": pv, "p_holm": ph}
-                effects.append({
-                    "factor": factor, "from": a, "to": b, "metric": m,
-                    "delta": delta, "lo": lo, "hi": hi, "pairs": pairs,
-                })
+    for factor, position, switches in FACTORS:
+        # Retriever switches span every chunker x breadcrumb cell; the other switches are read within
+        # each retriever family, so a breadcrumb effect on embeddings is never averaged with one on BM25.
+        families = [(None, None)] if factor == "retriever" else list(RETRIEVER_FAMILIES.items())
+        for family, members in families:
+            for a, b in switches:
+                matched = []
+                for cell, name in by_cell.items():
+                    if cell[position] == a and (members is None or cell[1] in members):
+                        other = cell[:position] + (b,) + cell[position + 1:]
+                        if other in by_cell:
+                            matched.append((name, by_cell[other]))
+                if not matched:
+                    continue
+                for m in EFFECT_METRICS:
+                    per_pair = [matrix[nb][m] - matrix[na][m] for na, nb in matched]
+                    delta, lo, hi = mean_ci(np.mean(per_pair, axis=0), idx)
+                    pvalues = [sign_flip_pvalue(d, resamples, seed + 1) for d in per_pair]
+                    pairs = {}
+                    for (na, nb), d, pv, ph in zip(matched, per_pair, pvalues, holm(pvalues)):
+                        d_mean, d_lo, d_hi = paired_diff_ci(np.zeros_like(d), d, idx)
+                        pairs[f"{na} -> {nb}"] = {"delta": d_mean, "lo": d_lo, "hi": d_hi, "p": pv, "p_holm": ph}
+                    effects.append({
+                        "factor": factor, "within": family, "from": a, "to": b, "metric": m,
+                        "delta": delta, "lo": lo, "hi": hi, "pairs": pairs,
+                    })
     return effects
 
 
@@ -285,7 +498,8 @@ def _git_state(stage_dir: Path) -> dict:
         commit = git("rev-parse", "--verify", "--quiet", "HEAD")
         if commit.returncode != 0:
             return {"git_commit": None, "git_dirty": None}
-        status = git("status", "--porcelain", "--", "raglab", "pyproject.toml")
+        status = git("status", "--porcelain", "--", "raglab", "pyproject.toml", "requirements-lock.txt", "PLAN.md",
+                     "../models.lock.json", "../corpus.lock.json")
         dirty = bool(status.stdout.strip()) if status.returncode == 0 else None
         return {"git_commit": commit.stdout.strip(), "git_dirty": dirty}
     except (OSError, subprocess.SubprocessError):
@@ -303,6 +517,21 @@ def _sha256_of(paths: Sequence[Path]) -> str | None:
     return h.hexdigest()
 
 
+def _chip() -> str | None:
+    """The processor's marketing name (it decides the last bits of float arithmetic), or None."""
+    if platform.system() == "Darwin":
+        try:
+            out = subprocess.run(["sysctl", "-n", "machdep.cpu.brand_string"], capture_output=True, text=True, timeout=5)
+            return out.stdout.strip() or None
+        except (OSError, subprocess.SubprocessError):
+            return None
+    return platform.processor() or None
+
+
+def plan_path() -> Path:
+    return Path(__file__).resolve().parents[1] / "PLAN.md"
+
+
 def _relative(path: Path) -> str:
     try:
         return path.resolve().relative_to(project_root()).as_posix()
@@ -318,8 +547,13 @@ def build_manifest(
     seed: int = SEED,
     now: datetime | None = None,
 ) -> dict:
+    from raglab.models import default_models_lock_path
+    from raglab.neural import THREADS, library_versions, model_lock, model_settings
+
     now = now or datetime.now(timezone.utc)
     code = code_version()
+    models = model_lock()
+    folder = golden.path.parent
     return {
         "schema": SCHEMA,
         "run_id": f"{now:%Y%m%d-%H%M%S}-{code['package_sha256'][:8]}",
@@ -333,12 +567,28 @@ def build_manifest(
             "path": _relative(golden.path), "version": golden.version,
             "sha256": golden.sha256, "questions": len(golden.questions),
         },
-        # What the README's robustness claims are computed from, so they are pinned too.
+        # What the README's robustness claims are computed from, so they are pinned too: every
+        # study file beside the golden set (v1's and v2's), the judging prompts, and the analysis scripts.
         "robustness_inputs": {
-            "agreement_sha256": _sha256_of([golden.path.with_name(f"{golden.path.stem}-agreement.json")]),
-            "unjudged_sample_sha256": _sha256_of([golden.path.with_name(f"{golden.path.stem}-unjudged-sample.json")]),
-            "regrade_log_sha256": _sha256_of([golden.path.with_name(f"{golden.path.stem}-regrade.json")]),
+            **{p.name: _sha256_of([p]) for p in sorted(folder.glob("v[0-9]*-*.json"))},
+            "prompts_sha256": _sha256_of(list((folder / "prompts").glob("*.md"))),
             "analysis_sha256": _sha256_of(list((Path(__file__).resolve().parents[1] / "analysis").glob("*.py"))),
+        },
+        "plan": {"path": _relative(plan_path()), "sha256": _sha256_of([plan_path()])},
+        "models": {
+            "lock_sha256": _sha256_of([default_models_lock_path()]),
+            "embedder": model_settings(models["embedder"], "embedder"),
+            "reranker": model_settings(models["reranker"], "reranker"),
+        },
+        "numerics": {"threads": THREADS, "platform": f"{platform.system()} {platform.machine()}", "chip": _chip(),
+                     **library_versions()},
+        "confirmatory_plan": {
+            "primary_metric": PRIMARY_METRIC, "alpha": ALPHA,
+            "chain": [[a.name, b.name, predicted] for a, b, predicted in CHAIN],
+            "supporting_metrics": list(SUPPORTING_METRICS),
+            "exploratory_pairs": [[a.name, b.name] for a, b in EXPLORATORY_PAIRS],
+            "procedure": "chain tested in order on the primary metric, each link only if all earlier links were "
+                         "significant; supporting metrics Holm-adjusted, claimed only if the headline is significant",
         },
         "configs": [c.manifest() for c in configs],
         "baseline": BASELINE.name,
@@ -347,7 +597,8 @@ def build_manifest(
                     "min(min_overlap_chars, the section's body, all the section-body text the chunk holds) "
                     "characters of that section's body",
             "min_overlap_chars": MIN_OVERLAP_CHARS,
-            "chunks_ranked": "every chunk with a positive score",
+            "chunks_ranked": "lexical retrievers and bm25+rerank: every chunk with a positive score; dense, hybrid "
+                             "and hybrid+rerank: every chunk",
             "rank_depth_sections": RANK_DEPTH,
             "k": list(K_VALUES),
             "budgets_chars": list(BUDGETS),
@@ -405,18 +656,22 @@ def save_run(
     for i, q in enumerate(questions):
         for name, per_question in results.items():
             r = per_question[i]
-            lines.append(json.dumps({
+            line = {
                 "question": q.id, "config": name,
                 "values": [_rounded(r.values[m]) for m in METRICS],
                 "ranking": list(r.ranking), "top5_chars": r.top5_chars,
-            }, ensure_ascii=False))
+            }
+            if r.rerank_depth is not None:
+                line["rerank_depth"] = r.rerank_depth
+            lines.append(json.dumps(line, ensure_ascii=False))
     _write(run_dir / "questions.jsonl", "\n".join(lines) + "\n")
     _write(run_dir / "summary.json", json.dumps(_round_tree(dict(summary)), indent=1, ensure_ascii=False) + "\n")
     _write(run_dir / "manifest.json", json.dumps(dict(manifest), indent=1, ensure_ascii=False) + "\n")
 
 
-_MANIFEST_KEYS = ("schema", "run_id", "code", "corpus", "golden", "statistics")
-_SUMMARY_KEYS = ("questions", "baseline", "configs", "headline", "summary", "vs_baseline", "effects", "by_style", "diagnostics")
+_MANIFEST_KEYS = ("schema", "run_id", "code", "corpus", "golden", "statistics", "models", "plan", "confirmatory_plan")
+_SUMMARY_KEYS = ("questions", "baseline", "configs", "headline", "summary", "vs_baseline", "effects", "by_style",
+                 "diagnostics", "confirmatory", "by_style_paired", "interaction")
 
 
 def load_run(run_dir: Path) -> tuple[dict, dict]:

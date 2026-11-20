@@ -100,6 +100,82 @@ def sign_flip_pvalue(diffs: Sequence[float], resamples: int = RESAMPLES, seed: i
     return (extreme + 1) / (resamples + 1)
 
 
+def two_group_diff_ci(
+    a: Sequence[float], b: Sequence[float], resamples: int = RESAMPLES, seed: int = SEED,
+    confidence: float = CONFIDENCE,
+) -> tuple[float, float, float]:
+    """(mean of a - mean of b, lo, hi) for two groups of *different* questions.
+
+    The groups can't be paired, so each is resampled on its own (a bootstrap
+    stratified by group). Used to compare question styles.
+    """
+    x, y = np.asarray(a, dtype=float), np.asarray(b, dtype=float)
+    if x.ndim != 1 or y.ndim != 1 or x.size == 0 or y.size == 0:
+        raise ValueError("need two non-empty 1-D arrays")
+    rng = np.random.default_rng(seed)
+    boots = x[rng.integers(0, x.size, size=(resamples, x.size))].mean(axis=1) \
+        - y[rng.integers(0, y.size, size=(resamples, y.size))].mean(axis=1)
+    return (float(x.mean() - y.mean()), *_percentiles(boots, confidence))
+
+
+def permutation_pvalue(a: Sequence[float], b: Sequence[float], resamples: int = RESAMPLES, seed: int = SEED) -> float:
+    """Two-sided test that two groups of different questions share a mean.
+
+    Under the null hypothesis the group labels are exchangeable, so they are
+    shuffled at random. The p-value is the share of shuffles whose difference
+    in means is at least as extreme as the observed one, counting the observed
+    arrangement itself.
+    """
+    x, y = np.asarray(a, dtype=float), np.asarray(b, dtype=float)
+    if x.ndim != 1 or y.ndim != 1 or x.size == 0 or y.size == 0:
+        raise ValueError("need two non-empty 1-D arrays")
+    observed = abs(x.mean() - y.mean())
+    if observed == 0.0:
+        return 1.0
+    pooled = np.concatenate([x, y])
+    shuffled = np.random.default_rng(seed).permuted(np.tile(pooled, (resamples, 1)), axis=1)
+    diffs = np.abs(shuffled[:, : x.size].mean(axis=1) - shuffled[:, x.size:].mean(axis=1))
+    extreme = int(np.count_nonzero(diffs >= observed * (1 - 1e-12)))
+    return (extreme + 1) / (resamples + 1)
+
+
+def _clusters(diffs: Sequence[float], clusters: Sequence[str]) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    d = np.asarray(diffs, dtype=float)
+    if d.ndim != 1 or d.size == 0 or len(clusters) != d.size:
+        raise ValueError("need one cluster label per paired difference")
+    _, inverse = np.unique(np.asarray(clusters), return_inverse=True)
+    return d, np.bincount(inverse, weights=d), np.bincount(inverse).astype(float)
+
+
+def cluster_sign_flip_pvalue(
+    diffs: Sequence[float], clusters: Sequence[str], resamples: int = RESAMPLES, seed: int = SEED,
+) -> float:
+    """The sign-flip test with one sign per cluster, so questions that share a target page flip together.
+
+    Questions written from the same page share its answers, so they aren't
+    independent; flipping them together gives an honest p-value when they agree.
+    """
+    d, sums, _ = _clusters(diffs, clusters)
+    observed = abs(d.mean())
+    if observed == 0.0:
+        return 1.0
+    signs = np.random.default_rng(seed).choice((-1.0, 1.0), size=(resamples, sums.size))
+    flipped = np.abs(signs @ sums) / d.size
+    extreme = int(np.count_nonzero(flipped >= observed * (1 - 1e-12)))
+    return (extreme + 1) / (resamples + 1)
+
+
+def cluster_bootstrap_ci(
+    diffs: Sequence[float], clusters: Sequence[str], resamples: int = RESAMPLES, seed: int = SEED,
+    confidence: float = CONFIDENCE,
+) -> tuple[float, float, float]:
+    """(mean, lo, hi) with a percentile bootstrap that resamples whole clusters (target pages)."""
+    d, sums, counts = _clusters(diffs, clusters)
+    picks = np.random.default_rng(seed).integers(0, sums.size, size=(resamples, sums.size))
+    boots = sums[picks].sum(axis=1) / counts[picks].sum(axis=1)
+    return (float(d.mean()), *_percentiles(boots, confidence))
+
+
 def holm(pvalues: Sequence[float]) -> list[float]:
     """Holm-Bonferroni adjusted p-values, in the input order."""
     m = len(pvalues)

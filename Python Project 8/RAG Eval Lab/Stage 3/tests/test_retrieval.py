@@ -101,7 +101,7 @@ def test_nothing_to_index_is_a_clear_error(cls):
 
 
 def test_build_retriever_names_the_choices_on_a_typo():
-    with pytest.raises(ValueError, match="bm25, tfidf, dense, hybrid, hybrid\\+rerank"):
+    with pytest.raises(ValueError, match="bm25, tfidf, dense, hybrid, bm25\\+rerank, hybrid\\+rerank"):
         build_retriever("colbert", FRUIT)
 
 
@@ -111,9 +111,10 @@ def test_the_grid_is_the_baseline_plus_every_chunker_retriever_pair():
     names = [c.name for c in GRID]
     assert GRID[0] == BASELINE
     assert (BASELINE.chunker, BASELINE.retriever, BASELINE.with_context) == ("paragraph", "tfidf", False)
-    # the baseline, then 3 chunkers x 5 retrievers with the breadcrumb on
-    assert len(GRID) == 16 and len(set(names)) == 16
-    assert {c.retriever for c in GRID[1:]} == {"bm25", "tfidf", "dense", "hybrid", "hybrid+rerank"}
+    # the baseline, then 3 chunkers x 5 retrievers with the breadcrumb on, then the bm25+rerank control
+    assert len(GRID) == 17 and len(set(names)) == 17
+    assert {c.retriever for c in GRID[1:]} == {"bm25", "tfidf", "dense", "hybrid", "bm25+rerank", "hybrid+rerank"}
+    assert GRID[-1].name == "heading+bm25+rerank"
 
 
 def test_build_retrievers_chunks_each_strategy_only_once(monkeypatch, mini_corpus):
@@ -123,7 +124,7 @@ def test_build_retrievers_chunks_each_strategy_only_once(monkeypatch, mini_corpu
     real = experiments.chunk_corpus
     monkeypatch.setattr(experiments, "chunk_corpus", lambda docs, c: calls.append(c.name) or real(docs, c))
     retrievers = build_retrievers(list(load_corpus(mini_corpus).documents))
-    assert len(retrievers) == 16
+    assert len(retrievers) == 17
     assert sorted(calls) == ["fixed", "heading", "paragraph"]
 
 
@@ -136,6 +137,19 @@ def test_build_retrievers_builds_each_index_once_and_shares_it(mini_corpus):
         assert hybrid.lexical is retrievers[f"{chunker}+bm25"]
         assert hybrid.dense is retrievers[f"{chunker}+dense"]
         assert rerank.first_stage is hybrid
+    assert retrievers["heading+bm25+rerank"].first_stage is retrievers["heading+bm25"]
+
+
+def test_variants_share_the_main_configuration_s_components(mini_corpus):
+    from raglab.corpus import load_corpus
+    from raglab.experiments import EXTRAS
+
+    retrievers = build_retrievers(list(load_corpus(mini_corpus).documents), GRID + EXTRAS)
+    assert retrievers["heading+dense [no instruction]"].instruction == ""
+    for depth in (10, 20, 50):
+        variant = retrievers[f"heading+hybrid+rerank [depth {depth}]"]
+        assert variant.depth == depth and variant.first_stage is retrievers["heading+hybrid"]
+    assert retrievers["heading+hybrid+rerank"].depth == 100
 
 
 # ---------------------------------------------------------------- the real corpus

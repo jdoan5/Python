@@ -2,7 +2,8 @@
 
 Two families, because they answer different questions.
 
-Ranking quality: success@5, recall@k, MRR@10, nDCG@10. A chunk ranking is
+Ranking quality: success@5, recall@k, MRR@10, nDCG@10 (graded, and answers
+only). A chunk ranking is
 first turned into a ranking of sections. Walking down the chunks, each section
 a chunk retrieves joins the list (most-overlapped first) unless it is already
 there, and a chunk that retrieves no section at all, such as a lone heading,
@@ -26,7 +27,9 @@ most completely delivered one.
 
 Grades: 2 = answers the question, 1 = related, 0 = not relevant. Success,
 recall, MRR and coverage count only grade-2 sections; nDCG uses both positive
-grades with gain 2^grade - 1. A section nobody judged scores as not relevant.
+grades with gain 2^grade - 1, and its answers-only twin credits grade 2 alone,
+so a gain on it can't come from sections judged merely related. A section
+nobody judged scores as not relevant.
 `raglab golden pool` checks that every section any configuration ranks in its
 top 10 is judged; sections deeper in a budget may not be.
 """
@@ -46,12 +49,14 @@ RANK_DEPTH = 10  # sections; MRR and nDCG are computed at 10
 BUDGETS = (1200, 2400, 4800, 9600)
 HEADLINE_BUDGET = 4800  # ~1,200 tokens. Chosen before any results were seen.
 GAIN = {1: 1.0, 2: 3.0}
+ANSWER_GAIN = {2: 1.0}  # nDCG@10 (answers only): credit only answering sections, the line judges agree on most
 
 METRICS: tuple[str, ...] = (
     *(f"recall@{k}" for k in K_VALUES),
     "success@5",
     "mrr@10",
     "ndcg@10",
+    "ndcg_answers@10",
     *(f"budget_recall@{b}" for b in BUDGETS),
     *(f"budget_success@{b}" for b in BUDGETS),
     *(f"coverage@{b}" for b in BUDGETS),
@@ -66,6 +71,7 @@ LABELS = {
     "success@5": "Success@5",
     "mrr@10": "MRR@10",
     "ndcg@10": "nDCG@10",
+    "ndcg_answers@10": "nDCG@10 (answers only)",
     **{f"budget_recall@{b}": f"Recall in {b / 1000:g}k chars" for b in BUDGETS},
     **{f"budget_success@{b}": f"Success in {b / 1000:g}k chars" for b in BUDGETS},
     **{f"coverage@{b}": f"Mean coverage in {b / 1000:g}k chars" for b in BUDGETS},
@@ -104,10 +110,13 @@ def reciprocal_rank(ranking: Sequence[str | None], primary: frozenset[str], k: i
     return 0.0
 
 
-def ndcg_at(ranking: Sequence[str | None], judgments: Mapping[str, int], k: int = RANK_DEPTH) -> float:
-    gains = [GAIN.get(judgments.get(loc, 0), 0.0) if loc is not None else 0.0 for loc in ranking[:k]]
+def ndcg_at(
+    ranking: Sequence[str | None], judgments: Mapping[str, int], k: int = RANK_DEPTH,
+    gain: Mapping[int, float] = GAIN,
+) -> float:
+    gains = [gain.get(judgments.get(loc, 0), 0.0) if loc is not None else 0.0 for loc in ranking[:k]]
     dcg = sum(g / math.log2(i + 2) for i, g in enumerate(gains))
-    ideal = sorted((GAIN[g] for g in judgments.values() if g in GAIN), reverse=True)[:k]
+    ideal = sorted((gain[g] for g in judgments.values() if g in gain), reverse=True)[:k]
     idcg = sum(g / math.log2(i + 2) for i, g in enumerate(ideal))
     return dcg / idcg if idcg > 0 else 0.0
 
@@ -189,6 +198,7 @@ def score(
     values["success@5"] = float(any(loc in primary for loc in ranking[:5]))
     values["mrr@10"] = reciprocal_rank(ranking, primary)
     values["ndcg@10"] = ndcg_at(ranking, judgments)
+    values["ndcg_answers@10"] = ndcg_at(ranking, judgments, gain=ANSWER_GAIN)
     for budget in BUDGETS:
         packed = pack(spans, budget)
         arrived = primary & delivered(packed, index)

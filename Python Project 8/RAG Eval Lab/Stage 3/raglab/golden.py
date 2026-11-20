@@ -43,7 +43,7 @@ from raglab.sections import SectionIndex, SectionRef
 
 STYLES = ("keyword", "paraphrase", "scenario")
 GRADES = (0, 1, 2)
-GOLDEN_VERSION = 1
+GOLDEN_VERSION = 2  # Stage 3 scores against v2; v1 stays frozen with Stage 2
 MAX_QUESTION_CHARS = 300
 
 _ID_RE = re.compile(r"^q\d{3}$")
@@ -452,13 +452,14 @@ HEADER = """\
 #
 # Questions about the FastAPI docs, each with graded judgments of which doc
 # sections answer it. Grades: 2 = answers the question, 1 = related but not an
-# answer, 0 = judged and rejected. The full rubric is the `rubric` key below.
+# answer, 0 = judged and rejected. The `rubric` key summarises them; the exact
+# judging prompts are in golden/prompts/.
 #
 # Questions were written from seeded, stratified samples of sections (see
-# `sampling`). Two pools were then judged against each question: every section
-# any evaluated configuration ranks in its top 10, and every section on the
-# question's target page. Edit by hand if you like, then run
-# `python -m raglab golden validate`.
+# `sampling`). Each question's judged sections come from pools: every section
+# on its target page, and every section an evaluated configuration retrieved
+# near the top. golden/README.md describes each version's pools. Edit by hand
+# if you like, then run `python -m raglab golden validate`.
 """
 
 # Keys in the order a reader wants them: what it is, then the questions, each question before its labels.

@@ -5,10 +5,11 @@ judgments of which FastAPI doc sections answer them.
 
 | file | what it is |
 |---|---|
-| `v1.yaml` | 98 questions with 3,261 judgments `doc_id#anchor: grade`. Labelled against FastAPI 0.165.0; its fingerprint is in the file. The rubric is the `rubric` key. |
+| `v1.yaml` | 98 questions with 3,261 judgments `doc_id#anchor: grade`. Labelled against FastAPI 0.165.0; its fingerprint is in the file. The `rubric` key summarises the grades; the exact prompts are in `prompts/`. |
 | `v1-regrade.json` | The 186 sections first judged from a truncated excerpt and re-judged on their full text: every grade, and the 28 that changed. |
 | `v1-agreement.json` | A blind second judging of a stratified sample of v1's labels, so their reliability can be recomputed (`raglab golden agreement`). |
 | `v1-unjudged-sample.json` | Sections that some configuration puts in its prompt but v1 leaves unjudged, judged separately to bound what they could change (`Stage 2/analysis/unjudged_sensitivity.py`). |
+| `prompts/` | The judging prompts, word for word: v1's pool and blind prompts as Stage 2 ran them, and v2's, which add one sentence ("Open no file other than the input file."), plus v2's quote-checking prompt. |
 
 **Grades.** 2 = the section answers the question on its own. 1 = related:
 useful context, but not an answer. 0 = judged and rejected. A section that
@@ -42,6 +43,12 @@ not-an-answer κ = 0.92, reweighted to the whole label set.
 **Changing it.** `golden validate` checks the file. `golden merge` adds
 judgments; it changes an existing grade only with `--regrade`, and never a
 target's. `golden pool` writes full-text worksheets for anything unjudged.
-**v1 is frozen with Stage 2.** Stage 3's new retrievers will surface sections
+**v1 is frozen with Stage 2.** Stage 3's new retrievers surface sections
 nobody judged, and those judgments go into a copy, `v2.yaml`, so Stage 2's
 results stay reproducible from `v1.yaml`.
+
+**v2 (Stage 3)** is v1 plus one judging round under v1's prompt, model and
+references, with 200 hidden v1 labels mixed in to measure drift between the
+rounds, then a blind round over every label Stage 3's headline reads. The
+procedure is fixed in [Stage 3's analysis plan](../Stage%203/PLAN.md), and
+`Stage 3/analysis/v2_labels.py verify` checks the files it produces.

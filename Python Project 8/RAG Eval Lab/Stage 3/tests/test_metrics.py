@@ -212,3 +212,14 @@ def test_best_coverage_is_the_most_completely_delivered_answer(index):
     for budget in BUDGETS:
         assert values[f"coverage@{budget}"] == pytest.approx(0.5)
         assert values[f"best_coverage@{budget}"] == pytest.approx(1.0)
+
+
+def test_answers_only_ndcg_ignores_related_sections():
+    from raglab.metrics import ANSWER_GAIN, ndcg_at
+
+    judgments = {"a#1": 2, "b#1": 1, "c#1": 1}
+    related_first = ["b#1", "c#1", "a#1"]
+    assert ndcg_at(related_first, judgments) > ndcg_at(related_first, judgments, gain=ANSWER_GAIN)
+    assert ndcg_at(["a#1", "b#1"], judgments, gain=ANSWER_GAIN) == 1.0
+    assert ndcg_at(["b#1", "c#1"], judgments, gain=ANSWER_GAIN) == 0.0  # no answer at all: no credit
+    assert ndcg_at(["b#1", "a#1"], judgments, gain=ANSWER_GAIN) == pytest.approx(1 / math.log2(3))

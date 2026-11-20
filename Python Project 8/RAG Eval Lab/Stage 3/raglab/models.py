@@ -12,17 +12,21 @@ tokenizer files. There are no pickled weights and no Python files, and models
 are loaded with `trust_remote_code=False` and `use_safetensors=True`. So
 loading a model can't run code that came with the download.
 
-`raglab models fetch` downloads exactly the locked files into the Hugging Face
-cache and checks them. A run loads each model from that local copy, never the
-network, and checks every hash first, so it can't silently use different
-weights.
+`raglab models fetch` downloads exactly the locked files, one by one at the
+locked revision and without credentials, and copies them into a folder of
+their own under data/models/. A run loads each model from that folder, never
+the network, after checking every file's size and hash and that the folder
+holds nothing else. So the bytes checked are the bytes loaded, and a run can't
+silently use different weights.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
+import shutil
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from types import MappingProxyType
@@ -47,30 +51,40 @@ class ModelError(Exception):
 
 
 @dataclass(frozen=True)
+class LockedFile:
+    sha256: str
+    bytes: int
+
+
+@dataclass(frozen=True)
 class ModelSpec:
     role: str
     repo: str
     revision: str
     license: str
-    files: Mapping[str, str]  # path inside the repository -> SHA-256
+    files: Mapping[str, LockedFile]  # path inside the repository -> its hash and size
 
     @property
     def fingerprint(self) -> str:
         """One hash over the repository, the revision and every locked file."""
         h = hashlib.sha256(f"{self.repo}\0{self.revision}\0".encode("utf-8"))
-        for name, digest in sorted(self.files.items()):
-            h.update(f"{name}\0{digest}\0".encode("utf-8"))
+        for name, f in sorted(self.files.items()):
+            h.update(f"{name}\0{f.sha256}\0{f.bytes}\0".encode("utf-8"))
         return h.hexdigest()
+
+    @property
+    def folder_name(self) -> str:
+        return f"{self.repo.replace('/', '__')}@{self.revision[:12]}"
 
     def manifest(self) -> dict:
         return {
             "repo": self.repo, "revision": self.revision, "license": self.license,
-            "files": len(self.files), "fingerprint": self.fingerprint,
+            "files": {name: f.sha256 for name, f in sorted(self.files.items())}, "fingerprint": self.fingerprint,
         }
 
     def as_json(self) -> dict:
         return {"repo": self.repo, "revision": self.revision, "license": self.license,
-                "files": dict(sorted(self.files.items()))}
+                "files": {name: {"sha256": f.sha256, "bytes": f.bytes} for name, f in sorted(self.files.items())}}
 
 
 @dataclass(frozen=True)
@@ -121,14 +135,20 @@ def _parse_spec(lock_name: str, role: str, entry: object) -> ModelSpec:
     if not isinstance(license_, str) or not license_:
         raise ModelError(f"{where}: license must be named")
     if not isinstance(files, dict) or not files:
-        raise ModelError(f"{where}: files must map file names to SHA-256 digests")
-    for name, digest in files.items():
+        raise ModelError(f"{where}: files must map file names to their sha256 and bytes")
+    parsed = {}
+    for name, f in files.items():
         _check_file_name(where, name)
-        if not isinstance(digest, str) or not _SHA256_RE.fullmatch(digest):
+        if not isinstance(f, dict) or set(f) != {"sha256", "bytes"}:
+            raise ModelError(f"{where}: {name!r} must have exactly sha256 and bytes")
+        if not isinstance(f["sha256"], str) or not _SHA256_RE.fullmatch(f["sha256"]):
             raise ModelError(f"{where}: {name!r} needs a 64-character lowercase SHA-256")
-    if not any(name.endswith(".safetensors") for name in files):
+        if not isinstance(f["bytes"], int) or isinstance(f["bytes"], bool) or f["bytes"] < 0:
+            raise ModelError(f"{where}: {name!r} needs a size in bytes")
+        parsed[name] = LockedFile(f["sha256"], f["bytes"])
+    if not any(name.endswith(".safetensors") for name in parsed):
         raise ModelError(f"{where}: no safetensors weights are locked")
-    return ModelSpec(role, repo, revision, license_, MappingProxyType(dict(files)))
+    return ModelSpec(role, repo, revision, license_, MappingProxyType(parsed))
 
 
 def _check_file_name(where: str, name: object) -> None:
@@ -146,6 +166,30 @@ def default_models_lock_path() -> Path:
     return project_root() / "models.lock.json"
 
 
+def default_models_dir() -> Path:
+    return project_root() / "data" / "models"
+
+
+def ensure_not_synced(path: Path, what: str) -> None:
+    """Refuse to keep large derived files where iCloud Drive syncs them.
+
+    iCloud can evict files to the cloud and make "name 2" copies, which would
+    corrupt a model folder or a cache. A folder whose name ends in .nosync is
+    skipped by iCloud, so data/ can be a symlink to data.nosync.
+    """
+    resolved = path.resolve()
+    parts = resolved.parts
+    if "Mobile Documents" in parts and not any(part.endswith(".nosync") for part in parts):
+        raise ModelError(
+            f"The {what} folder resolves to {resolved}, inside iCloud Drive. Rename the project's data folder to "
+            "data.nosync and leave a symlink named data pointing to it, so iCloud doesn't sync it."
+        )
+
+
+def model_dir(spec: ModelSpec, models_dir: Path | None = None) -> Path:
+    return (models_dir or default_models_dir()) / spec.folder_name
+
+
 def _sha256(path: Path) -> str:
     h = hashlib.sha256()
     with path.open("rb") as f:
@@ -155,50 +199,66 @@ def _sha256(path: Path) -> str:
 
 
 def problems(spec: ModelSpec, directory: Path) -> list[str]:
-    """Every locked file that is missing from `directory` or differs from its hash."""
+    """Every difference between `directory` and the lock: missing, altered or extra files."""
     found = []
-    for name, digest in sorted(spec.files.items()):
+    for name, f in sorted(spec.files.items()):
         path = directory / name
         if not path.is_file():
             found.append(f"{name}: missing")
-        elif _sha256(path) != digest:
-            found.append(f"{name}: SHA-256 differs from models.lock.json")
+        elif path.stat().st_size != f.bytes or _sha256(path) != f.sha256:
+            found.append(f"{name}: differs from models.lock.json")
+    if directory.is_dir():
+        for path in sorted(p for p in directory.rglob("*") if p.is_file() or p.is_symlink()):
+            name = path.relative_to(directory).as_posix()
+            if name not in spec.files:
+                found.append(f"{name}: not in models.lock.json")
     return found
 
 
-def local_dir(spec: ModelSpec) -> Path | None:
-    """Where the locked revision sits in the Hugging Face cache, or None if it was never fetched."""
-    from huggingface_hub import snapshot_download
-
-    try:
-        path = snapshot_download(spec.repo, revision=spec.revision, allow_patterns=sorted(spec.files),
-                                 local_files_only=True)
-    except Exception:  # LocalEntryNotFoundError and friends: nothing usable in the cache
-        return None
-    return Path(path)
+def local_dir(spec: ModelSpec, models_dir: Path | None = None) -> Path | None:
+    """The model's own folder, or None if it was never fetched."""
+    folder = model_dir(spec, models_dir)
+    return folder if folder.is_dir() else None
 
 
-def require(spec: ModelSpec) -> Path:
+def require(spec: ModelSpec, models_dir: Path | None = None) -> Path:
     """The verified local copy of a locked model, or a ModelError that says how to get it."""
-    directory = local_dir(spec)
-    if directory is None:
+    folder = local_dir(spec, models_dir)
+    if folder is None:
         raise ModelError(f"The {spec.role} {spec.repo} isn't downloaded. Run `python -m raglab models fetch`.")
-    found = problems(spec, directory)
+    ensure_not_synced(folder, "model")
+    found = problems(spec, folder)
     if found:
         raise ModelError(f"The local copy of {spec.repo} doesn't match models.lock.json: {'; '.join(found)}. "
-                         "Delete it from the Hugging Face cache and run `python -m raglab models fetch`.")
-    return directory
+                         f"Delete {folder.name} under data/models and run `python -m raglab models fetch`.")
+    return folder
 
 
-def fetch(spec: ModelSpec) -> Path:
-    """Download exactly the locked files at the locked revision, then check every hash."""
-    from huggingface_hub import snapshot_download
+def _download(repo: str, filename: str, revision: str) -> Path:
+    from huggingface_hub import hf_hub_download
 
-    directory = Path(snapshot_download(spec.repo, revision=spec.revision, allow_patterns=sorted(spec.files)))
-    found = problems(spec, directory)
+    # token=False: these models are public, so no credentials are ever sent.
+    return Path(hf_hub_download(repo, filename, revision=revision, token=False))
+
+
+def fetch(spec: ModelSpec, models_dir: Path | None = None) -> Path:
+    """Download each locked file at the locked revision, check it, and copy it into the model's folder."""
+    folder = model_dir(spec, models_dir)
+    ensure_not_synced(folder.parent, "model")
+    for name, f in sorted(spec.files.items()):
+        source = _download(spec.repo, name, spec.revision)
+        target = folder / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        tmp = target.with_name(f"{target.name}.tmp-{os.getpid()}")
+        shutil.copyfile(source, tmp)  # follows the Hub cache's symlink to the file itself
+        if tmp.stat().st_size != f.bytes or _sha256(tmp) != f.sha256:
+            tmp.unlink()
+            raise ModelError(f"{spec.repo} at {spec.revision[:12]}: {name} doesn't match models.lock.json")
+        os.replace(tmp, target)
+    found = problems(spec, folder)
     if found:
-        raise ModelError(f"{spec.repo} at {spec.revision[:12]} doesn't match models.lock.json: {'; '.join(found)}")
-    return directory
+        raise ModelError(f"{folder.name} doesn't match models.lock.json after fetching: {'; '.join(found)}")
+    return folder
 
 
 def pin(role: str, repo: str, revision: str, license_: str) -> ModelSpec:
@@ -210,12 +270,12 @@ def pin(role: str, repo: str, revision: str, license_: str) -> ModelSpec:
 
     if not _REVISION_RE.fullmatch(revision):
         raise ModelError("pin a full 40-character commit SHA, not a branch or tag")
-    directory = Path(snapshot_download(repo, revision=revision, allow_patterns=list(PIN_PATTERNS)))
+    directory = Path(snapshot_download(repo, revision=revision, allow_patterns=list(PIN_PATTERNS), token=False))
     files = {}
     for path in sorted(p for p in directory.rglob("*") if p.is_file()):
         name = path.relative_to(directory).as_posix()
         if name in _PIN_EXCLUDED:
             continue
         _check_file_name(f"pin {repo}", name)
-        files[name] = _sha256(path)
+        files[name] = {"sha256": _sha256(path), "bytes": path.stat().st_size}
     return _parse_spec("pin", role, {"repo": repo, "revision": revision, "license": license_, "files": files})

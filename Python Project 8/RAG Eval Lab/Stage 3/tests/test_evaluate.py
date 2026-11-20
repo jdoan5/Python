@@ -14,10 +14,11 @@ from raglab import evaluate
 from raglab.corpus import CorpusLock, default_lock_path, fingerprint_of, hash_tree, load_corpus
 from raglab.evaluate import (
     QuestionResult, build_manifest, code_version, load_run, run_configs, save_run, summarize, unjudged,
+    unjudged_in_windows,
 )
-from raglab.experiments import BASELINE, FACTORIAL, RetrievalConfig
+from raglab.experiments import BASELINE, EVALUATED, FACTORIAL, RetrievalConfig
 from raglab.golden import Question, check_against_corpus, default_golden_path, dump_golden, load_golden, questions_fingerprint
-from raglab.metrics import METRICS
+from raglab.metrics import BINARY_METRICS, METRICS
 from raglab.sections import SectionIndex
 
 RAISE = "tutorial/first-steps#raise-errors"
@@ -25,6 +26,13 @@ DOCS = "tutorial/first-steps#interactive-api-docs"
 HOME = "index#home"
 FROZEN_QUESTIONS = "c4673dddd9bdce5b73ae05f94672ad9e603c591d80b9469133ea442b821fcb4a"
 FIXED_TIME = datetime(2026, 11, 20, 12, 0, tzinfo=timezone.utc)
+STAGE = Path(__file__).resolve().parents[1]
+V1 = default_golden_path(1)
+# Stage 2's twelve configurations: the lexical cells of Stage 3's factorial.
+LEXICAL = tuple(c for c in FACTORIAL if c.retriever in ("bm25", "tfidf"))
+needs_v2 = pytest.mark.skipif(not default_golden_path(2).is_file(), reason="golden/v2.yaml is not built yet")
+needs_results = pytest.mark.skipif(not (STAGE / "results" / "manifest.json").is_file(),
+                                   reason="Stage 3's results/ is not generated yet")
 
 
 @pytest.fixture
@@ -55,7 +63,7 @@ def setup(tmp_path, mini_corpus):
 def test_every_configuration_scores_every_question(setup):
     _, docs, index, golden = setup
     results = run_configs(docs, golden.questions, FACTORIAL, index)
-    assert list(results) == [c.name for c in FACTORIAL] and len(results) == 12
+    assert list(results) == [c.name for c in FACTORIAL] and len(results) == 30
     for per_question in results.values():
         assert len(per_question) == 3
         for r in per_question:
@@ -66,8 +74,9 @@ def test_every_configuration_scores_every_question(setup):
 
 def test_the_factorial_is_complete_and_contains_the_baseline_once():
     cells = [c.cell for c in FACTORIAL]
-    assert len(set(cells)) == 12 and BASELINE.cell in cells
+    assert len(set(cells)) == 30 and BASELINE.cell in cells
     assert sum(c.name == BASELINE.name for c in FACTORIAL) == 1
+    assert len(LEXICAL) == 12 and len(EVALUATED) == 35 and len({c.name for c in EVALUATED}) == 35
 
 
 def test_summary_has_intervals_comparisons_and_switch_effects(setup):
@@ -78,7 +87,7 @@ def test_summary_has_intervals_comparisons_and_switch_effects(setup):
         for m in METRICS:
             cell = summary["summary"][name][m]
             assert cell["lo"] <= cell["mean"] <= cell["hi"]
-    assert BASELINE.name not in summary["vs_baseline"] and len(summary["vs_baseline"]) == 11
+    assert BASELINE.name not in summary["vs_baseline"] and len(summary["vs_baseline"]) == 29
     for per_metric in summary["vs_baseline"].values():
         for row in per_metric.values():
             assert row["p"] <= row["p_holm"] <= 1.0
@@ -89,10 +98,17 @@ def test_summary_has_intervals_comparisons_and_switch_effects(setup):
         for per_config in style["configs"].values():
             cell = per_config["recall@5"]
             assert cell["lo"] <= cell["mean"] <= cell["hi"] and "success@5" in per_config
-    pairs = {(e["factor"], str(e["from"]), str(e["to"])): len(e["pairs"]) for e in summary["effects"]}
-    assert pairs[("retriever", "tfidf", "bm25")] == 6        # 3 chunkers x 2 breadcrumb settings
-    assert pairs[("breadcrumb", "False", "True")] == 6       # 3 chunkers x 2 retrievers
-    assert pairs[("chunker", "paragraph", "heading")] == 4   # 2 retrievers x 2 breadcrumb settings
+    pairs = {(e["factor"], e["within"], str(e["from"]), str(e["to"])): len(e["pairs"]) for e in summary["effects"]}
+    for a, b in (("tfidf", "bm25"), ("bm25", "dense"), ("bm25", "hybrid"), ("dense", "hybrid"),
+                 ("hybrid", "hybrid+rerank")):
+        assert pairs[("retriever", None, a, b)] == 6                   # 3 chunkers x 2 breadcrumb settings
+    assert pairs[("breadcrumb", "lexical", "False", "True")] == 6      # 3 chunkers x 2 lexical retrievers
+    assert pairs[("chunker", "lexical", "paragraph", "heading")] == 4  # 2 lexical retrievers x 2 breadcrumbs
+    for family in ("dense", "hybrid", "hybrid+rerank"):                # never pooled across families
+        assert pairs[("breadcrumb", family, "False", "True")] == 3
+        assert pairs[("chunker", family, "paragraph", "heading")] == 2
+    assert summary["confirmatory"] is None  # the chain needs the control, which the factorial alone lacks
+    assert set(summary["by_style_paired"]) == {"keyword", "paraphrase", "scenario"}
     assert set(summary["by_style"]) == {"keyword", "paraphrase", "scenario"}
     for d in summary["diagnostics"].values():
         assert 0.0 <= d["judged@10"] <= 1.0 and 0.0 <= d["empty_slots@10"] <= 1.0
@@ -122,6 +138,19 @@ def test_pooling_lists_only_sections_nobody_judged(setup):
     assert unjudged(golden.questions, results, depth=3)["q001"] == {"x#1": ["a", "b"], "x#2": ["b"]}
 
 
+def test_window_pooling_lists_unjudged_sections_inside_a_budget(setup):
+    _, _, _, golden = setup
+
+    def r(window):
+        return QuestionResult({}, (), 0, frozenset(window), {4800: frozenset(window), 9600: frozenset(window) | {"z#9"}})
+
+    results = {"a": [r({RAISE, "w#1"}), r({DOCS}), r(set())], "b": [r({"w#1", "w#2"}), r({HOME}), r({"w#3"})]}
+    assert unjudged_in_windows(golden.questions, results) == {
+        "q001": {"w#1": ["a", "b"], "w#2": ["b"]}, "q003": {"w#3": ["b"]}}
+    assert unjudged_in_windows(golden.questions, results, configs=["a"]) == {"q001": {"w#1": ["a"]}}
+    assert "z#9" in unjudged_in_windows(golden.questions, results, budget=9600)["q001"]
+
+
 def _run(setup, out: Path) -> dict:
     lock, docs, index, golden = setup
     manifest = build_manifest(golden, lock, FACTORIAL, resamples=1000, now=FIXED_TIME)
@@ -147,6 +176,12 @@ def test_the_manifest_pins_everything_and_carries_no_personal_paths(setup, tmp_p
     assert {c["name"] for c in manifest["configs"]} == {c.name for c in FACTORIAL}
     bm25 = next(c for c in manifest["configs"] if c["retriever"]["name"] == "bm25")
     assert bm25["retriever"]["k1"] == 1.5 and bm25["chunker"]["name"] in ("paragraph", "fixed", "heading")
+    assert manifest["schema"] == 4
+    assert manifest["models"]["embedder"]["repo"] == "BAAI/bge-small-en-v1.5"
+    assert manifest["models"]["reranker"]["threads"] == manifest["numerics"]["threads"] == 4
+    assert manifest["confirmatory_plan"]["primary_metric"] == "mrr@10"
+    assert manifest["confirmatory_plan"]["chain"][0] == ["heading+bm25", "heading+hybrid+rerank", 1]
+    assert manifest["plan"]["path"].endswith("PLAN.md")
     text = (tmp_path / "run" / "manifest.json").read_text(encoding="utf-8")
     for personal in (str(Path.home()), str(tmp_path), "/Users/", "/home/"):
         assert personal not in text
@@ -188,6 +223,34 @@ def test_loading_something_that_is_not_a_run_is_a_clean_error(tmp_path):
         load_run(tmp_path)
 
 
+# --- Stage 2's numbers, recomputed by Stage 3's code ------------------------------------------
+
+
+@pytest.mark.corpus
+def test_stage_3_code_reproduces_stage_2_s_summary_on_its_twelve_configurations(real_docs):
+    # Everything Stage 3 changed in the shared machinery (ranking helpers, effects within families,
+    # new summary blocks) must leave Stage 2's committed numbers exactly as they were.
+    from raglab.evaluate import _round_tree
+
+    golden = load_golden(V1)
+    stage2 = json.loads((STAGE.parent / "Stage 2" / "results" / "summary.json").read_text(encoding="utf-8"))
+    run = run_configs(real_docs, golden.questions, LEXICAL, SectionIndex(real_docs))
+    summary = _round_tree(json.loads(json.dumps(summarize(golden.questions, LEXICAL, run))))
+    new = ("ndcg_answers@10",)  # Stage 3 adds metrics; everything Stage 2 reported must be unchanged
+    assert {n: {m: v for m, v in per.items() if m not in new} for n, per in summary["summary"].items()} == stage2["summary"]
+    assert {n: {m: v for m, v in per.items() if m not in new}
+            for n, per in summary["vs_baseline"].items()} == stage2["vs_baseline"]
+    for style, block in stage2["by_style"].items():
+        assert {n: {m: v for m, v in per.items() if m not in new}
+                for n, per in summary["by_style"][style]["configs"].items()} == block["configs"]
+    assert summary["confirmatory"] is None and summary["interaction"] is None
+    mine = [{k: v for k, v in e.items() if k != "within"} for e in summary["effects"]
+            if e["within"] in (None, "lexical") and e["metric"] not in new]
+    assert mine == stage2["effects"]
+    for name, diagnostics in stage2["diagnostics"].items():
+        assert {k: summary["diagnostics"][name][k] for k in diagnostics} == diagnostics
+
+
 # --- the real golden set -------------------------------------------------------------------
 
 
@@ -195,31 +258,37 @@ def test_loading_something_that_is_not_a_run_is_a_clean_error(tmp_path):
 def real_run(real_docs):
     golden = load_golden(default_golden_path())
     index = SectionIndex(real_docs)
-    return golden, index, run_configs(real_docs, golden.questions, FACTORIAL, index)
+    return golden, index, run_configs(real_docs, golden.questions, EVALUATED, index)
 
 
 @pytest.mark.corpus
-def test_the_golden_set_matches_the_pinned_corpus(real_docs):
-    golden = load_golden(default_golden_path())
+@pytest.mark.parametrize("version", [1, pytest.param(2, marks=needs_v2)])
+def test_the_golden_set_matches_the_pinned_corpus(real_docs, version):
+    golden = load_golden(default_golden_path(version))
     assert check_against_corpus(golden, CorpusLock.load(default_lock_path()), SectionIndex(real_docs)) == []
 
 
 @pytest.mark.corpus
-def test_no_question_was_edited_after_it_was_frozen():
+@pytest.mark.parametrize("version", [1, pytest.param(2, marks=needs_v2)])
+def test_no_question_was_edited_after_it_was_frozen(version):
     # Judging adds labels; it must never change what was asked.
-    assert questions_fingerprint(load_golden(default_golden_path()).questions) == FROZEN_QUESTIONS
+    assert questions_fingerprint(load_golden(default_golden_path(version)).questions) == FROZEN_QUESTIONS
 
 
+@needs_v2
 @pytest.mark.corpus
-def test_every_section_any_configuration_ranks_in_its_top_ten_has_been_judged(real_run):
+@pytest.mark.models
+def test_every_section_any_configuration_ranks_in_its_top_ten_has_been_judged(real_run, real_models):
     # MRR@10, nDCG@10 and Recall@10 read ten ranks deep, so the pool must reach that deep too.
     golden, _, results = real_run
     missing = unjudged(golden.questions, results, depth=10)
     assert not missing, f"{sum(len(v) for v in missing.values())} unjudged; run `raglab golden pool`"
 
 
+@needs_v2
 @pytest.mark.corpus
-def test_real_scores_are_bounded_and_rankings_are_real_sections(real_run):
+@pytest.mark.models
+def test_real_scores_are_bounded_and_rankings_are_real_sections(real_run, real_models):
     golden, index, results = real_run
     for per_question in results.values():
         for r in per_question:
@@ -234,9 +303,9 @@ def test_the_reliability_studies_are_the_documented_draws_from_this_golden_set(r
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "analysis"))
     from samples import agreement_draw, unjudged_draw, unjudged_population
 
-    golden = load_golden(default_golden_path())
+    golden = load_golden(V1)
     index = SectionIndex(real_docs)
-    folder = default_golden_path().parent
+    folder = V1.parent
     agreement = json.loads((folder / "v1-agreement.json").read_text(encoding="utf-8"))["items"]
     assert [(i["question"], i["location"]) for i in agreement] == [(q, loc) for q, loc, _, _ in agreement_draw(golden)]
     for item in agreement:  # the first-pass grade quoted is the grade in v1.yaml
@@ -252,16 +321,18 @@ def test_the_reliability_studies_are_the_documented_draws_from_this_golden_set(r
         assert item["location"] in index and item["location"] not in golden.by_id(item["question"]).judgments
 
 
+@needs_v2
 @pytest.mark.corpus
-def test_the_real_evaluation_reproduces_byte_for_byte(real_docs, tmp_path):
+@pytest.mark.models
+def test_the_real_evaluation_reproduces_byte_for_byte(real_docs, real_models, tmp_path):
     # The claim the README makes about results/: same inputs, same bytes.
     golden = load_golden(default_golden_path())
     index = SectionIndex(real_docs)
     lock = CorpusLock.load(default_lock_path())
     for name in ("one", "two"):
-        results = run_configs(real_docs, golden.questions, FACTORIAL, index)
-        summary = summarize(golden.questions, FACTORIAL, results, resamples=2000)
-        save_run(tmp_path / name, build_manifest(golden, lock, FACTORIAL, resamples=2000, now=FIXED_TIME),
+        results = run_configs(real_docs, golden.questions, EVALUATED, index)
+        summary = summarize(golden.questions, EVALUATED, results, resamples=2000)
+        save_run(tmp_path / name, build_manifest(golden, lock, EVALUATED, resamples=2000, now=FIXED_TIME),
                  summary, golden.questions, results)
     for file in ("summary.json", "questions.jsonl", "manifest.json"):
         assert (tmp_path / "one" / file).read_bytes() == (tmp_path / "two" / file).read_bytes(), file
@@ -277,14 +348,14 @@ def test_summary_signs_and_holm_adjustment_on_synthetic_results():
         return QuestionResult({m: value for m in METRICS}, (), 0)
 
     results = {}
-    for c in FACTORIAL:
+    for c in LEXICAL:
         if c == BASELINE:
             results[c.name] = [result(0.0) for _ in questions]
         elif c.name == "heading+bm25":
             results[c.name] = [result(1.0) for _ in questions]
         else:
             results[c.name] = [result(float(rng.random() < 0.3)) for _ in questions]
-    summary = summarize(questions, FACTORIAL, results, resamples=2000)
+    summary = summarize(questions, LEXICAL, results, resamples=2000)
     best = summary["vs_baseline"]["heading+bm25"]["recall@5"]
     assert best["delta"] == pytest.approx(1.0) and best["lo"] == pytest.approx(1.0)  # direction: b - baseline
     rows = [row for per in summary["vs_baseline"].values() for row in per.values()]
@@ -306,9 +377,9 @@ def test_the_default_golden_set_is_recorded_by_a_project_relative_path(tmp_path,
     (tmp_path / "golden").mkdir()
     dump_golden({"version": 1, "corpus": {"ref": lock.ref, "fingerprint": lock.fingerprint},
                  "questions": [{"id": "q001", "question": "Where?", "style": "keyword", "target": RAISE,
-                                "judgments": {RAISE: 2}}]}, tmp_path / "golden" / "v1.yaml")
+                                "judgments": {RAISE: 2}}]}, tmp_path / "golden" / "v2.yaml")
     manifest = build_manifest(load_golden(default_golden_path()), lock, FACTORIAL, resamples=1000, now=FIXED_TIME)
-    assert manifest["golden"]["path"] == "golden/v1.yaml"
+    assert manifest["golden"]["path"] == "golden/v2.yaml"
     assert str(tmp_path) not in json.dumps(manifest)
 
 
@@ -330,7 +401,7 @@ def test_the_largest_budget_is_not_cut_short_by_retrieval_depth(real_docs):
     from raglab.experiments import build_retrievers
     from raglab.metrics import BUDGETS, score
 
-    golden = load_golden(default_golden_path())
+    golden = load_golden(V1)
     q = golden.by_id("q030")
     retriever = build_retrievers(real_docs, (BASELINE,))[BASELINE.name]
     spans = ranked_spans(retriever, q.text)
@@ -342,8 +413,8 @@ def test_the_largest_budget_is_not_cut_short_by_retrieval_depth(real_docs):
 
 @pytest.mark.corpus
 def test_the_regrade_log_matches_the_golden_set_and_the_readme():
-    log = json.loads((default_golden_path().parent / "v1-regrade.json").read_text(encoding="utf-8"))["items"]
-    golden = load_golden(default_golden_path())
+    log = json.loads((V1.parent / "v1-regrade.json").read_text(encoding="utf-8"))["items"]
+    golden = load_golden(V1)
     for item in log:
         assert golden.by_id(item["question"]).judgments[item["location"]] == item["final"], item
         assert (item["tiebreak"] is None) == (item["first"] == item["full_text"])
@@ -352,15 +423,18 @@ def test_the_regrade_log_matches_the_golden_set_and_the_readme():
     assert sum(i["final"] == 2 and i["first"] != 2 for i in log) == 18
 
 
+@needs_v2
+@needs_results
 @pytest.mark.corpus
-def test_a_fresh_run_reproduces_the_committed_results(real_docs, tmp_path):
+@pytest.mark.models
+def test_a_fresh_run_reproduces_the_committed_results(real_docs, real_models, tmp_path):
     # The README's claim about results/, checked against the committed files themselves.
     results = Path(__file__).resolve().parents[1] / "results"
     golden = load_golden(default_golden_path())
     lock = CorpusLock.load(default_lock_path())
     index = SectionIndex(real_docs)
-    run = run_configs(real_docs, golden.questions, FACTORIAL, index)
-    save_run(tmp_path, build_manifest(golden, lock, FACTORIAL), summarize(golden.questions, FACTORIAL, run),
+    run = run_configs(real_docs, golden.questions, EVALUATED, index)
+    save_run(tmp_path, build_manifest(golden, lock, EVALUATED), summarize(golden.questions, EVALUATED, run),
              golden.questions, run)
     for name in ("summary.json", "questions.jsonl"):
         assert (tmp_path / name).read_bytes() == (results / name).read_bytes(), name
@@ -373,6 +447,7 @@ def test_a_fresh_run_reproduces_the_committed_results(real_docs, tmp_path):
     assert fresh == committed
 
 
+@needs_results
 def test_every_table_in_the_readme_is_the_generated_one():
     from raglab.report import markdown_report
 
@@ -384,3 +459,100 @@ def test_every_table_in_the_readme_is_the_generated_one():
     assert len(tables) >= 8
     for table in tables:
         assert table in readme, table.splitlines()[0]
+
+
+# --- Stage 3: the confirmatory chain, on synthetic results with known answers --------------------
+
+
+def _synthetic(per_config, styles=("keyword", "paraphrase", "scenario"), n=60):
+    """Questions on n/2 pages (two per page); per_config maps a name to a function (question index) -> value."""
+    from raglab.experiments import EVALUATED
+
+    questions = [Question(f"q{i:03d}", f"question {i}", styles[i % len(styles)], f"page{i // 2}#t",
+                          MappingProxyType({f"page{i // 2}#t": 2})) for i in range(n)]
+    results = {}
+    for c in EVALUATED:
+        value = per_config.get(c.name, lambda i: 0.3)
+        results[c.name] = [QuestionResult({m: float(round(value(i)) if m in BINARY_METRICS else value(i))
+                                           for m in METRICS}, (), 0) for i in range(n)]
+    return questions, results
+
+
+def test_the_chain_stops_at_the_first_link_that_is_not_significant():
+    better, same = (lambda i: 0.9), (lambda i: 0.3)
+    questions, results = _synthetic({
+        "heading+bm25": same, "heading+hybrid+rerank": better,   # 1: clearly better -> significant
+        "heading+hybrid": same,                                  # 2: no difference -> chain stops here
+        "heading+dense": better,                                 # 3: would be significant, but is never reached
+    })
+    c = summarize(questions, EVALUATED, results, resamples=2000)["confirmatory"]
+    first, second, third = c["chain"][:3]
+    assert first["significant"] and first["verdict"] == "supported" and first["tested"]
+    assert second["tested"] and not second["significant"] and second["verdict"] == "inconclusive"
+    assert not third["tested"] and third["significant"] is None and third["p"] < 0.05
+    assert third["verdict"].startswith("not reached")
+    assert all(not t["tested"] for t in c["chain"][2:])
+
+
+def test_supporting_metrics_count_only_when_the_headline_holds():
+    questions, results = _synthetic({"heading+bm25": lambda i: 0.3, "heading+hybrid+rerank": lambda i: 0.3})
+    c = summarize(questions, EVALUATED, results, resamples=2000)["confirmatory"]
+    assert not c["chain"][0]["significant"]
+    assert all(t["verdict"].startswith("exploratory") for t in c["supporting"])
+    questions, results = _synthetic({"heading+bm25": lambda i: 0.3, "heading+hybrid+rerank": lambda i: 0.9})
+    c = summarize(questions, EVALUATED, results, resamples=2000)["confirmatory"]
+    assert [t["metric"] for t in c["supporting"]][:2] == ["success@5", "ndcg_answers@10"]
+    assert all(t["p"] <= t["p_holm"] <= 1 and t["verdict"] == "supported" for t in c["supporting"])
+    assert c["ndcg_versions_agree"] is True
+
+
+def test_success_changes_count_fixed_and_broken_questions():
+    questions, results = _synthetic({"heading+bm25": lambda i: float(i % 3 == 0),
+                                     "heading+hybrid+rerank": lambda i: float(i % 2 == 0)})
+    changes = summarize(questions, EVALUATED, results, resamples=1000)["confirmatory"]["success@5_changes"]
+    # i % 6: 0 both, 1 neither, 2 fixed, 3 broken, 4 fixed, 5 neither -> per 60 questions: 10, 20, 20, 10
+    assert changes == {"fixed": 20, "broken": 10, "both_found": 10, "both_missed": 20}
+
+
+def test_a_gain_carried_by_whole_pages_is_marked_fragile_when_pages_disagree():
+    # Within each page the two questions agree, so the per-question test overcounts the evidence.
+    rng = np.random.default_rng(11)
+    page_effect = rng.normal(0.08, 0.35, 30)
+    questions, results = _synthetic({"heading+bm25": lambda i: 0.4,
+                                     "heading+hybrid+rerank": lambda i: 0.4 + page_effect[i // 2]})
+    headline = summarize(questions, EVALUATED, results, resamples=4000)["confirmatory"]["chain"][0]
+    assert headline["page_level"]["p"] >= headline["p"]
+    assert headline["fragile"] == (headline["p"] < 0.05 <= headline["page_level"]["p"])
+    assert headline["resolvable"] > 0
+
+
+def test_the_style_interaction_compares_paraphrase_with_keyword_questions():
+    styles = ("keyword", "paraphrase")
+    questions, results = _synthetic({"heading+bm25": lambda i: 0.5,
+                                     "heading+dense": lambda i: 0.5 + (0.4 if i % 2 else 0.0)}, styles=styles)
+    inter = summarize(questions, EVALUATED, results, resamples=2000)["interaction"]
+    m = inter["metrics"]["ndcg_answers@10"]
+    assert inter["pre_specified_metric"] == "ndcg_answers@10"
+    assert m["paraphrase_mean"] == pytest.approx(0.4) and m["keyword_mean"] == pytest.approx(0.0)
+    # every paraphrase gains exactly 0.4 and no keyword question gains, so the interval collapses onto 0.4
+    assert m["difference"] == pytest.approx(0.4) and m["lo"] == pytest.approx(0.4) == m["hi"] and m["p"] < 0.05
+
+
+def test_by_style_paired_differences_cover_the_headline_and_every_chain_link():
+    questions, results = _synthetic({"heading+hybrid+rerank": lambda i: 0.8})
+    block = summarize(questions, EVALUATED, results, resamples=1000)["by_style_paired"]
+    pairs = block["paraphrase"]["pairs"]
+    assert "heading+bm25 -> heading+hybrid+rerank" in pairs and "heading+bm25+rerank -> heading+hybrid+rerank" in pairs
+    assert pairs["heading+bm25 -> heading+hybrid+rerank"]["mrr@10"]["delta"] == pytest.approx(0.5)
+    assert block["paraphrase"]["n"] == 20
+
+
+def test_new_diagnostics_report_related_slots_and_unreranked_windows(setup):
+    _, docs, index, golden = setup
+    results = run_configs(docs, golden.questions, EVALUATED, index)
+    diagnostics = summarize(golden.questions, EVALUATED, results, resamples=1000)["diagnostics"]
+    assert diagnostics["heading+bm25"]["unreranked_share_of_window"] is None
+    assert set(diagnostics["heading+hybrid+rerank"]["unreranked_share_of_window"]) == {"1200", "2400", "4800", "9600"}
+    assert diagnostics["heading+hybrid+rerank [depth 10]"]["rerank_depth"]["max"] <= 10
+    for d in diagnostics.values():
+        assert 0.0 <= d["related_share@10"] <= 1.0 and set(d["judged_in_budget"]) == {"1200", "2400", "4800", "9600"}

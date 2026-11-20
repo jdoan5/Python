@@ -311,7 +311,7 @@ def golden_sample(
 
 @golden_app.command("validate")
 def golden_validate(
-    golden: Optional[Path] = typer.Option(None, help="Golden set file (default: golden/v1.yaml)."),
+    golden: Optional[Path] = typer.Option(None, help="Golden set file (default: golden/v2.yaml)."),
 ) -> None:
     """Check the golden set's structure and that every judged section exists in the pinned corpus."""
     lock, _, _, gs = _golden_context(golden)
@@ -356,7 +356,7 @@ def golden_show(
 @golden_app.command("pool")
 def golden_pool(
     depth: int = typer.Option(10, min=1, max=10, help="Pool every configuration's top N sections (metrics read 10)."),
-    golden: Optional[Path] = typer.Option(None, help="Golden set file (default: golden/v1.yaml)."),
+    golden: Optional[Path] = typer.Option(None, help="Golden set file (default: golden/v2.yaml)."),
     worksheet: Optional[Path] = typer.Option(None, help="Write the unjudged sections, with their text, to this JSON file."),
 ) -> None:
     """List pooled sections nobody has judged yet. Exits 1 if there are any, so it can gate CI."""
@@ -405,7 +405,7 @@ def golden_pool(
 @golden_app.command("merge")
 def golden_merge(
     judgments: Path = typer.Argument(..., help='JSON file of {"q001": {"doc#anchor": 0|1|2, ...}, ...}.'),
-    golden: Optional[Path] = typer.Option(None, help="Golden set file (default: golden/v1.yaml)."),
+    golden: Optional[Path] = typer.Option(None, help="Golden set file (default: golden/v2.yaml)."),
     regrade: bool = typer.Option(False, help="Allow changing existing grades (never a target's). For deliberate corrections."),
 ) -> None:
     """Add new judgments to the golden set. Existing judgments change only with --regrade."""
@@ -503,7 +503,7 @@ def _print_summary(summary: dict, manifest: dict) -> None:
 
 @eval_app.command("run")
 def eval_run(
-    golden: Optional[Path] = typer.Option(None, help="Golden set file (default: golden/v1.yaml)."),
+    golden: Optional[Path] = typer.Option(None, help="Golden set file (default: golden/v2.yaml)."),
     out: Optional[Path] = typer.Option(None, help="Run directory (default: runs/<run id>)."),
     overwrite: bool = typer.Option(False, help="Replace a run already in --out."),
     resamples: int = typer.Option(RESAMPLES, min=1000, help="Bootstrap and randomisation resamples."),
