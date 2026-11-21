@@ -9,7 +9,7 @@ describes: a Holm-adjusted p below 0.05 against the baseline, or a switch
 effect whose interval excludes zero. The [README](README.md) explains each
 table.
 
-Run `20261121-033633-25ad5ed6` · 98 questions · golden v2 `4e8a0f5c03d0` · FastAPI 0.165.0 `3ec279619717` · code `25ad5ed6ddb6` · 10,000 resamples
+Run `20261121-163240-25ad5ed6` · 98 questions · golden v2 `4e8a0f5c03d0` · FastAPI 0.165.0 `3ec279619717` · code `25ad5ed6ddb6` · 10,000 resamples
 
 ### The confirmatory tests
 

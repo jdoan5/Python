@@ -14,7 +14,7 @@ How it would be measured was fixed before any Stage 3 result was read. The
 it, the decision rules, and what had already run when it was written. It was
 pushed (freeze point 1) before any new label was drawn. The new labels were
 pushed (freeze point 2) before any Stage 3 configuration was scored against
-them.
+them, and the results were pushed at freeze point 3, commit `711f8b40`.
 
 ## What it found
 
@@ -137,8 +137,8 @@ links 4 and 5, which the chain never reached.
      each other.
    - **Against the committed files.** Another test re-runs the evaluation as
      `eval run` does, and requires the committed `summary.json` and
-     `questions.jsonl` byte for byte. Re-running from the final code
-     reproduced both exactly.
+     `questions.jsonl` byte for byte. Re-running from the final code, before
+     and after it was committed, reproduced both exactly.
    - **Perturbation (exploratory).** Every model score was moved by one
      float32 unit in the last place, in 20 runs. No chain configuration's top
      10 changed on any question. One unit is the smallest possible change;
@@ -181,7 +181,7 @@ Success@5's interval in the supporting table excludes zero, yet its p is
 0.071: with 7 questions gained and 1 lost, the sign-flip test is the stricter
 of the two.
 
-Run `20261121-033633-25ad5ed6` · 98 questions · golden v2 `4e8a0f5c03d0` · FastAPI 0.165.0 `3ec279619717` · code `25ad5ed6ddb6` · 10,000 resamples
+Run `20261121-163240-25ad5ed6` · 98 questions · golden v2 `4e8a0f5c03d0` · FastAPI 0.165.0 `3ec279619717` · code `25ad5ed6ddb6` · 10,000 resamples
 
 ### The confirmatory tests
 
@@ -654,8 +654,9 @@ changed after freeze point 1:
 The modules that compute `summary.json` and `questions.jsonl` are
 byte-identical to `0f05de5c`. So no change below moved link 1: +0.090,
 supported, its blind-round confirmation fragile per page. Every change was
-made on 2026-11-20, US Eastern time, as in the plan. Run ids are stamped in
-UTC, so both runs in the table read 20261121.
+made on 2026-11-20, US Eastern time as in the plan, except the last re-run,
+from the freeze point 3 commit on 2026-11-21. Run ids are stamped in UTC, so
+all three runs in the table read 20261121.
 
 | change | why | effect on link 1 |
 |---|---|---|
@@ -667,7 +668,7 @@ UTC, so both runs in the table read 20261121.
 | Changed after freeze point 2: the confirmatory table's label-check line now says when the blind-round confirmation is fragile per page. | The plan calls a fragile Supported fragile wherever it is stated. Display only. | none |
 | Fixed after freeze point 2: `raglab golden agreement` looked for `golden/v2-agreement.json`, which doesn't exist. It now reads `v1-agreement.json` by default, as its help text says. | A Stage 2 default that broke when Stage 3's golden set became v2. It reads no Stage 3 result. | none |
 | Fixed a test: `test_a_fresh_run_reproduces_the_committed_results` now passes the blind grades to `summarize`, as `eval run` does. | Without them its label check was empty, so it could never match the committed `summary.json`. | none |
-| `results/` was first written (run `20261121-023046-35c58b76`) from a working tree with uncommitted edits to `cli.py` and `report.py`, before `analysis/extras.py` existed. Its code hash matched no commit, so `results/` was regenerated from the final code (run `20261121-033633-25ad5ed6`). | So the manifest names the code committed with it. `summary.json` and `questions.jsonl` came out byte-identical. The manifest's git fields record the state at run time: `88431f1a` plus the then-uncommitted final code. | none |
+| `results/` was first written (run `20261121-023046-35c58b76`) from a working tree with uncommitted edits to `cli.py` and `report.py`, before `analysis/extras.py` existed, so its code hash matched no commit. It was regenerated from the final code (run `20261121-033633-25ad5ed6`), which was committed at freeze point 3 (`711f8b40`), and run once more from that commit with a clean tree (run `20261121-163240-25ad5ed6`). | So the manifest names committed code and a clean tree. Each time, `summary.json` and `questions.jsonl` came out byte-identical. | none |
 | "Source left out" covers 66 questions, not the 64 the plan names. | The rule, questions with an answer besides the target, is applied as written. v2 found such answers for two more questions. | none |
 
 ## Known limitations
