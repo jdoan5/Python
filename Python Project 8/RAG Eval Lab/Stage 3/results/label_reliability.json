@@ -1,0 +1,186 @@
+{
+ "new_labels": {
+  "0": 1857,
+  "1": 147,
+  "2": 49
+ },
+ "drift": {
+  "all": {
+   "promotions": {
+    "n": 100,
+    "count": 0,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.03699349820698565
+   },
+   "promotions_from_1": {
+    "n": 50,
+    "count": 0,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.07134759913335868
+   },
+   "demotions": {
+    "n": 100,
+    "count": 2,
+    "rate": 0.02,
+    "lo": 0.00550196755016235,
+    "hi": 0.07001179072854385
+   }
+  },
+  "in heading+bm25's top 10": {
+   "promotions": {
+    "n": 50,
+    "count": 0,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.07134759913335868
+   },
+   "promotions_from_1": {
+    "n": 25,
+    "count": 0,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.1331922509390484
+   },
+   "demotions": {
+    "n": 50,
+    "count": 2,
+    "rate": 0.04,
+    "lo": 0.011038884327619805,
+    "hi": 0.13460090687507015
+   }
+  },
+  "not in it": {
+   "promotions": {
+    "n": 50,
+    "count": 0,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.07134759913335868
+   },
+   "promotions_from_1": {
+    "n": 25,
+    "count": 0,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.1331922509390484
+   },
+   "demotions": {
+    "n": 50,
+    "count": 0,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.07134759913335868
+   }
+  },
+  "demotions of off-target-page answers": {
+   "n": 55,
+   "count": 1,
+   "rate": 0.01818181818181818,
+   "lo": 0.003216780454841077,
+   "hi": 0.09605776062162391
+  },
+  "test_retest": {
+   "n": 200,
+   "exact": 0.94,
+   "kappa": 0.9043824701195219,
+   "answer_kappa": 0.98,
+   "promoted_to_answer": 0,
+   "demoted_from_answer": 2
+  }
+ },
+ "blind": {
+  "label_check_kappa_answer_vs_not": 0.8845785440613027,
+  "union_new_labels": {
+   "n": 241,
+   "exact": 0.9585062240663901,
+   "kappa": 0.8522741203873974,
+   "answer_kappa": 0.8845785440613027,
+   "promoted_to_answer": 1,
+   "demoted_from_answer": 1
+  },
+  "union_v1_labels": {
+   "n": 1197,
+   "exact": 0.9172932330827067,
+   "kappa": 0.8540058667212026,
+   "answer_kappa": 0.9193713859354598,
+   "promoted_to_answer": 7,
+   "demoted_from_answer": 19
+  },
+  "agreement_sample": {
+   "n": 160,
+   "exact": 0.91875,
+   "kappa": 0.8761904761904762,
+   "answer_kappa": 0.9666666666666667,
+   "promoted_to_answer": 1,
+   "demoted_from_answer": 1
+  },
+  "agreement_sample_reweighted_to_all_new_labels": {
+   "n": 160,
+   "exact": 0.9850828056502678,
+   "kappa": 0.9097150637315781,
+   "answer_kappa": 0.9620459097211524,
+   "promoted_to_answer": 1,
+   "demoted_from_answer": 1
+  },
+  "bridge_blind_now_vs_v1_blind": {
+   "n": 40,
+   "exact": 0.925,
+   "kappa": 0.8871119473189087,
+   "answer_kappa": 0.9418604651162791,
+   "promoted_to_answer": 0,
+   "demoted_from_answer": 1
+  }
+ },
+ "quote": {
+  "first grade 2": {
+   "answers_with_a_quote_that_holds": {
+    "n": 62,
+    "count": 62,
+    "rate": 1.0,
+    "lo": 0.9416559278986275,
+    "hi": 1.0
+   },
+   "answers_whose_quote_fails": {
+    "n": 62,
+    "count": 0,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.05834407210137245
+   }
+  },
+  "first grade 1": {
+   "answers_with_a_quote_that_holds": {
+    "n": 74,
+    "count": 6,
+    "rate": 0.08108108108108109,
+    "lo": 0.03768985019382637,
+    "hi": 0.16581942443557815
+   },
+   "answers_whose_quote_fails": {
+    "n": 74,
+    "count": 0,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.04934977939638603
+   }
+  },
+  "first grade 0": {
+   "answers_with_a_quote_that_holds": {
+    "n": 73,
+    "count": 0,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.04999200795573108
+   },
+   "answers_whose_quote_fails": {
+    "n": 73,
+    "count": 0,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.04999200795573108
+   }
+  }
+ }
+}

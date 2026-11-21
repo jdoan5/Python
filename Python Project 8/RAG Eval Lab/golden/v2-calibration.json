@@ -1,0 +1,1805 @@
+{
+ "rule": "200 v1 labels to grade again, hidden among the new candidates.\n\nThree strata by v1 grade: 50 related (1) and 50 rejected (0), which a\nlenient round could promote, and 100 non-target answers (2), which a strict\nround could demote. Each stratum is half sections in heading+bm25's top 10,\nthe side of the headline whose labels all come from v1, and half not.\nWithin each half, off-target-page sections come first, because that is\nwhere v2's new labels fall, then sha256 order. A half that runs short is\nfilled from the other half.",
+ "items": [
+  {
+   "question": "q001",
+   "location": "tutorial/query-param-models#query-parameter-models",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q001",
+   "location": "tutorial/query-param-models#query-parameters-with-a-pydantic-model",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q001",
+   "location": "tutorial/query-param-models#summary",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q002",
+   "location": "advanced/advanced-dependencies#choose-a-limit-for-your-application",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q002",
+   "location": "tutorial/bigger-applications#include-a-path-operation",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q003",
+   "location": "tutorial/query-params#multiple-path-and-query-parameters",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q003",
+   "location": "tutorial/query-params-str-validations#alternative-old-query-as-the-default-value",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q004",
+   "location": "tutorial/query-params-str-validations#query-parameter-list-multiple-values",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q004",
+   "location": "tutorial/query-params-str-validations#using-just-list",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q004",
+   "location": "tutorial/security/oauth2-jwt#about-jwt",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q006",
+   "location": "tutorial/query-params-str-validations#declare-more-metadata",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q006",
+   "location": "tutorial/request-forms-and-files#import-file-and-form",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q007",
+   "location": "tutorial/path-params#data-validation",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q007",
+   "location": "tutorial/query-param-models#query-parameters-with-a-pydantic-model",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q008",
+   "location": "deployment/concepts#small-errors-automatically-handled",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q008",
+   "location": "editor-support#setup-and-installation",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q010",
+   "location": "advanced/custom-response#available-responses",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q010",
+   "location": "advanced/custom-response#custom-response-class",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q010",
+   "location": "advanced/custom-response#response",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q010",
+   "location": "advanced/response-cookies#use-a-response-parameter",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q011",
+   "location": "advanced/custom-response#available-responses",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q011",
+   "location": "advanced/custom-response#response",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q011",
+   "location": "advanced/response-directly#using-the-jsonable-encoder-in-a-response",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q011",
+   "location": "advanced/response-headers#return-a-response-directly",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q011",
+   "location": "reference/responses#fastapi-responses",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/oauth2-jwt#oauth2-with-password-and-hashing-bearer-with-jwt-tokens",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#use-the-form-data",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q014",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#add-dependencies-to-the-path-operation-decorator",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q014",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#dependencies-in-path-operation-decorators",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q017",
+   "location": "advanced/security/http-basic-auth#return-the-error",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/oauth2-jwt#hash-and-verify-the-passwords",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/simple-oauth2#oauth2passwordrequestform",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q019",
+   "location": "advanced/advanced-python-types#using-union-or-optional",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q019",
+   "location": "tutorial/request-forms-and-files#import-file-and-form",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q020",
+   "location": "how-to/configure-swagger-ui#disable-syntax-highlighting",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q021",
+   "location": "how-to/custom-docs-ui-assets#include-the-custom-docs",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q023",
+   "location": "tutorial/extra-models#response-with-arbitrary-dict",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q024",
+   "location": "features#security-and-authentication",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q024",
+   "location": "reference/security/index#security-tools",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q025",
+   "location": "tutorial/stream-json-lines#json-lines",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q027",
+   "location": "how-to/separate-openapi-schemas#model-for-output-response-data",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q028",
+   "location": "advanced/advanced-dependencies#dependencies-with-yield-and-scope",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q028",
+   "location": "advanced/advanced-dependencies#use-cases-with-early-exit-code",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q030",
+   "location": "ai-development#deploy-your-app",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q030",
+   "location": "help-fastapi#try-fastapi-cloud",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q030",
+   "location": "index#deploy-your-app-optional",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/first-steps#deploy-your-app-optional",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/first-steps#recap",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q030",
+   "location": "tutorial/first-steps#step-6-deploy-it",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q031",
+   "location": "index#create-it",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/first-steps#use-it",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q033",
+   "location": "index#deploy-to-other-cloud-providers",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q035",
+   "location": "advanced/templates#templates-and-static-files",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q036",
+   "location": "advanced/security/oauth2-scopes#jwt-token-with-scopes",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/first-steps#configure-the-app-entrypoint-in-pyproject-toml",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/request-forms#define-form-parameters",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/first-steps#use-it",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/simple-oauth2#oauth2passwordrequestform",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/simple-oauth2#return-the-token",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/simple-oauth2#update-the-dependencies",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/simple-oauth2#use-the-form-data",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/simple-oauth2#why-use-password-hashing",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q038",
+   "location": "index#run-it",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q038",
+   "location": "tutorial/debugging#about-name-main",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q039",
+   "location": "advanced/openapi-callbacks#add-the-callback-router",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q039",
+   "location": "advanced/openapi-callbacks#create-a-callback-apirouter",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q039",
+   "location": "advanced/openapi-callbacks#create-the-callback-path-operation",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q040",
+   "location": "deployment/docker#behind-a-tls-termination-proxy",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q040",
+   "location": "deployment/https#about-https",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q040",
+   "location": "deployment/https#certificate-renewal",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q040",
+   "location": "deployment/https#http-response",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q040",
+   "location": "deployment/https#https-request",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q040",
+   "location": "deployment/https#lets-encrypt",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q041",
+   "location": "advanced/path-operation-advanced-configuration#using-the-path-operation-function-name-as-the-operationid",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q042",
+   "location": "how-to/custom-request-and-route#handling-custom-request-body-encodings",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q043",
+   "location": "advanced/response-directly#using-the-jsonable-encoder-in-a-response",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q043",
+   "location": "tutorial/body-updates#partial-updates-recap",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q043",
+   "location": "tutorial/body-updates#update-replacing-with-put",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q044",
+   "location": "tutorial/request-forms-and-files#import-file-and-form",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q044",
+   "location": "tutorial/request-forms-and-files#recap",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q045",
+   "location": "advanced/opentelemetry#choose-what-to-record",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q047",
+   "location": "how-to/conditional-openapi#conditional-openapi-from-settings-and-env-vars",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q048",
+   "location": "advanced/response-headers#return-a-response-directly",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q048",
+   "location": "advanced/security/http-basic-auth#return-the-error",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q048",
+   "location": "tutorial/security/simple-oauth2#update-the-dependencies",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q050",
+   "location": "alternatives#webargs",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q050",
+   "location": "index#recap",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q050",
+   "location": "python-types#typing-module",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q050",
+   "location": "tutorial/dependencies/classes-as-dependencies#classes-as-dependencies",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q051",
+   "location": "tutorial/path-params#documentation",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q052",
+   "location": "deployment/docker#what-is-a-container-image",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q054",
+   "location": "tutorial/query-params-str-validations#required-parameters",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q054",
+   "location": "tutorial/request-form-models#combine-form-models",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q054",
+   "location": "tutorial/request-form-models#pydantic-models-for-forms",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q055",
+   "location": "advanced/generate-clients#custom-generate-unique-id-function",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q055",
+   "location": "how-to/extending-openapi#generate-the-openapi-schema",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q056",
+   "location": "advanced/security/oauth2-scopes#use-securityscopes",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/query-params-str-validations#query-parameter-list-multiple-values",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/get-current-user#code-size",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/get-current-user#inject-the-current-user",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/simple-oauth2#return-the-token",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q058",
+   "location": "advanced/settings#settings-and-testing",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q058",
+   "location": "advanced/testing-dependencies#use-the-app-dependency-overrides-attribute",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q059",
+   "location": "advanced/security/oauth2-scopes#global-view",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q059",
+   "location": "advanced/security/oauth2-scopes#oauth2-security-scheme",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q059",
+   "location": "advanced/security/oauth2-scopes#use-the-scopes",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q059",
+   "location": "advanced/security/oauth2-scopes#verify-the-username-and-data-shape",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q059",
+   "location": "deployment/concepts#restarts",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q062",
+   "location": "advanced/settings#settings-and-environment-variables",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q062",
+   "location": "advanced/websockets#handling-disconnections-and-multiple-clients",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q063",
+   "location": "advanced/additional-responses#additional-response-with-model",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q063",
+   "location": "advanced/additional-status-codes#additional-status-codes_1",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q063",
+   "location": "advanced/response-cookies#return-a-response-directly",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q063",
+   "location": "advanced/response-directly#notes",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q063",
+   "location": "advanced/response-directly#using-the-jsonable-encoder-in-a-response",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q063",
+   "location": "tutorial/response-model#response-model-parameter",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q063",
+   "location": "tutorial/response-model#return-type-and-data-filtering",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q065",
+   "location": "how-to/custom-request-and-route#custom-apiroute-class-in-a-router",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q065",
+   "location": "tutorial/middleware#create-a-middleware",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q066",
+   "location": "advanced/security/oauth2-scopes#declare-scopes-in-path-operations-and-dependencies",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q066",
+   "location": "advanced/security/oauth2-scopes#global-view",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q066",
+   "location": "advanced/security/oauth2-scopes#jwt-token-with-scopes",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q066",
+   "location": "advanced/security/oauth2-scopes#oauth2-security-scheme",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q066",
+   "location": "advanced/security/oauth2-scopes#use-securityscopes",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q066",
+   "location": "advanced/security/oauth2-scopes#verify-the-scopes",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q066",
+   "location": "advanced/security/oauth2-scopes#verify-the-username-and-data-shape",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q066",
+   "location": "tutorial/security/get-current-user#inject-the-current-user",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q066",
+   "location": "tutorial/security/simple-oauth2#return-the-token",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q066",
+   "location": "tutorial/security/simple-oauth2#why-use-password-hashing",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q068",
+   "location": "advanced/openapi-callbacks#an-app-with-callbacks",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#dependency-requirements",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q070",
+   "location": "tutorial/path-params-numeric-validations#order-the-parameters-as-you-need",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q070",
+   "location": "tutorial/query-param-models#optional-query-parameter-models",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q070",
+   "location": "tutorial/query-params#required-query-parameters",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q071",
+   "location": "tutorial/schema-extra-example#body-with-multiple-examples",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q072",
+   "location": "deployment/fastapicloud#deploy-to-other-cloud-providers",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q072",
+   "location": "tutorial/dependencies/index#declare-the-dependency-in-the-dependant",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q073",
+   "location": "tutorial/request-files#what-is-form-data",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q073",
+   "location": "tutorial/request-forms#about-form-fields",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q074",
+   "location": "advanced/openapi-callbacks#add-the-callback-router",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q075",
+   "location": "ai-development#run-your-app",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q075",
+   "location": "index#interactive-api-docs",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q075",
+   "location": "index#run-it",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q075",
+   "location": "tutorial/first-steps#first-steps",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q075",
+   "location": "tutorial/index#run-the-code",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q077",
+   "location": "features#pydantic-features",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q077",
+   "location": "index#recap",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q077",
+   "location": "tutorial/security/simple-oauth2#get-the-username-and-password",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/header-params#import-header",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/header-params#recap",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/query-params-str-validations#add-query-to-annotated-in-the-q-parameter",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/query-params-str-validations#declare-more-metadata",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/bigger-applications#avoid-name-collisions",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/bigger-applications#include-an-apirouter-with-a-custom-prefix-tags-responses-and-dependencies",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q079",
+   "location": "tutorial/dependencies/global-dependencies#global-dependencies",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q080",
+   "location": "advanced/using-request-directly#use-the-request-object-directly",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q080",
+   "location": "features#dependency-injection",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q081",
+   "location": "deployment/https#proxy-forwarded-headers",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/request-form-models#combine-form-models",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q084",
+   "location": "advanced/async-tests#example",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q084",
+   "location": "tutorial/bigger-applications#an-example-file-structure",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q084",
+   "location": "tutorial/first-steps#first-steps",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q084",
+   "location": "tutorial/testing#extended-fastapi-app-file",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q085",
+   "location": "tutorial/request-files#uploadfile",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q085",
+   "location": "tutorial/server-sent-events#non-async-path-operation-functions",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q086",
+   "location": "features#editor-support",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q086",
+   "location": "tutorial/body#request-body-path-query-parameters",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q086",
+   "location": "tutorial/dependencies/classes-as-dependencies#shortcut",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q086",
+   "location": "tutorial/dependencies/classes-as-dependencies#use-it",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q086",
+   "location": "tutorial/query-param-models#combine-parameter-models",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q088",
+   "location": "tutorial/dependencies/index#to-async-or-not-to-async",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q089",
+   "location": "tutorial/dependencies/index#first-steps",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q091",
+   "location": "deployment/concepts#worker-processes-and-ports",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q091",
+   "location": "tutorial/debugging#call-uvicorn",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q092",
+   "location": "advanced/generate-clients#custom-generate-unique-id-function",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q092",
+   "location": "advanced/security/http-basic-auth#a-professional-attack",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q092",
+   "location": "tutorial/extra-data-types#other-data-types",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q093",
+   "location": "tutorial/body#request-body-path-parameters",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q095",
+   "location": "ai-development#agent-plugins",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q095",
+   "location": "features#editor-support",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q095",
+   "location": "tutorial/body#use-the-model",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q095",
+   "location": "tutorial/first-steps#first-steps",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/bigger-applications#avoid-name-collisions",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/bigger-applications#import-the-apirouter",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/bigger-applications#include-an-apirouter-with-a-custom-prefix-tags-responses-and-dependencies",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/request-files#define-file-parameters",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/testing#fastapi-app-file",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q097",
+   "location": "deployment/docker#package-requirements",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q097",
+   "location": "fastapi-cli#fastapi-cli",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q097",
+   "location": "index#standard-dependencies",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q097",
+   "location": "index#without-fastapi-cloud-cli",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q097",
+   "location": "tutorial/security/first-steps#run-it",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q098",
+   "location": "deployment/concepts#replication-processes-and-memory",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q098",
+   "location": "deployment/concepts#server-memory",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q098",
+   "location": "deployment/docker#one-load-balancer-multiple-worker-containers",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q098",
+   "location": "deployment/docker#single-container",
+   "v1_grade": 0,
+   "stratum": "rejected",
+   "in_heading_bm25_top10": false,
+   "on_target_page": false,
+   "v2_round_grade": 0
+  },
+  {
+   "question": "q098",
+   "location": "deployment/server-workers#recap",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": false,
+   "on_target_page": true,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q099",
+   "location": "index#recap",
+   "v1_grade": 2,
+   "stratum": "answers",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 2
+  },
+  {
+   "question": "q099",
+   "location": "tutorial/path-params#path-parameters-with-types",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  },
+  {
+   "question": "q100",
+   "location": "tutorial/sql-databases#sql-relational-databases",
+   "v1_grade": 1,
+   "stratum": "related",
+   "in_heading_bm25_top10": true,
+   "on_target_page": false,
+   "v2_round_grade": 1
+  }
+ ]
+}

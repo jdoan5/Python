@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import statistics
+import subprocess
 from pathlib import Path
 from typing import Optional
 
@@ -535,6 +536,26 @@ def eval_run(
                   f" (git {code['git_commit'][:12] if code['git_commit'] else 'unavailable'}"
                   f"{', uncommitted changes' if code['git_dirty'] else ''}) · golden {gs.sha256[:12]}"
                   f" · corpus {lock.fingerprint[:12]}")
+
+
+@app.command("bench")
+def bench_command(
+    out: Path = typer.Option(Path("results/cost.json"), help="Where to write the timings."),
+    golden: Optional[Path] = typer.Option(None, help="Golden set whose question texts are timed (no grade is read)."),
+) -> None:
+    """Time each retriever on this machine, caches off (PLAN.md, "Cost"); reads question texts only."""
+    from raglab.bench import bench
+
+    lock, report = _load()
+    try:
+        gs = load_golden(golden or default_golden_path())
+        with console.status(f"Timing on {len(gs.questions)} questions (several minutes)..."):
+            result = bench(list(report.documents), [q.text for q in gs.questions], Path.cwd())
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(result, indent=1) + "\n", encoding="utf-8")
+    except (GoldenError, ModelError, OSError, subprocess.SubprocessError) as e:
+        _fail(str(e))
+    console.print(f"Wrote {escape(str(out))}")
 
 
 @eval_app.command("report")

@@ -1,0 +1,77 @@
+{
+ "limit_tokens": 512,
+ "embedder": {
+  "paragraph, breadcrumb on": {
+   "chunks": 9228,
+   "over_limit": 1,
+   "max_tokens": 564
+  },
+  "paragraph, breadcrumb off": {
+   "chunks": 9228,
+   "over_limit": 1,
+   "max_tokens": 557
+  },
+  "fixed, breadcrumb on": {
+   "chunks": 1045,
+   "over_limit": 2,
+   "max_tokens": 525
+  },
+  "fixed, breadcrumb off": {
+   "chunks": 1045,
+   "over_limit": 0,
+   "max_tokens": 497
+  },
+  "heading, breadcrumb on": {
+   "chunks": 1538,
+   "over_limit": 6,
+   "max_tokens": 525
+  },
+  "heading, breadcrumb off": {
+   "chunks": 1538,
+   "over_limit": 0,
+   "max_tokens": 498
+  },
+  "questions (with the instruction)": {
+   "questions": 98,
+   "over_limit": 0,
+   "max_tokens": 53
+  }
+ },
+ "reranker_pairs": {
+  "paragraph+hybrid": {
+   "pairs": 9800,
+   "over_limit": 2,
+   "max_tokens": 583
+  },
+  "paragraph+hybrid (no breadcrumb)": {
+   "pairs": 9800,
+   "over_limit": 1,
+   "max_tokens": 576
+  },
+  "fixed+hybrid": {
+   "pairs": 9800,
+   "over_limit": 51,
+   "max_tokens": 564
+  },
+  "fixed+hybrid (no breadcrumb)": {
+   "pairs": 9800,
+   "over_limit": 7,
+   "max_tokens": 536
+  },
+  "heading+hybrid": {
+   "pairs": 9800,
+   "over_limit": 75,
+   "max_tokens": 569
+  },
+  "heading+hybrid (no breadcrumb)": {
+   "pairs": 9800,
+   "over_limit": 10,
+   "max_tokens": 542
+  },
+  "BM25's top 100 (the control's first stage)": {
+   "pairs": 9777,
+   "over_limit": 23,
+   "max_tokens": 569
+  }
+ }
+}

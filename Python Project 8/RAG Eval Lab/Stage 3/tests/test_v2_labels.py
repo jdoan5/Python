@@ -167,3 +167,53 @@ def test_a_batch_that_passed_can_never_be_judged_again(tmp_path):
     first.write_text(json.dumps([{"label": "blind-01", "grades": []}]))  # failed: nothing returned for i1
     answers, log = v2_labels._round_answers(first, [again], manifest, "grades", quote=False)
     assert answers["i1"]["grade"] == 2 and log[0]["batch"] == "blind-01" and log[0]["first_run"] == []
+
+
+# --- the label-reliability report (analysis/label_reliability.py), on made-up grades -----------------
+
+
+def test_drift_counts_promotions_and_demotions_per_half():
+    import label_reliability as lr
+
+    cal = [{"v1_grade": 1, "v2_round_grade": 2, "in_heading_bm25_top10": True, "on_target_page": False},
+           {"v1_grade": 0, "v2_round_grade": 0, "in_heading_bm25_top10": False, "on_target_page": False},
+           {"v1_grade": 2, "v2_round_grade": 1, "in_heading_bm25_top10": True, "on_target_page": True},
+           {"v1_grade": 2, "v2_round_grade": 2, "in_heading_bm25_top10": False, "on_target_page": False}]
+    d = lr.drift(cal)
+    assert d["all"]["promotions"]["count"] == 1 and d["all"]["promotions"]["n"] == 2
+    assert d["all"]["demotions"]["count"] == 1 and d["in heading+bm25's top 10"]["demotions"]["count"] == 1
+    assert d["demotions of off-target-page answers"] == {"n": 1, "count": 0, "rate": 0.0,
+                                                         "lo": d["demotions of off-target-page answers"]["lo"],
+                                                         "hi": d["demotions of off-target-page answers"]["hi"]}
+    assert d["test_retest"]["promoted_to_answer"] == 1 and d["test_retest"]["demoted_from_answer"] == 1
+
+
+def test_the_blind_report_reweights_the_agreement_sample_and_reads_the_bridge():
+    from collections import Counter
+
+    import label_reliability as lr
+
+    rows = [{"groups": ["union"], "new_in_v2": True, "first": 2, "blind": 2},
+            {"groups": ["union"], "new_in_v2": True, "first": 0, "blind": 0},
+            {"groups": ["union"], "new_in_v2": False, "first": 2, "blind": 1},
+            {"groups": ["agreement"], "new_in_v2": True, "first": 2, "blind": 2},
+            {"groups": ["agreement"], "new_in_v2": True, "first": 0, "blind": 2},
+            {"groups": ["bridge"], "new_in_v2": False, "first": 1, "v1_blind": 1, "blind": 1},
+            {"groups": ["bridge"], "new_in_v2": False, "first": 0, "v1_blind": 0, "blind": 2}]
+    report = lr.blind_report(rows, Counter({2: 10, 0: 90}))
+    assert report["label_check_kappa_answer_vs_not"] == pytest.approx(1.0)
+    assert report["union_v1_labels"]["n"] == 1
+    sample, weighted = report["agreement_sample"], report["agreement_sample_reweighted_to_all_new_labels"]
+    assert sample["exact"] == 0.5 and weighted["exact"] == pytest.approx(10 / 100)  # the 0s weigh nine times more
+    assert report["bridge_blind_now_vs_v1_blind"]["exact"] == 0.5
+
+
+def test_the_quote_report_separates_quotes_that_hold_from_those_that_fail():
+    import label_reliability as lr
+
+    items = [{"first": 2, "answers": True, "quote_holds": True}, {"first": 2, "answers": True, "quote_holds": False},
+             {"first": 0, "answers": False, "quote_holds": False}]
+    report = lr.quote_report(items)
+    assert report["first grade 2"]["answers_with_a_quote_that_holds"]["count"] == 1
+    assert report["first grade 2"]["answers_whose_quote_fails"]["count"] == 1
+    assert report["first grade 0"]["answers_with_a_quote_that_holds"]["count"] == 0

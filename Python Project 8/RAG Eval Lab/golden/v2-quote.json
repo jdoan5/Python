@@ -1,0 +1,2303 @@
+{
+ "items": [
+  {
+   "question": "q001",
+   "location": "tutorial/request-form-models#pydantic-models-for-forms",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q002",
+   "location": "tutorial/bigger-applications#include-an-apirouter-in-another",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q004",
+   "location": "tutorial/cors#use-corsmiddleware",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q004",
+   "location": "tutorial/stream-json-lines#json-lines",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q007",
+   "location": "tutorial/body-multiple-params#mix-path-query-and-body-parameters",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": true,
+   "quote": "item_id: Annotated[int, Path(title=\"The ID of the item to get\", ge=0, le=1000)],",
+   "quote_holds": true
+  },
+  {
+   "question": "q008",
+   "location": "tutorial/dependencies/dependencies-with-yield#dependencies-with-yield-and-except",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": true,
+   "quote": "If you catch an exception using `except` in a dependency with `yield` and you don't raise it again (or raise a new exception), FastAPI won't be able to notice there was an exception, the same way that would happen with regular Python:",
+   "quote_holds": true
+  },
+  {
+   "question": "q008",
+   "location": "tutorial/handling-errors#import-httpexception",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q009",
+   "location": "tutorial/security/get-current-user#other-models",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q011",
+   "location": "advanced/additional-status-codes#additional-status-codes_1",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "But most of the available responses come directly from Starlette.",
+   "quote_holds": true
+  },
+  {
+   "question": "q011",
+   "location": "advanced/custom-response#document-in-openapi-and-override-response",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q011",
+   "location": "advanced/custom-response#return-a-response",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q011",
+   "location": "advanced/response-headers#return-a-response-directly",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "But most of the available responses come directly from Starlette.",
+   "quote_holds": true
+  },
+  {
+   "question": "q011",
+   "location": "advanced/templates#using-jinja2templates",
+   "groups": [
+    "union"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "But most of the available responses come directly from Starlette.",
+   "quote_holds": true
+  },
+  {
+   "question": "q011",
+   "location": "features#starlette-features",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q011",
+   "location": "tutorial/handling-errors#install-custom-exception-handlers",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "But most of the available responses come directly from Starlette.",
+   "quote_holds": true
+  },
+  {
+   "question": "q011",
+   "location": "tutorial/handling-errors#override-the-httpexception-error-handler",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "**FastAPI** provides the same `starlette.responses` as `fastapi.responses` just as a convenience for you, the developer. But most of the available responses come directly from Starlette.",
+   "quote_holds": true
+  },
+  {
+   "question": "q011",
+   "location": "tutorial/request-files#multiple-file-uploads",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "But most of the available responses come directly from Starlette.",
+   "quote_holds": true
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/extra-models#extra-models",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/index#oauth-1",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/oauth2-jwt#install-pwdlib",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/oauth2-jwt#oauth2-with-password-and-hashing-bearer-with-jwt-tokens",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "Now that we have all the security flow, let's make the application actually secure, using JWT (JSON Web Tokens) tokens and secure password hashing.",
+   "quote_holds": true
+  },
+  {
+   "question": "q012",
+   "location": "tutorial/security/simple-oauth2#update-the-dependencies",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "# This doesn't provide any security at all",
+   "quote_holds": true
+  },
+  {
+   "question": "q013",
+   "location": "index#recap",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q013",
+   "location": "index#standard-dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q014",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#add-dependencies-to-the-path-operation-decorator",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "These dependencies will be executed/solved the same way as normal dependencies. But their value (if they return any) won't be passed to your *path operation function*.",
+   "quote_holds": true
+  },
+  {
+   "question": "q014",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#dependency-requirements",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q017",
+   "location": "advanced/security/oauth2-scopes#global-view",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "user = authenticate_user(fake_users_db, form_data.username, form_data.password)\n    if not user:\n        raise HTTPException(status_code=400, detail=\"Incorrect username or password\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q017",
+   "location": "advanced/security/oauth2-scopes#use-the-scopes",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "user = authenticate_user(fake_users_db, form_data.username, form_data.password)\n    if not user:\n        raise HTTPException(status_code=400, detail=\"Incorrect username or password\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q017",
+   "location": "advanced/security/oauth2-scopes#verify-the-scopes",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "user = authenticate_user(fake_users_db, form_data.username, form_data.password)\n    if not user:\n        raise HTTPException(status_code=400, detail=\"Incorrect username or password\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q017",
+   "location": "advanced/security/oauth2-scopes#verify-the-username-and-data-shape",
+   "groups": [
+    "union"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "user = authenticate_user(fake_users_db, form_data.username, form_data.password)\n    if not user:\n        raise HTTPException(status_code=400, detail=\"Incorrect username or password\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/first-steps#the-password-flow",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/oauth2-jwt#handle-jwt-tokens",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "user = authenticate_user(fake_users_db, form_data.username, form_data.password)\n    if not user:\n        raise HTTPException(\n            status_code=status.HTTP_401_UNAUTHORIZED,\n            detail=\"Incorrect username or password\",",
+   "quote_holds": true
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/oauth2-jwt#update-the-dependencies",
+   "groups": [
+    "union"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "user = authenticate_user(fake_users_db, form_data.username, form_data.password)\n    if not user:\n        raise HTTPException(",
+   "quote_holds": true
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/oauth2-jwt#update-the-token-path-operation",
+   "groups": [
+    "union"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "user = authenticate_user(fake_users_db, form_data.username, form_data.password)\n    if not user:\n        raise HTTPException(\n            status_code=status.HTTP_401_UNAUTHORIZED,\n            detail=\"Incorrect username or password\",",
+   "quote_holds": true
+  },
+  {
+   "question": "q017",
+   "location": "tutorial/security/simple-oauth2#get-the-username-and-password",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q020",
+   "location": "how-to/custom-docs-ui-assets#disable-the-automatic-docs-for-static-files",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q020",
+   "location": "tutorial/first-steps#what-is-openapi-for",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q020",
+   "location": "tutorial/metadata#docs-urls",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q020",
+   "location": "tutorial/security/first-steps#use-it",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q023",
+   "location": "tutorial/query-params-str-validations#required-parameters",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q024",
+   "location": "advanced/security/oauth2-scopes#about-third-party-integrations",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q024",
+   "location": "advanced/security/oauth2-scopes#oauth2-scopes-and-openapi",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q024",
+   "location": "advanced/security/oauth2-scopes#oauth2-security-scheme",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q024",
+   "location": "tutorial/first-steps#step-1-import-fastapi",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q024",
+   "location": "tutorial/security/first-steps#use-it",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q026",
+   "location": "history-design-future#alternatives",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q026",
+   "location": "history-design-future#investigation",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q027",
+   "location": "advanced/generate-clients#create-a-typescript-sdk",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q028",
+   "location": "tutorial/dependencies/dependencies-with-yield#dependencies-with-yield-httpexception-except-and-background-tasks",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q029",
+   "location": "advanced/sub-applications#technical-details-root-path",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q029",
+   "location": "tutorial/cookie-params#declare-cookie-parameters",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q031",
+   "location": "reference/security/index#security-tools",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/first-steps#security-first-steps",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/get-current-user#code-size",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/get-current-user#create-a-get-current-user-dependency",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/get-current-user#create-a-user-model",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/get-current-user#get-current-user",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def read_items(token: Annotated[str, Depends(oauth2_scheme)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/get-current-user#get-the-user",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/get-current-user#inject-the-current-user",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/oauth2-jwt#handle-jwt-tokens",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/oauth2-jwt#update-the-dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q031",
+   "location": "tutorial/security/simple-oauth2#return-the-token",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q032",
+   "location": "advanced/events#lifespan-events",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q032",
+   "location": "alternatives#starlette",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q032",
+   "location": "index#opinions",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q033",
+   "location": "advanced/generate-clients#open-source-sdk-generators",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q033",
+   "location": "advanced/security/oauth2-scopes#declare-scopes-in-path-operations-and-dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q033",
+   "location": "alternatives#apispec",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q033",
+   "location": "async#path-operation-functions",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q033",
+   "location": "features#pydantic-features",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q033",
+   "location": "history-design-future#requirements",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q033",
+   "location": "tutorial/security/oauth2-jwt#recap",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q034",
+   "location": "deployment/https#domain-name",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q036",
+   "location": "advanced/security/http-basic-auth#simple-http-basic-auth",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q036",
+   "location": "advanced/security/oauth2-scopes#jwt-token-with-scopes",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(\n    tokenUrl=\"token\",",
+   "quote_holds": true
+  },
+  {
+   "question": "q036",
+   "location": "advanced/security/oauth2-scopes#use-securityscopes",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(\n    tokenUrl=\"token\",",
+   "quote_holds": true
+  },
+  {
+   "question": "q036",
+   "location": "advanced/security/oauth2-scopes#use-the-scopes",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(\n    tokenUrl=\"token\",",
+   "quote_holds": true
+  },
+  {
+   "question": "q036",
+   "location": "advanced/security/oauth2-scopes#verify-the-scopes",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(\n    tokenUrl=\"token\",",
+   "quote_holds": true
+  },
+  {
+   "question": "q036",
+   "location": "advanced/security/oauth2-scopes#verify-the-username-and-data-shape",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(\n    tokenUrl=\"token\",",
+   "quote_holds": true
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/response-model#return-the-same-input-data",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/first-steps#create-main-py",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/get-current-user#get-current-user",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/oauth2-jwt#handle-jwt-tokens",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/oauth2-jwt#hash-and-verify-the-passwords",
+   "groups": [
+    "union"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/oauth2-jwt#update-the-dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q036",
+   "location": "tutorial/security/oauth2-jwt#update-the-token-path-operation",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")",
+   "quote_holds": true
+  },
+  {
+   "question": "q038",
+   "location": "advanced/settings#settings-in-another-module",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q038",
+   "location": "tutorial/debugging#call-uvicorn",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q039",
+   "location": "advanced/openapi-webhooks#webhooks-steps",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q040",
+   "location": "deployment/concepts#multiple-processes-workers",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q042",
+   "location": "tutorial/body-multiple-params#singular-values-in-body",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q043",
+   "location": "tutorial/extra-data-types#other-data-types",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q044",
+   "location": "tutorial/request-files#uploadfile-with-additional-metadata",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q044",
+   "location": "tutorial/request-files#what-is-form-data",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "You can declare multiple `File` and `Form` parameters in a *path operation*, but you can't also declare `Body` fields that you expect to receive as JSON, as the request will have the body encoded using `multipart/form-data` instead of `application/json`.",
+   "quote_holds": true
+  },
+  {
+   "question": "q044",
+   "location": "tutorial/request-form-models#form-models-and-files",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "You can also combine a form model with file parameters.",
+   "quote_holds": true
+  },
+  {
+   "question": "q044",
+   "location": "tutorial/request-forms#about-form-fields",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q044",
+   "location": "tutorial/request-forms#define-form-parameters",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q045",
+   "location": "advanced/advanced-dependencies#parameterized-dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q045",
+   "location": "tutorial/dependencies/sub-dependencies#recap",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q047",
+   "location": "tutorial/bigger-applications#add-some-custom-tags-responses-and-dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q048",
+   "location": "tutorial/frontend#fallback-auto",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q048",
+   "location": "tutorial/response-model#response-model-return-type",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q050",
+   "location": "advanced/dataclasses#learn-more",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "You can also combine `dataclasses` with other Pydantic models, inherit from them, include them in your own models, etc.",
+   "quote_holds": true
+  },
+  {
+   "question": "q052",
+   "location": "deployment/docker#what-is-a-container",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q053",
+   "location": "how-to/separate-openapi-schemas#model-for-output-in-docs",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q053",
+   "location": "tutorial/query-params-str-validations#declare-more-metadata",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q054",
+   "location": "tutorial/query-params#query-parameter-type-conversion",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q054",
+   "location": "tutorial/request-form-models#optional-form-models",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q055",
+   "location": "advanced/generate-clients#client-method-names",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q055",
+   "location": "advanced/generate-clients#custom-operation-ids-and-better-method-names",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q055",
+   "location": "advanced/openapi-callbacks#the-normal-fastapi-app",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q056",
+   "location": "advanced/security/oauth2-scopes#declare-scopes-in-path-operations-and-dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def get_current_user(\n    security_scopes: SecurityScopes, token: Annotated[str, Depends(oauth2_scheme)]\n):",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "advanced/security/oauth2-scopes#global-view",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def get_current_user(\n    security_scopes: SecurityScopes, token: Annotated[str, Depends(oauth2_scheme)]\n):",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "advanced/security/oauth2-scopes#jwt-token-with-scopes",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def read_system_status(current_user: Annotated[User, Depends(get_current_user)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "advanced/security/oauth2-scopes#oauth2-security-scheme",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def get_current_user(\n    security_scopes: SecurityScopes, token: Annotated[str, Depends(oauth2_scheme)]\n):",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "advanced/security/oauth2-scopes#use-the-scopes",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def read_system_status(current_user: Annotated[User, Depends(get_current_user)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/first-steps#the-password-flow",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/get-current-user#inject-the-current-user",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/oauth2-jwt#hash-and-verify-the-passwords",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/oauth2-jwt#update-the-dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/oauth2-jwt#update-the-token-path-operation",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/simple-oauth2#oauth2passwordrequestform",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/simple-oauth2#update-the-dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "current_user: Annotated[User, Depends(get_current_active_user)],",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/simple-oauth2#use-the-form-data",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q056",
+   "location": "tutorial/security/simple-oauth2#why-use-password-hashing",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):",
+   "quote_holds": true
+  },
+  {
+   "question": "q058",
+   "location": "tutorial/dependencies/sub-dependencies#using-the-same-dependency-multiple-times",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q059",
+   "location": "advanced/opentelemetry#run-the-app",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q059",
+   "location": "advanced/security/oauth2-scopes#declare-scopes-in-path-operations-and-dependencies",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "for scope in security_scopes.scopes:\n        if scope not in token_data.scopes:\n            raise HTTPException(\n                status_code=status.HTTP_401_UNAUTHORIZED,\n                detail=\"Not enough permissions\",",
+   "quote_holds": true
+  },
+  {
+   "question": "q059",
+   "location": "deployment/https#certificate-renewal",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q059",
+   "location": "reference/security/index#security-tools",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q059",
+   "location": "tutorial/dependencies/index#simple-and-powerful",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q060",
+   "location": "advanced/sub-applications#mounting-a-fastapi-application",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q060",
+   "location": "advanced/sub-applications#top-level-application",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q060",
+   "location": "advanced/wsgi#including-wsgi-flask-django-others",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": true,
+   "quote": "For that, you can use the `WSGIMiddleware` and use it to wrap your WSGI application, for example, Flask, Django, etc.",
+   "quote_holds": true
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/background-tasks#using-backgroundtasks",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q060",
+   "location": "tutorial/testing#fastapi-app-file",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q062",
+   "location": "advanced/settings#types-and-validation",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q062",
+   "location": "deployment/https#domain-name",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q062",
+   "location": "tutorial/security/simple-oauth2#inactive-user",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q063",
+   "location": "advanced/custom-response#custom-response-html-stream-file-others",
+   "groups": [
+    "union"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "But if you return a `Response` directly (or any subclass, like `JSONResponse`), the data won't be automatically converted (even if you declare a `response_model`)",
+   "quote_holds": true
+  },
+  {
+   "question": "q064",
+   "location": "advanced/response-directly#return-a-response",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q065",
+   "location": "advanced/openapi-callbacks#check-the-docs",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q065",
+   "location": "tutorial/bigger-applications#configure-the-entrypoint-in-pyproject-toml",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q066",
+   "location": "advanced/security/oauth2-scopes#use-the-scopes",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])",
+   "quote_holds": true
+  },
+  {
+   "question": "q067",
+   "location": "how-to/migrate-from-pydantic-v1-to-pydantic-v2#fastapi-support-for-pydantic-v1-in-v2",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q068",
+   "location": "how-to/custom-request-and-route#custom-apiroute-class-in-a-router",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q068",
+   "location": "tutorial/bigger-applications#apirouter",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q069",
+   "location": "advanced/response-headers#use-a-response-parameter",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/dependencies/dependencies-in-path-operation-decorators#dependency-requirements",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "@app.get(\"/items/\", dependencies=[Depends(verify_token), Depends(verify_key)])",
+   "quote_holds": true
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/dependencies/global-dependencies#global-dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/handling-errors#use-the-requestvalidationerror-body",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/path-params#data-validation",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q069",
+   "location": "tutorial/path-params#recap",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q070",
+   "location": "tutorial/query-params#defaults",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q071",
+   "location": "advanced/openapi-callbacks#the-callback-path-expression",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q071",
+   "location": "advanced/path-operation-advanced-configuration#custom-openapi-path-operation-schema",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q071",
+   "location": "tutorial/schema-extra-example#body-with-examples",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "Here we pass `examples` containing one example of the data expected in `Body()`:",
+   "quote_holds": true
+  },
+  {
+   "question": "q072",
+   "location": "features#dependency-injection",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q072",
+   "location": "help-fastapi#try-fastapi-cloud",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q072",
+   "location": "tutorial/dependencies/dependencies-with-yield#sub-dependencies-with-yield",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q077",
+   "location": "features#pydantic-features",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "Because pydantic data structures are just instances of classes you define; auto-completion, linting, mypy and your intuition should all work properly with your validated data.",
+   "quote_holds": true
+  },
+  {
+   "question": "q077",
+   "location": "features#starlette-features",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q077",
+   "location": "tutorial/body#results",
+   "groups": [
+    "union"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "As you declared it in the function to be of type `Item`, you will also have all the editor support (completion, etc) for all of the attributes and their types.",
+   "quote_holds": true
+  },
+  {
+   "question": "q077",
+   "location": "tutorial/body-nested-models#editor-support-everywhere",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "And you get editor support everywhere.",
+   "quote_holds": true
+  },
+  {
+   "question": "q077",
+   "location": "tutorial/path-params-numeric-validations#recap",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q077",
+   "location": "tutorial/request-forms#define-form-parameters",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/header-param-models#disable-convert-underscores",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q078",
+   "location": "tutorial/query-params-str-validations#import-query-and-annotated",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q080",
+   "location": "advanced/advanced-dependencies#dependencies-with-yield-and-scope",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q080",
+   "location": "tutorial/sql-databases#create-a-session-dependency",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q081",
+   "location": "advanced/behind-a-proxy#mounting-a-sub-application",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q081",
+   "location": "deployment/docker#behind-a-tls-termination-proxy",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q082",
+   "location": "alternatives#pydantic",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/body#create-your-data-model",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/cookie-param-models#combine-parameter-models",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/extra-models#response-with-arbitrary-dict",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/header-param-models#combine-parameter-models",
+   "groups": [
+    "bridge"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "Each model's `extra` configuration applies to all header parameters, including those declared in other models or dependencies. With `extra=\"forbid\"`, any header outside that model is rejected.",
+   "quote_holds": true
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/query-param-models#combine-parameter-models",
+   "groups": [
+    "union"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "Each model's `extra` configuration applies to all query parameters, including those declared in other models or dependencies. With `extra=\"forbid\"`, any parameter outside that model is rejected.",
+   "quote_holds": true
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/query-param-models#query-parameter-models",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/request-form-models#summary",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q083",
+   "location": "tutorial/sql-databases#heropublic-the-public-data-model",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q084",
+   "location": "deployment/manually#run-the-server-program",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q085",
+   "location": "async#is-concurrency-better-than-parallelism",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q086",
+   "location": "tutorial/dependencies/index#share-annotated-dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q086",
+   "location": "tutorial/response-status-code#shortcut-to-remember-the-names",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q088",
+   "location": "tutorial/dependencies/dependencies-with-yield#a-database-dependency-with-yield",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": true,
+   "quote": "You can use `async` or regular functions.\n\n**FastAPI** will do the right thing with each, the same as with normal dependencies.",
+   "quote_holds": true
+  },
+  {
+   "question": "q089",
+   "location": "advanced/opentelemetry#install-fastapi",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q089",
+   "location": "advanced/opentelemetry#run-the-app",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q089",
+   "location": "index#check-it",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q090",
+   "location": "how-to/extending-openapi#normal-fastapi",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q090",
+   "location": "tutorial/metadata#docs-urls",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q090",
+   "location": "tutorial/middleware#middleware",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q091",
+   "location": "deployment/docker#one-load-balancer-multiple-worker-containers",
+   "groups": [
+    "union"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "Each of these containers running your app would normally have **just one process** (e.g. a Uvicorn process running your FastAPI application).",
+   "quote_holds": true
+  },
+  {
+   "question": "q091",
+   "location": "deployment/manually#deployment-concepts",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q092",
+   "location": "advanced/opentelemetry#other-monitoring-services",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q092",
+   "location": "python-types#pydantic-models",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q092",
+   "location": "tutorial/path-params#order-matters",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q095",
+   "location": "history-design-future#future",
+   "groups": [
+    "bridge"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q095",
+   "location": "tutorial/path-params#standards-based-benefits-alternative-documentation",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q096",
+   "location": "tutorial/bigger-applications#configure-the-entrypoint-in-pyproject-toml",
+   "groups": [
+    "bridge"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q097",
+   "location": "index#dependencies",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q098",
+   "location": "deployment/docker#one-process-per-container",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q098",
+   "location": "tutorial/background-tasks#caveat",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q098",
+   "location": "tutorial/bigger-applications#another-module-with-apirouter",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q099",
+   "location": "advanced/custom-response#response",
+   "groups": [
+    "agreement"
+   ],
+   "first": 0,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  },
+  {
+   "question": "q099",
+   "location": "tutorial/body#results",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "With just that Python type declaration, **FastAPI** will:\n\n* Read the body of the request as JSON.\n* Convert the corresponding types (if needed).\n* Validate the data.",
+   "quote_holds": true
+  },
+  {
+   "question": "q099",
+   "location": "tutorial/path-params#data-conversion",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": true,
+   "quote": "So, with that type declaration, **FastAPI** gives you automatic request \"parsing\".",
+   "quote_holds": true
+  },
+  {
+   "question": "q099",
+   "location": "tutorial/path-params#recap",
+   "groups": [
+    "agreement"
+   ],
+   "first": 2,
+   "answers": true,
+   "quote": "With **FastAPI**, by using short, intuitive and standard Python type declarations, you get:\n\n* Editor support: error checks, autocompletion, etc.\n* Data \"parsing\"\n* Data validation\n* API annotation and automatic documentation",
+   "quote_holds": true
+  },
+  {
+   "question": "q099",
+   "location": "tutorial/query-params-str-validations#query-parameters-and-string-validations",
+   "groups": [
+    "agreement"
+   ],
+   "first": 1,
+   "answers": false,
+   "quote": "",
+   "quote_holds": false
+  }
+ ]
+}
