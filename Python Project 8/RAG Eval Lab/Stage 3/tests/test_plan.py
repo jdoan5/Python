@@ -41,6 +41,11 @@ def test_the_plan_s_parameters_are_the_code_s():
     assert p["interaction_metric"] == evaluate.INTERACTION_METRICS[0]
     assert (p["budgets"], p["headline_budget"]) == (list(metrics.BUDGETS), metrics.HEADLINE_BUDGET)
     assert (p["resamples"], p["seed"]) == (stats.RESAMPLES, stats.SEED)
+    # the sign flips and the style shuffle draw from seed + 1 and seed + 2, as evaluate.py calls them
+    assert (p["sign_flip_seed"], p["style_shuffle_seed"]) == (stats.SEED + 1, stats.SEED + 2)
+    assert p["label_check_kappa"] == evaluate.LABEL_CHECK_KAPPA
+    from raglab.experiments import FACTORIAL
+    assert p["vs_baseline_comparisons"] == len(FACTORIAL) - 1
     assert p["pool"] == {"depth": 10, "window_budget": metrics.HEADLINE_BUDGET,
                          "window_chunkers": list(v2_labels.WINDOW_CHUNKERS)}
     assert p["calibration"] == v2_labels.CALIBRATION
@@ -82,3 +87,14 @@ def test_stage_3_s_lock_keeps_every_stage_2_pin_and_pins_every_wheel_by_hash():
     assert text.count("--hash=sha256:") == len(stage3) >= len(stage2)
     for name in ("torch", "sentence-transformers", "transformers", "tokenizers", "safetensors"):
         assert name in stage3
+
+
+def test_the_labels_were_drawn_under_this_plan():
+    # Once the round is drawn, v2-provenance.json records the plan in force; any later change is a deviation.
+    import pytest
+
+    provenance = STAGE.parent / "golden" / "v2-provenance.json"
+    if not provenance.is_file():
+        pytest.skip("the judging round hasn't been drawn yet")
+    recorded = json.loads(provenance.read_text(encoding="utf-8"))["plan_sha256"]
+    assert recorded == evaluate.file_sha256(STAGE / "PLAN.md"), "PLAN.md changed after the round was drawn"

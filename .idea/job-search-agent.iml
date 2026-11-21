@@ -3,7 +3,7 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$/Python Project 3/Job Search Agent/Stage 1">
       <sourceFolder url="file://$MODULE_DIR$/Python Project 3/Job Search Agent/Stage 1" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Python Project 3/Job Search Agent/Stage 1/src" />
+      <sourceFolder url="file://$MODULE_DIR$/Python Project 3/Job Search Agent/Stage 1/src" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

@@ -40,16 +40,19 @@ import yaml
 
 from raglab import __version__
 from raglab.corpus import CorpusLock, Document, project_root
-from raglab.experiments import BASELINE, CHAIN, CHALLENGER, EXPLORATORY_PAIRS, INCUMBENT, RetrievalConfig, build_retrievers
+from raglab.experiments import (
+    BASELINE, CHAIN, CHALLENGER, EXPLORATORY_PAIRS, FACTORIAL, INCUMBENT, RetrievalConfig, build_retrievers,
+)
 from raglab.golden import STYLES, GoldenSet, Question
 from raglab.metrics import (
-    BINARY_METRICS, BUDGETS, GAIN, HEADLINE_BUDGET, HEADLINE_METRICS, K_VALUES, METRICS, RANK_DEPTH, Span, pack, score,
+    BINARY_METRICS, BUDGETS, GAIN, HEADLINE_BUDGET, HEADLINE_METRICS, K_VALUES, METRICS, RANK_DEPTH, Span, pack,
+    reciprocal_rank, score, section_ranking,
 )
 from raglab.retrieval import Retriever
 from raglab.sections import MIN_OVERLAP_CHARS, SectionIndex
 from raglab.stats import (
     CONFIDENCE, RESAMPLES, SEED, bootstrap_indices, cluster_bootstrap_ci, cluster_sign_flip_pvalue, holm, mean_ci,
-    paired_diff_ci, permutation_pvalue, sign_flip_pvalue, two_group_diff_ci, wilson_ci,
+    cohen_kappa, paired_diff_ci, permutation_pvalue, sign_flip_pvalue, two_group_diff_ci, wilson_ci,
 )
 
 SCHEMA = 4  # 4: neural retrievers, the confirmatory family, models, numerics and the plan in the manifest
@@ -87,6 +90,8 @@ INTERACTION_PAIR = ("heading+bm25", "heading+dense")
 INTERACTION_STYLES = ("paraphrase", "keyword")
 INTERACTION_METRICS = ("ndcg_answers@10", "recall@5")  # the first is the pre-specified one
 _Z80 = NormalDist().inv_cdf(1 - ALPHA / 2) + NormalDist().inv_cdf(0.80)  # two-sided alpha, 80% power
+# The label check (PLAN.md): below this answer-versus-not agreement, the README leads with both label sets' results.
+LABEL_CHECK_KAPPA = 0.70
 
 
 @dataclass(frozen=True)
@@ -120,7 +125,14 @@ def run_configs(
     questions: Sequence[Question],
     configs: Sequence[RetrievalConfig],
     index: SectionIndex,
+    scored: bool = True,
 ) -> RunResults:
+    """Every configuration's rankings and budget windows for every question, and, if `scored`, its metrics.
+
+    `scored=False` never reads a grade: building labels (pooling, drawing
+    samples) uses it, so no metric is computed, even in memory, before the
+    labels are final.
+    """
     names = [c.name for c in configs]
     if len(set(names)) != len(names):
         raise ValueError("configuration names must be unique")
@@ -132,7 +144,10 @@ def run_configs(
         for q in questions:
             hits = retriever.search(q.text, len(retriever.chunks))
             spans = [(h.chunk.doc_id, h.chunk.start, h.chunk.end) for h in hits]
-            values, ranking = score(spans, q.primary, q.judgments, index)
+            if scored:
+                values, ranking = score(spans, q.primary, q.judgments, index)
+            else:
+                values, ranking = {}, section_ranking(spans, index)
             windows = {
                 budget: frozenset(ref.location for doc_id, start, end in pack(spans, budget)
                                   for ref, _ in index.retrieved_by(doc_id, start, end))
@@ -204,7 +219,9 @@ def summarize(
     baseline: RetrievalConfig = BASELINE,
     resamples: int = RESAMPLES,
     seed: int = SEED,
+    blind: Sequence[Mapping] | None = None,
 ) -> dict:
+    """The run's numbers. `blind` is v2-blind.json's rows, for the label check; without it there is none."""
     names = [c.name for c in configs]
     if baseline.name not in results:
         raise ValueError(f"the baseline {baseline.name!r} must be one of the configurations")
@@ -218,7 +235,10 @@ def summarize(
 
     summary = {name: {m: interval(matrix[name][m], m, idx) for m in METRICS} for name in names}
 
-    vs_baseline: dict[str, dict] = {name: {} for name in names if name != baseline.name}
+    # The comparisons with the baseline are the factorial's 29 other cells (PLAN.md); the extras are scored
+    # and reported, but kept out of this Holm family.
+    factorial = {c.name for c in FACTORIAL}
+    vs_baseline: dict[str, dict] = {name: {} for name in names if name != baseline.name and name in factorial}
     for m in METRICS:
         rows = []
         for name in vs_baseline:
@@ -286,7 +306,8 @@ def summarize(
         "effects": factor_effects(configs, matrix, idx, resamples, seed),
         "by_style": by_style,
         "diagnostics": diagnostics,
-        "confirmatory": confirmatory(questions, matrix, idx, resamples, seed),
+        "confirmatory": (confirmed := confirmatory(questions, matrix, idx, resamples, seed)),
+        "label_check": label_check(questions, results, confirmed, blind, idx, resamples, seed) if blind else None,
         "by_style_paired": by_style_paired(questions, matrix, resamples, seed),
         "interaction": interaction(questions, matrix, resamples, seed),
     }
@@ -318,19 +339,10 @@ def confirmatory(
     needed = {c.name for a, b, _ in CHAIN for c in (a, b)}
     if any(name not in matrix for name in needed):
         return None
-    n = len(questions)
-    pages = [q.target.split("#", 1)[0] for q in questions]
 
     def test(a: str, b: str, metric: str, predicted: int) -> dict:
-        d = matrix[b][metric] - matrix[a][metric]
-        delta, lo, hi = paired_diff_ci(matrix[a][metric], matrix[b][metric], idx)
-        _, page_lo, page_hi = cluster_bootstrap_ci(d, pages, resamples, seed)
-        p = sign_flip_pvalue(d, resamples, seed + 1)
-        page_p = cluster_sign_flip_pvalue(d, pages, resamples, seed + 1)
-        return {"from": a, "to": b, "metric": metric, "predicted": predicted, "delta": delta, "lo": lo, "hi": hi,
-                "p": p, "page_level": {"lo": page_lo, "hi": page_hi, "p": page_p},
-                "fragile": bool(p < ALPHA <= page_p),
-                "resolvable": float(_Z80 * d.std(ddof=1) / np.sqrt(n)) if n > 1 else None}
+        return {"from": a, "to": b, "metric": metric,
+                **paired_test(questions, matrix[a][metric], matrix[b][metric], predicted, idx, resamples, seed)}
 
     chain, reached = [], True
     for a, b, predicted in CHAIN:
@@ -346,8 +358,11 @@ def confirmatory(
         chain.append(t)
     headline = chain[0]
     supporting = [test(INCUMBENT.name, CHALLENGER.name, m, 1) for m in SUPPORTING_METRICS]
-    for t, p_holm in zip(supporting, holm([t["p"] for t in supporting])):
+    page_holm = holm([t["page_level"]["p"] for t in supporting])
+    for t, p_holm, page_p_holm in zip(supporting, holm([t["p"] for t in supporting]), page_holm):
         t["p_holm"] = p_holm
+        t["page_level"]["p_holm"] = page_p_holm
+        t["fragile"] = bool(p_holm < ALPHA <= page_p_holm)  # both Holm-adjusted, as the claim itself is
         t["verdict"] = (_verdict(t["delta"], t["hi"], p_holm, 1) if headline["significant"]
                         else "exploratory: the headline was not significant")
     graded, answers = (next(t for t in supporting if t["metric"] == m) for m in ("ndcg@10", "ndcg_answers@10"))
@@ -358,7 +373,9 @@ def confirmatory(
                      "significant; supporting metrics Holm-adjusted, claimed only if the headline is significant",
         "chain": chain,
         "supporting": supporting,
-        "ndcg_versions_agree": bool(np.sign(graded["delta"]) == np.sign(answers["delta"])),
+        # An nDCG gain is robust only if one version is supported and the other's estimate is also above zero.
+        "ndcg_gain_robust": bool("supported" in (graded["verdict"], answers["verdict"])
+                                 and graded["delta"] > 0 and answers["delta"] > 0),
         "exploratory": [test(a.name, b.name, PRIMARY_METRIC, 0) for a, b in EXPLORATORY_PAIRS
                         if a.name in matrix and b.name in matrix],
         "success@5_changes": {
@@ -367,6 +384,75 @@ def confirmatory(
             "both_found": int(np.count_nonzero((incumbent == 1) & (challenger == 1))),
             "both_missed": int(np.count_nonzero((incumbent == 0) & (challenger == 0))),
         },
+    }
+
+
+def paired_test(
+    questions: Sequence[Question], a: np.ndarray, b: np.ndarray, predicted: int, idx: np.ndarray,
+    resamples: int = RESAMPLES, seed: int = SEED,
+) -> dict:
+    """How much better b is than a on the same questions: per question, and per target page.
+
+    The interval is the percentile bootstrap (seed); the p-value is the
+    two-sided sign-flip test (seed + 1). The per-page versions resample, and
+    flip, the questions that share a target page together.
+    """
+    n = len(questions)
+    pages = [q.target.split("#", 1)[0] for q in questions]
+    d = b - a
+    delta, lo, hi = paired_diff_ci(a, b, idx)
+    _, page_lo, page_hi = cluster_bootstrap_ci(d, pages, resamples, seed)
+    p = sign_flip_pvalue(d, resamples, seed + 1)
+    page_p = cluster_sign_flip_pvalue(d, pages, resamples, seed + 1)
+    return {"predicted": predicted, "delta": delta, "lo": lo, "hi": hi, "p": p,
+            "page_level": {"lo": page_lo, "hi": page_hi, "p": page_p},
+            "fragile": bool(p < ALPHA <= page_p),
+            "resolvable": float(_Z80 * d.std(ddof=1) / np.sqrt(n)) if n > 1 else None}
+
+
+def label_check(
+    questions: Sequence[Question], results: RunResults, confirmed: dict | None, blind: Sequence[Mapping],
+    idx: np.ndarray, resamples: int = RESAMPLES, seed: int = SEED,
+) -> dict | None:
+    """Link 1 again on the blind round's grades, the agreement figure, and the rule that combines them.
+
+    Every section either headline configuration ranks in its top 10 was
+    graded blind (the union), so MRR@10 on the blind grades needs only the
+    rankings: each such section takes its blind grade, targets included. The
+    agreement figure is Cohen's kappa on answer versus not, unweighted, between
+    the blind grade and the v2 grade, over the union's labels new in v2.
+    """
+    if confirmed is None:
+        return None
+    blind_grade = {(r["question"], r["location"]): r["blind"] for r in blind if "union" in r["groups"]}
+
+    def mrr(name: str) -> np.ndarray:
+        values = []
+        for q, r in zip(questions, results[name]):
+            ranked = [loc for loc in r.ranking if loc is not None]
+            missing = [loc for loc in ranked if (q.id, loc) not in blind_grade]
+            if missing:
+                raise ValueError(f"{q.id}: {missing[0]} is in {name}'s top 10 but has no blind grade")
+            values.append(reciprocal_rank(r.ranking, frozenset(loc for loc in ranked if blind_grade[(q.id, loc)] == 2)))
+        return np.array(values, dtype=float)
+
+    on_blind = paired_test(questions, mrr(INCUMBENT.name), mrr(CHALLENGER.name), 1, idx, resamples, seed)
+    on_blind["verdict"] = _verdict(on_blind["delta"], on_blind["hi"], on_blind["p"], 1)
+    new = [r for r in blind if "union" in r["groups"] and r.get("new_in_v2")]
+    kappa = (cohen_kappa([int(r["first"] == 2) for r in new], [int(r["blind"] == 2) for r in new], categories=(0, 1))
+             if len(new) > 1 else None)
+    on_v2 = confirmed["chain"][0]["verdict"]
+    if on_v2 != "supported":
+        combined = on_v2
+    elif on_blind["verdict"] == "supported":
+        combined = "supported"
+    else:
+        combined = "supported on v2's labels, not confirmed by the blind round"
+    return {
+        "metric": PRIMARY_METRIC, "on_blind_labels": on_blind, "kappa_answer_vs_not": kappa, "kappa_items": len(new),
+        "verdict": combined,
+        "lead_with_both_label_sets": bool(kappa is not None and kappa < LABEL_CHECK_KAPPA),
+        "stage4_inherits": CHALLENGER.name if combined == "supported" else INCUMBENT.name,
     }
 
 
@@ -532,6 +618,11 @@ def plan_path() -> Path:
     return Path(__file__).resolve().parents[1] / "PLAN.md"
 
 
+def file_sha256(path: Path) -> str | None:
+    """The file's own SHA-256 (what `shasum -a 256` prints), or None if it doesn't exist."""
+    return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+
+
 def _relative(path: Path) -> str:
     try:
         return path.resolve().relative_to(project_root()).as_posix()
@@ -574,13 +665,14 @@ def build_manifest(
             "prompts_sha256": _sha256_of(list((folder / "prompts").glob("*.md"))),
             "analysis_sha256": _sha256_of(list((Path(__file__).resolve().parents[1] / "analysis").glob("*.py"))),
         },
-        "plan": {"path": _relative(plan_path()), "sha256": _sha256_of([plan_path()])},
+        "plan": {"path": _relative(plan_path()), "sha256": file_sha256(plan_path())},
         "models": {
-            "lock_sha256": _sha256_of([default_models_lock_path()]),
+            "lock_sha256": file_sha256(default_models_lock_path()),
             "embedder": model_settings(models["embedder"], "embedder"),
             "reranker": model_settings(models["reranker"], "reranker"),
         },
         "numerics": {"threads": THREADS, "platform": f"{platform.system()} {platform.machine()}", "chip": _chip(),
+                     "requirements_lock_sha256": file_sha256(Path(__file__).resolve().parents[1] / "requirements-lock.txt"),
                      **library_versions()},
         "confirmatory_plan": {
             "primary_metric": PRIMARY_METRIC, "alpha": ALPHA,

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 from types import MappingProxyType
@@ -31,6 +32,9 @@ V1 = default_golden_path(1)
 # Stage 2's twelve configurations: the lexical cells of Stage 3's factorial.
 LEXICAL = tuple(c for c in FACTORIAL if c.retriever in ("bm25", "tfidf"))
 needs_v2 = pytest.mark.skipif(not default_golden_path(2).is_file(), reason="golden/v2.yaml is not built yet")
+# Tests that score Stage 3 configurations against v2 wait until the labels are final (PLAN.md, freeze point 2).
+needs_final_v2 = pytest.mark.skipif(not (default_golden_path(2).parent / "v2-blind.json").is_file(),
+                                    reason="v2's labels are not final yet (no golden/v2-blind.json)")
 needs_results = pytest.mark.skipif(not (STAGE / "results" / "manifest.json").is_file(),
                                    reason="Stage 3's results/ is not generated yet")
 
@@ -275,7 +279,7 @@ def test_no_question_was_edited_after_it_was_frozen(version):
     assert questions_fingerprint(load_golden(default_golden_path(version)).questions) == FROZEN_QUESTIONS
 
 
-@needs_v2
+@needs_final_v2
 @pytest.mark.corpus
 @pytest.mark.models
 def test_every_section_any_configuration_ranks_in_its_top_ten_has_been_judged(real_run, real_models):
@@ -285,7 +289,7 @@ def test_every_section_any_configuration_ranks_in_its_top_ten_has_been_judged(re
     assert not missing, f"{sum(len(v) for v in missing.values())} unjudged; run `raglab golden pool`"
 
 
-@needs_v2
+@needs_final_v2
 @pytest.mark.corpus
 @pytest.mark.models
 def test_real_scores_are_bounded_and_rankings_are_real_sections(real_run, real_models):
@@ -321,7 +325,7 @@ def test_the_reliability_studies_are_the_documented_draws_from_this_golden_set(r
         assert item["location"] in index and item["location"] not in golden.by_id(item["question"]).judgments
 
 
-@needs_v2
+@needs_final_v2
 @pytest.mark.corpus
 @pytest.mark.models
 def test_the_real_evaluation_reproduces_byte_for_byte(real_docs, real_models, tmp_path):
@@ -423,7 +427,7 @@ def test_the_regrade_log_matches_the_golden_set_and_the_readme():
     assert sum(i["final"] == 2 and i["first"] != 2 for i in log) == 18
 
 
-@needs_v2
+@needs_final_v2
 @needs_results
 @pytest.mark.corpus
 @pytest.mark.models
@@ -503,7 +507,7 @@ def test_supporting_metrics_count_only_when_the_headline_holds():
     c = summarize(questions, EVALUATED, results, resamples=2000)["confirmatory"]
     assert [t["metric"] for t in c["supporting"]][:2] == ["success@5", "ndcg_answers@10"]
     assert all(t["p"] <= t["p_holm"] <= 1 and t["verdict"] == "supported" for t in c["supporting"])
-    assert c["ndcg_versions_agree"] is True
+    assert c["ndcg_gain_robust"] is True
 
 
 def test_success_changes_count_fixed_and_broken_questions():
@@ -556,3 +560,144 @@ def test_new_diagnostics_report_related_slots_and_unreranked_windows(setup):
     assert diagnostics["heading+hybrid+rerank [depth 10]"]["rerank_depth"]["max"] <= 10
     for d in diagnostics.values():
         assert 0.0 <= d["related_share@10"] <= 1.0 and set(d["judged_in_budget"]) == {"1200", "2400", "4800", "9600"}
+
+
+# --- Stage 3: drawing labels never scores; the label check; provenance hashes ---------------------
+
+
+def test_ranking_only_runs_never_read_a_grade(setup, monkeypatch):
+    _, docs, index, golden = setup
+
+    def no_scoring(*args, **kwargs):
+        raise AssertionError("a grade was read")
+
+    monkeypatch.setattr(evaluate, "score", no_scoring)
+    results = run_configs(docs, golden.questions, EVALUATED, index, scored=False)
+    assert all(r.values == {} and r.ranking is not None for per in results.values() for r in per)
+    assert unjudged(golden.questions, results, depth=10) is not None
+
+
+def test_the_baseline_is_compared_with_the_29_factorial_cells_only(setup):
+    _, docs, index, golden = setup
+    summary = summarize(golden.questions, EVALUATED, run_configs(docs, golden.questions, EVALUATED, index), resamples=1000)
+    assert len(summary["vs_baseline"]) == 29 and "heading+bm25+rerank" not in summary["vs_baseline"]
+    assert "heading+bm25+rerank" in summary["summary"]  # scored and reported, just outside that Holm family
+
+
+def _blind_rows(questions, results, grade_of):
+    rows = []
+    for i, q in enumerate(questions):
+        for name in ("heading+bm25", "heading+hybrid+rerank"):
+            for loc in results[name][i].ranking:
+                if loc and not any(r["question"] == q.id and r["location"] == loc for r in rows):
+                    rows.append({"question": q.id, "location": loc, "groups": ["union"], "new_in_v2": True,
+                                 "first": q.judgments.get(loc, 0), "blind": grade_of(q, loc)})
+    return rows
+
+
+def _ranked_synthetic(winner_first: bool, n: int = 40):
+    """Rankings where heading+hybrid+rerank puts the answer first and heading+bm25 puts it third (or the reverse)."""
+    questions = [Question(f"q{i:03d}", f"question {i}", ("keyword", "paraphrase")[i % 2], f"page{i // 2}#t",
+                          MappingProxyType({f"page{i // 2}#t": 2, f"x{i}#a": 0, f"x{i}#b": 0}))
+                 for i in range(n)]
+    results = {}
+    for c in EVALUATED:
+        rows = []
+        for q in questions:
+            good = (q.target, f"{q.id}x#a", f"{q.id}x#b")
+            bad = (f"{q.id}x#a", f"{q.id}x#b", q.target)
+            better = c.name == "heading+hybrid+rerank"
+            ranking = good if better == winner_first else bad
+            mrr = 1.0 if ranking[0] == q.target else 1 / 3
+            rows.append(QuestionResult({m: (1.0 if mrr == 1.0 else 0.0) if m in BINARY_METRICS else mrr
+                                        for m in METRICS}, ranking, 0))
+        results[c.name] = rows
+    return questions, results
+
+
+def test_the_label_check_confirms_a_headline_only_when_the_blind_grades_agree():
+    from raglab.evaluate import label_check, confirmatory, _matrix
+    from raglab.stats import bootstrap_indices
+
+    questions, results = _ranked_synthetic(winner_first=True)
+    idx = bootstrap_indices(len(questions), 2000)
+    confirmed = confirmatory(questions, _matrix(results), idx, 2000)
+    assert confirmed["chain"][0]["verdict"] == "supported"
+    agree = _blind_rows(questions, results, lambda q, loc: 2 if loc == q.target else 0)
+    check = label_check(questions, results, confirmed, agree, idx, 2000)
+    assert check["verdict"] == "supported" and check["stage4_inherits"] == "heading+hybrid+rerank"
+    assert check["kappa_answer_vs_not"] == pytest.approx(1.0) and not check["lead_with_both_label_sets"]
+    # The blind judge calls every target merely related: no answers on the blind labels, so no difference.
+    doubt = _blind_rows(questions, results, lambda q, loc: 1)
+    check = label_check(questions, results, confirmed, doubt, idx, 2000)
+    assert check["on_blind_labels"]["delta"] == 0 and check["stage4_inherits"] == "heading+bm25"
+    assert check["verdict"] == "supported on v2's labels, not confirmed by the blind round"
+    assert check["lead_with_both_label_sets"]  # agreement collapses, so the README shows both label sets
+    with pytest.raises(ValueError, match="no blind grade"):
+        label_check(questions, results, confirmed, agree[1:], idx, 2000)
+
+
+def test_an_unsupported_headline_stays_unsupported_whatever_the_blind_grades_say():
+    from raglab.evaluate import label_check, confirmatory, _matrix
+    from raglab.stats import bootstrap_indices
+
+    questions, results = _ranked_synthetic(winner_first=False)
+    idx = bootstrap_indices(len(questions), 2000)
+    confirmed = confirmatory(questions, _matrix(results), idx, 2000)
+    check = label_check(questions, results, confirmed,
+                        _blind_rows(questions, results, lambda q, loc: 2 if loc == q.target else 0), idx, 2000)
+    assert check["verdict"] == confirmed["chain"][0]["verdict"] == "contradicted"
+    assert check["stage4_inherits"] == "heading+bm25"
+
+
+def test_the_manifest_records_plain_file_hashes_of_the_plan_and_the_locks(setup, tmp_path):
+    import hashlib
+
+    manifest = _run(setup, tmp_path / "run")
+    assert manifest["plan"]["sha256"] == hashlib.sha256((STAGE / "PLAN.md").read_bytes()).hexdigest()
+    assert manifest["numerics"]["requirements_lock_sha256"] == \
+        hashlib.sha256((STAGE / "requirements-lock.txt").read_bytes()).hexdigest()
+
+
+@pytest.mark.models
+@pytest.mark.corpus
+def test_a_seeded_sample_of_the_cache_is_exactly_what_the_models_compute(real_docs, real_models):
+    # The byte-for-byte tests read the cache; this one checks the cache against the models themselves.
+    import random
+
+    from raglab import neural
+    from raglab.chunking import chunk_corpus, get_chunker
+    from raglab.models import ModelLock
+
+    embedder, scorer = neural.default_embedder(), neural.default_scorer()
+    lock = ModelLock.load(STAGE.parent / "models.lock.json")
+    fresh_embedder = neural.SentenceTransformerEmbedder(lock["embedder"])
+    fresh_scorer = neural.CrossEncoderScorer(lock["reranker"])
+    texts = sorted({c.index_text(True) for c in chunk_corpus(real_docs, get_chunker("heading"))})
+    sample = random.Random(20261120).sample(texts, 40)
+    assert np.array_equal(embedder.embed(sample, ""), fresh_embedder.embed(sample, ""))
+    question = "How do I add a background task that runs after the response is sent?"
+    assert np.array_equal(scorer.score(question, sample[:20]), fresh_scorer.score(question, sample[:20]))
+
+
+@needs_final_v2
+@pytest.mark.corpus
+@pytest.mark.models
+@pytest.mark.skipif(os.environ.get("RAGLAB_COLD") != "1", reason="about 15 minutes; set RAGLAB_COLD=1 to run it")
+def test_the_evaluation_reproduces_from_an_empty_cache(real_docs, real_models, tmp_path, monkeypatch):
+    # Run one computes every vector and score from the models; run two reads the filled cache. Same bytes.
+    from raglab import neural
+
+    golden = load_golden(default_golden_path())
+    index = SectionIndex(real_docs)
+    lock = CorpusLock.load(default_lock_path())
+    real_cache = neural.default_cache_dir()
+    for name, cache in (("cold", tmp_path / "empty-cache"), ("warm", real_cache)):
+        monkeypatch.setattr(neural, "default_cache_dir", lambda cache=cache: cache)
+        neural._DEFAULTS.clear()
+        results = run_configs(real_docs, golden.questions, EVALUATED, index)
+        save_run(tmp_path / name, build_manifest(golden, lock, EVALUATED, resamples=2000, now=FIXED_TIME),
+                 summarize(golden.questions, EVALUATED, results, resamples=2000), golden.questions, results)
+    neural._DEFAULTS.clear()
+    for file in ("summary.json", "questions.jsonl"):
+        assert (tmp_path / "cold" / file).read_bytes() == (tmp_path / "warm" / file).read_bytes(), file

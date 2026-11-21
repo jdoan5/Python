@@ -1,24 +1,38 @@
 """README-ready tables, generated from a saved run so no number is ever hand-copied.
 
-`python -m raglab eval report <run> --markdown` prints these. Each value is a
-mean with its 95% interval: percentile bootstrap for scores, Wilson for yes/no
-rates. In the comparisons with the baseline, a difference is bold when its
-Holm-adjusted p is below 0.05; in the switch-effect tables, when its 95%
-interval excludes zero.
+`python -m raglab eval report <run> --markdown` prints the README's tables:
+the confirmatory tests, then the heading-chunk pipelines, the baseline and the
+control. `--full` prints every table for every configuration (TABLES.md).
+Configurations are always listed in design order, never by score, so no row
+is singled out as the best. Each value is a mean with its 95% interval:
+percentile bootstrap for scores, Wilson for yes/no rates. Bold in an
+exploratory table describes (Holm-adjusted p below 0.05 against the baseline;
+an interval that excludes zero for a switch); it is not a claim. Only the
+confirmatory table's verdicts are claims.
 """
 
 from __future__ import annotations
 
 from typing import Mapping
 
+from raglab.experiments import CHALLENGER, CONTROL, INCUMBENT
 from raglab.metrics import HEADLINE_BUDGET, HEADLINE_METRICS, LABELS
 
 ALPHA = 0.05
 # The README's two table families: how well sections are ranked, and what a fixed-size prompt receives.
-RANK_TABLE = ("success@5", "recall@5", "mrr@10", "ndcg@10")
+RANK_TABLE = ("success@5", "recall@5", "mrr@10", "ndcg@10", "ndcg_answers@10")
 BUDGET_TABLE = tuple(f"{m}@{HEADLINE_BUDGET}" for m in ("budget_success", "budget_recall", "coverage", "best_coverage"))
+# The README core: Stage 1's baseline, every heading-chunk pipeline with the breadcrumb, and the control.
+README_CONFIGS = ("baseline (RAG Mini Chat)", "heading+tfidf", "heading+bm25", "heading+dense", "heading+hybrid",
+                  "heading+hybrid+rerank", CONTROL.name)
 SWITCH_LABELS = {
     ("retriever", "tfidf", "bm25"): "BM25 instead of TF-IDF",
+    ("retriever", "bm25", "dense"): "dense instead of BM25",
+    ("retriever", "bm25", "hybrid"): "hybrid instead of BM25",
+    ("retriever", "dense", "hybrid"): "hybrid instead of dense",
+    ("retriever", "hybrid", "hybrid+rerank"): "reranking the hybrid",
+    ("retriever", "bm25", "bm25+rerank"): "reranking BM25",
+    ("retriever", "bm25+rerank", "hybrid+rerank"): "hybrid instead of BM25, both reranked",
     ("breadcrumb", False, True): "breadcrumb on",
     ("chunker", "paragraph", "heading"): "heading chunks instead of paragraphs",
     ("chunker", "paragraph", "fixed"): "fixed windows instead of paragraphs",
@@ -46,9 +60,13 @@ def _header(first: str, metrics: tuple[str, ...]) -> list[str]:
     ]
 
 
-def results_table(summary: Mapping, metrics: tuple[str, ...] = HEADLINE_METRICS) -> str:
-    """Every configuration, best first by the first metric; the baseline in bold."""
-    order = sorted(summary["configs"], key=lambda n: -summary["summary"][n][metrics[0]]["mean"])
+def _in_order(summary: Mapping, names) -> list[str]:
+    return [n for n in summary["configs"] if names is None or n in names]
+
+
+def results_table(summary: Mapping, metrics: tuple[str, ...] = HEADLINE_METRICS, configs=None) -> str:
+    """The configurations in design order; the baseline in bold."""
+    order = _in_order(summary, configs)
     lines = _header("configuration", metrics)
     for name in order:
         label = f"**{name}**" if name == summary["baseline"] else name
@@ -56,8 +74,8 @@ def results_table(summary: Mapping, metrics: tuple[str, ...] = HEADLINE_METRICS)
     return "\n".join(lines)
 
 
-def vs_baseline_table(summary: Mapping, metrics: tuple[str, ...] = HEADLINE_METRICS) -> str:
-    order = sorted(summary["vs_baseline"], key=lambda n: -summary["vs_baseline"][n][metrics[0]]["delta"])
+def vs_baseline_table(summary: Mapping, metrics: tuple[str, ...] = HEADLINE_METRICS, configs=None) -> str:
+    order = [n for n in _in_order(summary, configs) if n in summary["vs_baseline"]]
     lines = _header(f"vs {summary['baseline']}", metrics)
     for name in order:
         cells = [_delta(summary["vs_baseline"][name][m]) for m in metrics]
@@ -69,11 +87,12 @@ def effects_table(summary: Mapping, metrics: tuple[str, ...] = HEADLINE_METRICS)
     """Average effect of flipping one switch, over every setting of the other two."""
     rows: dict[tuple, dict] = {}
     for e in summary["effects"]:
-        key = (e["factor"], e["from"], e["to"])
+        key = (e["factor"], e["from"], e["to"], e.get("within"))
         rows.setdefault(key, {"pairs": len(e["pairs"])})[e["metric"]] = e
     lines = _header("switch (pairs compared)", metrics)
-    for key, by_metric in rows.items():
-        label = f"{SWITCH_LABELS.get(key, ' -> '.join(map(str, key)))} ({by_metric['pairs']})"
+    for (factor, a, b, within), by_metric in rows.items():
+        name = SWITCH_LABELS.get((factor, a, b), f"{factor}: {a} -> {b}")
+        label = f"{name}{f', {within} retrievers' if within else ''} ({by_metric['pairs']})"
         lines.append("| " + " | ".join([label, *(_delta(by_metric[m], None) for m in metrics)]) + " |")
     return "\n".join(lines)
 
@@ -90,13 +109,13 @@ def style_table(summary: Mapping, configs: list[str], metric: str = "recall@5") 
     return "\n".join(lines)
 
 
-def diagnostics_table(summary: Mapping, budget: int = HEADLINE_BUDGET) -> str:
+def diagnostics_table(summary: Mapping, budget: int = HEADLINE_BUDGET, configs=None) -> str:
     lines = [
         f"| configuration | top-10 slots that are lone headings | chars in top 5 chunks | sections in {budget / 1000:g}k chars "
         f"| top-10 sections judged | sections in {budget / 1000:g}k chars judged |",
         "|---|---:|---:|---:|---:|---:|",
     ]
-    for name in summary["configs"]:
+    for name in _in_order(summary, configs):
         d = summary["diagnostics"][name]
         lines.append(
             f"| {name} | {d['empty_slots@10']:.0%} | {d['top5_chars']:,.0f} | {d[f'sections_in_budget@{budget}']:.1f} "
@@ -105,23 +124,60 @@ def diagnostics_table(summary: Mapping, budget: int = HEADLINE_BUDGET) -> str:
     return "\n".join(lines)
 
 
-def markdown_report(summary: Mapping, manifest: Mapping) -> str:
+def _test_row(label: str, t: Mapping, holm: bool = False) -> str:
+    p = t["p_holm"] if holm else t["p"]
+    page = t["page_level"]["p_holm"] if holm else t["page_level"]["p"]
+    verdict = t["verdict"] + (" (fragile per page)" if t.get("fragile") else "")
+    return (f"| {label} | {t['delta']:+.3f} ({t['lo']:+.3f} to {t['hi']:+.3f}) | {p:.4f} | {page:.4f} "
+            f"| ±{t['resolvable']:.3f} | {verdict} |")
+
+
+def confirmatory_table(summary: Mapping) -> str:
+    """The chain, the supporting metrics and the label check, with their verdicts: the only claims."""
+    c = summary["confirmatory"]
+    if c is None:
+        return "_The confirmatory tests need every chain configuration; this run lacks one._"
+    head = ["| test | difference (95% CI) | p | p per page | resolvable | verdict |", "|---|---:|---:|---:|---:|---|"]
+    lines = list(head)
+    for i, t in enumerate(c["chain"], 1):
+        lines.append(_test_row(f"link {i}: {t['to']} vs {t['from']}, {LABELS[t['metric']]}", t))
+    lines += ["", "Supporting metrics, headline pair (Holm-adjusted p):", "", *head]
+    for t in c["supporting"]:
+        lines.append(_test_row(LABELS[t["metric"]], t, holm=True))
+    changes = c["success@5_changes"]
+    lines += ["", f"Success@5: {changes['fixed']} questions fixed, {changes['broken']} broken, "
+                  f"{changes['both_found']} found by both, {changes['both_missed']} missed by both."]
+    check = summary.get("label_check")
+    if check:
+        lines += ["", "Label check, link 1 on the blind round's grades:", "", *head,
+                  _test_row(LABELS[check["metric"]], check["on_blind_labels"]), "",
+                  f"Answer-versus-not agreement with the new labels: κ = {check['kappa_answer_vs_not']:.2f} "
+                  f"over {check['kappa_items']} labels. Verdict: **{check['verdict']}**. "
+                  f"Stage 4 inherits {check['stage4_inherits']}."]
+    return "\n".join(lines)
+
+
+def markdown_report(summary: Mapping, manifest: Mapping, full: bool = False) -> str:
+    """The README's tables, or with `full` every table for every configuration."""
     code, corpus, golden = manifest["code"], manifest["corpus"], manifest["golden"]
-    best = max(summary["configs"], key=lambda n: summary["summary"][n][HEADLINE_METRICS[0]]["mean"])
-    grid = [summary["baseline"], *(n for n in summary["configs"] if "breadcrumb" not in n and n != summary["baseline"])]
+    configs = None if full else [n for n in README_CONFIGS if n in summary["configs"]]
+    styles = (list(summary["configs"]) if full else
+              [n for n in (summary["baseline"], INCUMBENT.name, CHALLENGER.name) if n in summary["configs"]])
     parts = [
         f"Run `{manifest['run_id']}` · {summary['questions']} questions · golden v{golden['version']} "
         f"`{golden['sha256'][:12]}` · FastAPI {corpus['ref']} `{corpus['fingerprint'][:12]}` · "
         f"code `{code['package_sha256'][:12]}` · {manifest['statistics']['bootstrap_resamples']:,} resamples",
-        "", "### Ranking quality", "", results_table(summary, RANK_TABLE),
-        "", "### What a 4,800-character prompt receives", "", results_table(summary, BUDGET_TABLE),
-        "", "### Against the baseline: ranking", "", vs_baseline_table(summary, RANK_TABLE),
-        "", "### Against the baseline: the prompt", "", vs_baseline_table(summary, BUDGET_TABLE),
-        "", "### What each switch is worth: ranking", "", effects_table(summary, RANK_TABLE),
-        "", "### What each switch is worth: the prompt", "", effects_table(summary, BUDGET_TABLE),
-        "", "### By question style", "", style_table(summary, list(dict.fromkeys([summary["baseline"], best, *grid])), "success@5"),
-        "", "### Diagnostics", "", diagnostics_table(summary),
+        "", "### The confirmatory tests", "", confirmatory_table(summary),
+        "", "### Ranking quality", "", results_table(summary, RANK_TABLE, configs),
+        "", "### What a 4,800-character prompt receives", "", results_table(summary, BUDGET_TABLE, configs),
+        "", "### Against the baseline: ranking", "", vs_baseline_table(summary, RANK_TABLE, configs),
+        "", "### Against the baseline: the prompt", "", vs_baseline_table(summary, BUDGET_TABLE, configs),
     ]
+    if full:
+        parts += ["", "### What each switch is worth: ranking", "", effects_table(summary, RANK_TABLE),
+                  "", "### What each switch is worth: the prompt", "", effects_table(summary, BUDGET_TABLE)]
+    parts += ["", "### By question style", "", style_table(summary, styles, "success@5"),
+              "", "### Diagnostics", "", diagnostics_table(summary, configs=configs)]
     return "\n".join(parts) + "\n"
 
 

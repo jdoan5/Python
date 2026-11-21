@@ -2,7 +2,7 @@
 <module external.system.id="pyproject.toml" type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$/Python Project 8/RAG Eval Lab/Stage 1">
-      <sourceFolder url="file://$MODULE_DIR$/Python Project 8/RAG Eval Lab/Stage 1/src" />
+      <sourceFolder url="file://$MODULE_DIR$/Python Project 8/RAG Eval Lab/Stage 1/src" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

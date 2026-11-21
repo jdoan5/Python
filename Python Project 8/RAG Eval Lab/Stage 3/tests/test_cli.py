@@ -253,12 +253,18 @@ def test_eval_run_saves_a_run_that_report_can_read(golden_home, tmp_path):
     report = run("eval", "report", str(out))
     assert report.exit_code == 0, report.output
     assert "Paired difference" in report.output
+    summary = json.loads((out / "summary.json").read_text())
+    assert summary["confirmatory"] is not None  # the run scores all 35, so the chain and its control are there
+    assert len(summary["configs"]) == 35 and len(summary["vs_baseline"]) == 29
     markdown = run("eval", "report", str(out), "--markdown")
     assert markdown.exit_code == 0, markdown.output
-    for heading in ("### Ranking quality", "### What a 4,800-character prompt receives",
-                    "### Against the baseline: ranking", "### What each switch is worth: the prompt"):
+    for heading in ("### The confirmatory tests", "### Ranking quality", "### What a 4,800-character prompt receives",
+                    "### Against the baseline: ranking"):
         assert heading in markdown.output
-    assert "| **baseline (RAG Mini Chat)** |" in markdown.output
+    assert "| **baseline (RAG Mini Chat)** |" in markdown.output and "link 1: heading+hybrid+rerank" in markdown.output
+    assert "### What each switch is worth" not in markdown.output and "fixed+dense" not in markdown.output
+    full = run("eval", "report", str(out), "--markdown", "--full")
+    assert "### What each switch is worth: the prompt" in full.output and "fixed+dense" in full.output
 
 
 

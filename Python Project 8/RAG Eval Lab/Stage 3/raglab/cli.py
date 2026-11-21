@@ -28,7 +28,7 @@ from raglab.corpus import (
 from raglab.evaluate import (
     build_manifest, load_run, run_configs, save_run, summarize, unjudged,
 )
-from raglab.experiments import BASELINE, FACTORIAL, GRID, RetrievalConfig, build_retrievers
+from raglab.experiments import BASELINE, EVALUATED, GRID, RetrievalConfig, build_retrievers
 from raglab.golden import (
     STYLES, GoldenError, GoldenSet, agreement_report, area_of, check_against_corpus, default_golden_path, dump_golden,
     load_golden, merge_judgments, questions_fingerprint, sample_targets, strict_json,
@@ -361,8 +361,8 @@ def golden_pool(
 ) -> None:
     """List pooled sections nobody has judged yet. Exits 1 if there are any, so it can gate CI."""
     _, docs, index, gs = _golden_context(golden)
-    try:
-        results = run_configs(docs, gs.questions, FACTORIAL, index)
+    try:  # rankings only: pooling never reads a grade
+        results = run_configs(docs, gs.questions, EVALUATED, index, scored=False)
     except (ValueError, RetrievalError, ModelError) as e:
         _fail(str(e))
     pool = unjudged(gs.questions, results, depth)
@@ -396,10 +396,10 @@ def golden_pool(
         console.print(f"Wrote {len(items)} questions' candidates to {escape(str(worksheet))}")
     if total:
         console.print(f"[yellow]{total} unjudged section(s)[/yellow] across {len(pool)} question(s) in the top {depth} "
-                      f"of {len(FACTORIAL)} configurations.")
+                      f"of {len(EVALUATED)} configurations.")
         raise typer.Exit(code=1)
     console.print(f"[green]Complete[/green] — every section in every configuration's top {depth} is judged "
-                  f"({len(gs.questions)} questions, {len(FACTORIAL)} configurations).")
+                  f"({len(gs.questions)} questions, {len(EVALUATED)} configurations).")
 
 
 @golden_app.command("merge")
@@ -479,7 +479,7 @@ def _print_summary(summary: dict, manifest: dict) -> None:
     table.add_column("configuration")
     for m in metrics:
         table.add_column(LABELS[m], justify="right")
-    order = sorted(summary["configs"], key=lambda n: -summary["summary"][n][metrics[0]]["mean"])
+    order = summary["configs"]  # in design order, never by score: no row is singled out as the best
     for name in order:
         style = "bold" if name == summary["baseline"] else ""
         table.add_row(escape(name), *(_ci(summary["summary"][name][m]) for m in metrics), style=style)
@@ -490,7 +490,7 @@ def _print_summary(summary: dict, manifest: dict) -> None:
     for m in metrics:
         vs.add_column(LABELS[m], justify="right")
     for name in order:
-        if name == summary["baseline"]:
+        if name not in summary["vs_baseline"]:  # the baseline itself, and the extras outside the factorial
             continue
         cells = []
         for m in metrics:
@@ -512,14 +512,16 @@ def eval_run(
     """Score every configuration against the golden set and save a reproducible run."""
     lock, docs, index, gs = _golden_context(golden)
     try:
-        manifest = build_manifest(gs, lock, FACTORIAL, resamples=resamples, seed=seed)
+        manifest = build_manifest(gs, lock, EVALUATED, resamples=resamples, seed=seed)
     except ModelError as e:
         _fail(str(e))
     run_dir = out or Path("runs") / manifest["run_id"]
+    blind_file = gs.path.with_name(f"{gs.path.stem}-blind.json")  # the blind round's grades, for the label check
     try:
-        with console.status(f"Scoring {len(FACTORIAL)} configurations on {len(gs.questions)} questions..."):
-            results = run_configs(docs, gs.questions, FACTORIAL, index)
-            summary = summarize(gs.questions, FACTORIAL, results, resamples=resamples, seed=seed)
+        blind = json.loads(blind_file.read_text(encoding="utf-8"))["items"] if blind_file.is_file() else None
+        with console.status(f"Scoring {len(EVALUATED)} configurations on {len(gs.questions)} questions..."):
+            results = run_configs(docs, gs.questions, EVALUATED, index)
+            summary = summarize(gs.questions, EVALUATED, results, resamples=resamples, seed=seed, blind=blind)
         save_run(run_dir, manifest, summary, gs.questions, results, overwrite=overwrite)
     except (ValueError, RetrievalError, ModelError, OSError) as e:
         _fail(str(e))
@@ -539,6 +541,7 @@ def eval_run(
 def eval_report(
     run_dir: Path = typer.Argument(..., help="A directory written by `eval run`."),
     markdown: bool = typer.Option(False, help="Print README-ready Markdown tables instead."),
+    full: bool = typer.Option(False, help="With --markdown: every table for every configuration (TABLES.md)."),
 ) -> None:
     """Print a saved run's tables again."""
     try:
@@ -547,7 +550,7 @@ def eval_report(
         _fail(str(e))
     try:
         if markdown:
-            print(markdown_report(summary, manifest), end="")  # plain print: no Rich wrapping inside tables
+            print(markdown_report(summary, manifest, full=full), end="")  # plain print: no Rich wrapping in tables
             return
         _print_summary(summary, manifest)
     except (KeyError, TypeError, ValueError, RecursionError, ArithmeticError) as e:

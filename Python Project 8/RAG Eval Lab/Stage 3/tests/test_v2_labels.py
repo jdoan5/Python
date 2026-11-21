@@ -24,24 +24,24 @@ def golden(questions: list[Question]) -> GoldenSet:
                      {"version": 1, "questions": [{"id": q.id, "judgments": dict(q.judgments)} for q in questions]})
 
 
-def test_calibration_strata_are_split_by_heading_bm25_s_top_10_and_prefer_off_page_sections(monkeypatch):
-    monkeypatch.setattr(v2_labels, "CALIBRATION", {"promotable": 4, "answers": 2})
-    q1 = question("q001", "a#t", {"a#t": 2, "a#x": 1, "b#y": 0, "c#z": 1, "d#w": 2, "a#v": 2})
+def test_calibration_strata_are_by_grade_split_by_heading_bm25_s_top_10_and_prefer_off_page_sections(monkeypatch):
+    monkeypatch.setattr(v2_labels, "CALIBRATION", {"related": 2, "rejected": 2, "answers": 2})
+    q1 = question("q001", "a#t", {"a#t": 2, "a#x": 1, "b#y": 0, "c#z": 1, "d#w": 2, "a#v": 2, "h#0": 0})
     q2 = question("q002", "e#t", {"e#t": 2, "e#u": 0, "f#u": 1, "g#u": 2})
-    drawn = v2_labels.calibration_draw(golden([q1, q2]), {"q001": {"a#x", "d#w"}, "q002": {"f#u"}})
+    drawn = v2_labels.calibration_draw(golden([q1, q2]), {"q001": {"a#x", "d#w", "b#y"}, "q002": {"f#u"}})
     assert all(d["location"] not in ("a#t", "e#t") for d in drawn)  # targets are never calibration items
-    promotable = [d for d in drawn if d["stratum"] == "promotable"]
-    answers = [d for d in drawn if d["stratum"] == "answers"]
-    assert len(promotable) == 4 and len(answers) == 2
-    assert {d["v1_grade"] for d in promotable} <= {0, 1} and {d["v1_grade"] for d in answers} == {2}
-    assert sum(d["in_heading_bm25_top10"] for d in promotable) == 2  # half and half
+    by = {s: [d for d in drawn if d["stratum"] == s] for s in ("related", "rejected", "answers")}
+    assert [len(v) for v in by.values()] == [2, 2, 2]
+    assert {d["v1_grade"] for d in by["related"]} == {1} and {d["v1_grade"] for d in by["rejected"]} == {0}
+    assert {d["v1_grade"] for d in by["answers"]} == {2}
+    assert all(sum(d["in_heading_bm25_top10"] for d in v) == 1 for v in by.values())  # half and half
     # answers: one from inside heading+bm25's top 10 (d#w), one from outside, off the target page first (g#u)
-    assert {(d["question"], d["location"]) for d in answers} == {("q001", "d#w"), ("q002", "g#u")}
+    assert {(d["question"], d["location"]) for d in by["answers"]} == {("q001", "d#w"), ("q002", "g#u")}
 
 
 def test_a_short_half_is_filled_from_the_other(monkeypatch):
-    monkeypatch.setattr(v2_labels, "CALIBRATION", {"promotable": 4, "answers": 0})
-    q1 = question("q001", "a#t", {"a#t": 2, "b#1": 0, "b#2": 0, "b#3": 0, "b#4": 1})
+    monkeypatch.setattr(v2_labels, "CALIBRATION", {"related": 0, "rejected": 4, "answers": 0})
+    q1 = question("q001", "a#t", {"a#t": 2, "b#1": 0, "b#2": 0, "b#3": 0, "b#4": 0})
     drawn = v2_labels.calibration_draw(golden([q1]), {"q001": {"b#1"}})
     assert len(drawn) == 4 and sum(d["in_heading_bm25_top10"] for d in drawn) == 1
 
@@ -108,8 +108,8 @@ def test_the_agreement_draw_keeps_its_paraphrase_share_and_skips_the_union(monke
 
 
 def test_blind_worksheets_hold_no_grades_answers_or_groups(tmp_path):
-    items = [{"item": f"i{k}", "question_id": "q001", "group": "union", "question": "Q?", "location": f"a#{k}",
-              "heading_path": "Page", "text": "body"} for k in range(3)]
+    items = [{"item": f"i{k}", "question_id": "q001", "groups": ["union"], "new_in_v2": True, "quote": False,
+              "question": "Q?", "location": f"a#{k}", "heading_path": "Page", "text": "body"} for k in range(3)]
     manifest = v2_labels.blind_worksheets(items, tmp_path, size=2)
     assert [len(m["items"]) for m in manifest] == [2, 1]
     entry = json.loads(Path(manifest[0]["path"]).read_text())[0]
@@ -125,7 +125,45 @@ def test_a_quote_counts_only_if_it_is_in_the_section(quote, holds):
     assert v2_labels.quote_holds(quote.replace("Use", "use") if quote.startswith("Use") else quote, text) is holds
 
 
-def test_the_bridge_draw_is_a_fixed_40_from_v1_s_study():
+def test_the_bridge_draw_is_a_fixed_40_from_v1_s_study_outside_the_union():
     items = [{"question": f"q{i:03d}", "location": f"x#{i}", "first": 1, "second": 1} for i in range(100)]
-    a, b = v2_labels.bridge_draw(items), v2_labels.bridge_draw(list(reversed(items)))
+    a, b = v2_labels.bridge_draw(items, set()), v2_labels.bridge_draw(list(reversed(items)), set())
     assert len(a) == 40 and a == b
+    union = {(i["question"], i["location"]) for i in a[:10]}
+    c = v2_labels.bridge_draw(items, union)
+    assert len(c) == 40 and not union & {(i["question"], i["location"]) for i in c}
+
+
+def test_the_quote_judge_sees_everything_outside_the_union_and_the_union_s_new_answers():
+    q = question("q001", "a#t", {"a#t": 2, "b#new2": 2, "c#new1": 1, "d#old2": 2, "e#agree": 0})
+    union = [("q001", "a#t"), ("q001", "b#new2"), ("q001", "c#new1"), ("q001", "d#old2")]
+    items = v2_labels.blind_items(golden([q]), [FakeDoc(d) for d in "abcde"], FakeIndex(), union,
+                                  [("q001", "e#agree", 0)], [], new_keys={("q001", "b#new2"), ("q001", "c#new1"),
+                                                                           ("q001", "e#agree")})
+    quoted = {i["location"] for i in items if i["quote"]}
+    assert quoted == {"b#new2", "e#agree"}  # a new answer in the union, and the agreement item
+    assert {i["location"]: i["groups"] for i in items}["e#agree"] == ["agreement"]
+
+
+def test_a_blind_batch_must_answer_every_item_once_with_a_valid_answer():
+    ok = [{"item": "i1", "grade": 2}, {"item": "i2", "grade": 0}]
+    assert v2_labels.check_blind_batch(["i1", "i2"], ok, quote=False) == []
+    assert v2_labels.check_blind_batch(["i1", "i2"], ok[:1], quote=False) == ["missing i2"]
+    assert any("twice" in p for p in v2_labels.check_blind_batch(["i1", "i2"], ok + ok[:1], quote=False))
+    assert any("bad grade" in p for p in v2_labels.check_blind_batch(["i1"], [{"item": "i1", "grade": "2"}], quote=False))
+    good_quote = [{"item": "i1", "answers": True, "quote": "x"}]
+    assert v2_labels.check_blind_batch(["i1"], good_quote, quote=True) == []
+    assert v2_labels.check_blind_batch(["i1"], [{"item": "i1", "answers": "yes", "quote": "x"}], quote=True)
+
+
+def test_a_batch_that_passed_can_never_be_judged_again(tmp_path):
+    manifest = [{"label": "blind-01", "items": ["i1"]}]
+    first = tmp_path / "first.json"
+    first.write_text(json.dumps([{"label": "blind-01", "grades": [{"item": "i1", "grade": 1}]}]))
+    again = tmp_path / "again.json"
+    again.write_text(json.dumps([{"label": "blind-01", "grades": [{"item": "i1", "grade": 2}]}]))
+    with pytest.raises(SystemExit, match="passed validation"):
+        v2_labels._round_answers(first, [again], manifest, "grades", quote=False)
+    first.write_text(json.dumps([{"label": "blind-01", "grades": []}]))  # failed: nothing returned for i1
+    answers, log = v2_labels._round_answers(first, [again], manifest, "grades", quote=False)
+    assert answers["i1"]["grade"] == 2 and log[0]["batch"] == "blind-01" and log[0]["first_run"] == []

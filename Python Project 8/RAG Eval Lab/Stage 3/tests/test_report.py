@@ -26,9 +26,19 @@ def test_against_the_baseline_bolds_on_holm_at_the_call_site():
     from raglab.report import vs_baseline_table
 
     row = {"delta": 0.1, "lo": 0.01, "hi": 0.2, "p": 0.01, "p_holm": 0.08}  # significant raw, not after Holm
-    summary = {"baseline": "b", "vs_baseline": {"c": {"recall@5": row}}}
+    summary = {"baseline": "b", "configs": ["b", "c"], "vs_baseline": {"c": {"recall@5": row}}}
     table = vs_baseline_table(summary, ("recall@5",))
     assert "| c | +0.10 (+0.01 to +0.20) |" in table
+
+
+def test_tables_list_configurations_in_design_order_never_by_score():
+    from raglab.report import results_table
+
+    cell = lambda m: {"mean": m, "lo": m, "hi": m}  # noqa: E731
+    summary = {"baseline": "a", "configs": ["a", "b", "c"],
+               "summary": {"a": {"recall@5": cell(0.1)}, "b": {"recall@5": cell(0.9)}, "c": {"recall@5": cell(0.5)}}}
+    rows = [line.split(" | ")[0] for line in results_table(summary, ("recall@5",)).splitlines()[2:]]
+    assert rows == ["| **a**", "| b", "| c"]  # the order given, although b scores highest
 
 
 def test_the_chart_plots_success_first_and_mean_coverage_second():
