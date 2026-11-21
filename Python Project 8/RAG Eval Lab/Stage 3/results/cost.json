@@ -1,0 +1,192 @@
+{
+ "machine": {
+  "chip": "Apple M5 Max",
+  "cores": 18,
+  "performance_cores": "6",
+  "ram_gb": 48,
+  "power": "AC Power",
+  "os": "Darwin 27.2.0 arm64",
+  "python": "3.14.7"
+ },
+ "threads": 4,
+ "libraries": {
+  "torch": "2.15.0",
+  "transformers": "5.22.1",
+  "sentence-transformers": "6.2.0",
+  "tokenizers": "0.23.3",
+  "safetensors": "0.8.0"
+ },
+ "protocol": {
+  "warmup_questions": 10,
+  "passes": 5,
+  "questions": 98,
+  "order": "retrievers shuffled per pass, seed 20261120",
+  "caches": "off",
+  "batch_size": 1,
+  "cold_runs": 5
+ },
+ "model_mb": {
+  "embedder": 128.18446826934814,
+  "reranker": 87.56233024597168
+ },
+ "cold_start": {
+  "import_s": {
+   "median_s": 1.6809329999996407,
+   "max_s": 1.9501915410000947
+  },
+  "load_s": {
+   "median_s": 0.23521299999993062,
+   "max_s": 0.24292099999911443
+  },
+  "first_question_s": {
+   "median_s": 0.017059959000107483,
+   "max_s": 0.017778749999706633
+  },
+  "runs": 5
+ },
+ "configurations": {
+  "heading+tfidf": {
+   "n": 490,
+   "p50_ms": 0.3276249990449287,
+   "p95_ms": 0.3771394000978034,
+   "mean_ms": 0.3312742407634149,
+   "cpu_seconds_per_1000_questions": 0.33174081632653596,
+   "steps_mean_ms": {
+    "question embedding": 0.0,
+    "dense scoring": 0.0,
+    "BM25": 0.0,
+    "reranking": 0.0,
+    "fusion, ordering and the rest": 0.33127424076341483
+   }
+  },
+  "heading+bm25": {
+   "n": 490,
+   "p50_ms": 0.049353999202139676,
+   "p95_ms": 0.0760481005272595,
+   "mean_ms": 0.049872861222402025,
+   "cpu_seconds_per_1000_questions": 0.05017755102051765,
+   "steps_mean_ms": {
+    "question embedding": 0.0,
+    "dense scoring": 0.0,
+    "BM25": 0.019362287750890553,
+    "reranking": 0.0,
+    "fusion, ordering and the rest": 0.030510573471511464
+   }
+  },
+  "heading+dense": {
+   "n": 490,
+   "p50_ms": 5.698145499991369,
+   "p95_ms": 5.892501750167867,
+   "mean_ms": 5.419834973486568,
+   "cpu_seconds_per_1000_questions": 6.546304081632918,
+   "steps_mean_ms": {
+    "question embedding": 5.289720508146126,
+    "dense scoring": 0.03936043062172434,
+    "BM25": 0.0,
+    "reranking": 0.0,
+    "fusion, ordering and the rest": 0.09075403471871812
+   }
+  },
+  "heading+hybrid": {
+   "n": 490,
+   "p50_ms": 5.883833499865432,
+   "p95_ms": 6.084496200310241,
+   "mean_ms": 5.605068618362046,
+   "cpu_seconds_per_1000_questions": 6.7326469387752494,
+   "steps_mean_ms": {
+    "question embedding": 5.28899232646966,
+    "dense scoring": 0.039395289808898504,
+    "BM25": 0.03050935106237338,
+    "reranking": 0.0,
+    "fusion, ordering and the rest": 0.24617165102111463
+   }
+  },
+  "heading+hybrid+rerank": {
+   "n": 490,
+   "p50_ms": 758.3681249998335,
+   "p95_ms": 926.5655411491024,
+   "mean_ms": 765.3628056938477,
+   "cpu_seconds_per_1000_questions": 1315.7872714285716,
+   "steps_mean_ms": {
+    "question embedding": 5.533633685697669,
+    "dense scoring": 0.04775533259223241,
+    "BM25": 0.05112893674350391,
+    "reranking": 758.7204842775427,
+    "fusion, ordering and the rest": 1.0098034612716447
+   }
+  },
+  "heading+bm25+rerank": {
+   "n": 490,
+   "p50_ms": 730.3423749999638,
+   "p95_ms": 890.6110167000406,
+   "mean_ms": 739.538190081624,
+   "cpu_seconds_per_1000_questions": 1265.841430612245,
+   "steps_mean_ms": {
+    "question embedding": 0.0,
+    "dense scoring": 0.0,
+    "BM25": 0.05067609591624576,
+    "reranking": 739.0481996061402,
+    "fusion, ordering and the rest": 0.4393143795674632
+   }
+  },
+  "heading+hybrid+rerank [depth 10]": {
+   "n": 490,
+   "p50_ms": 82.33054099946457,
+   "p95_ms": 106.65937880030468,
+   "mean_ms": 83.44340220824144,
+   "cpu_seconds_per_1000_questions": 139.4770428571425,
+   "steps_mean_ms": {
+    "question embedding": 5.527718812240614,
+    "dense scoring": 0.04545056534861569,
+    "BM25": 0.04607340405509232,
+    "reranking": 76.93046684282159,
+    "fusion, ordering and the rest": 0.8936925837755325
+   }
+  },
+  "heading+hybrid+rerank [depth 20]": {
+   "n": 490,
+   "p50_ms": 157.54747899973154,
+   "p95_ms": 199.57505654992923,
+   "mean_ms": 158.26456395301352,
+   "cpu_seconds_per_1000_questions": 268.39132857142846,
+   "steps_mean_ms": {
+    "question embedding": 5.525200687748575,
+    "dense scoring": 0.0460205734567829,
+    "BM25": 0.047573199967422514,
+    "reranking": 151.73002939179926,
+    "fusion, ordering and the rest": 0.9157401000414609
+   }
+  },
+  "heading+hybrid+rerank [depth 50]": {
+   "n": 490,
+   "p50_ms": 381.6538750006657,
+   "p95_ms": 478.54419185014194,
+   "mean_ms": 387.0332413265789,
+   "cpu_seconds_per_1000_questions": 661.7733346938779,
+   "steps_mean_ms": {
+    "question embedding": 5.550793467328007,
+    "dense scoring": 0.04750270004757251,
+    "BM25": 0.05060312043719839,
+    "reranking": 380.4317249102774,
+    "fusion, ordering and the rest": 0.9526171284886686
+   }
+  }
+ },
+ "index_build_seconds": {
+  "bm25": 0.04217679199973645,
+  "tfidf": 0.06371899999976449,
+  "dense (embed every chunk)": 20.497115832999043
+ },
+ "rerank_100_pairs_in_one_batch": {
+  "n": 98,
+  "p50_ms": 1255.5665835006948,
+  "p95_ms": 1603.4558625499812,
+  "mean_ms": 1306.0635841531473
+ },
+ "chunks": 1538,
+ "index_mb": {
+  "dense vectors (float32)": 2.2529296875,
+  "dense matrix as held (float64, distinct texts)": 4.505859375
+ },
+ "peak_rss_mb_whole_process": 4698.765625
+}

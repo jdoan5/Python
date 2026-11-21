@@ -21,7 +21,7 @@ This is the project that closes both.
 |---|---|---|
 | [1](Stage%201/) | Pinned corpus, three chunking strategies, BM25 and TF-IDF retrievers | ✅ done |
 | [2](Stage%202/) | Golden set of 98 questions labelled by section; recall@k, MRR, nDCG, answer coverage, each with 95% intervals; paired tests; versioned run manifests | ✅ done |
-| [3](Stage%203/) | Dense embeddings, hybrid fusion, reranking — each measured against Stage 2 | in progress ([analysis plan](Stage%203/PLAN.md)) |
+| [3](Stage%203/) | Dense embeddings, hybrid fusion, reranking — each measured against Stage 2 under a [pre-registered plan](Stage%203/PLAN.md). Supported: the reranked hybrid beats BM25 on MRR@10 (+0.09; its blind-round confirmation is fragile per page). Exploratory: the hybrid alone scored 0.72 to the reranked hybrid's 0.71 (reranking it changed MRR@10 by −0.014, 95% CI −0.073 to +0.048), at a median 6 ms a question instead of 758 ms on one Apple M5 Max CPU, one text at a time; whether the hybrid alone is enough needs new questions | ✅ done |
 | 4 | Answers with enforced citations; LLM-as-judge faithfulness; model cost/quality trade-offs | |
 | 5 | GitHub Actions regression gate: retrieval evals on every PR, LLM-judged evals nightly | |
 | 6 | Live demo: ask the docs, with clickable citations and an experiments leaderboard | |

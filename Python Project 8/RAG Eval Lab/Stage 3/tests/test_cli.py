@@ -287,3 +287,13 @@ def test_report_on_a_broken_run_is_a_clean_error(tmp_path, manifest, summary):
     for args in (("eval", "report", str(tmp_path)), ("eval", "report", str(tmp_path), "--markdown")):
         result = run(*args)
         assert result.exit_code == 1 and "Error:" in result.output, result.output
+
+
+def test_golden_agreement_reads_v1s_study_by_default(golden_home):
+    # Stage 3's golden set is v2, but the agreement study is v1's; v2's blind round has its own file.
+    items = [{"question": "q001", "location": RAISE, "first": 2, "second": 2, "is_target": True},
+             {"question": "q002", "location": DOCS, "first": 0, "second": 1, "is_target": False}]
+    (golden_home / "golden" / "v1-agreement.json").write_text(json.dumps({"items": items}), encoding="utf-8")
+    result = run("golden", "agreement")
+    assert result.exit_code == 0, result.output
+    assert "2 judgments re-graded blind" in result.output

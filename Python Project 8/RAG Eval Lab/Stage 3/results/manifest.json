@@ -1,0 +1,1628 @@
+{
+ "schema": 4,
+ "run_id": "20261121-033633-25ad5ed6",
+ "created_utc": "2026-11-21T03:36:33Z",
+ "code": {
+  "raglab_version": "0.3.0",
+  "package_sha256": "25ad5ed6ddb6e1f85996515d38835e45ce9ceaae0e8e271135da186eca26d2d4",
+  "git_commit": "88431f1aa37ed29f056075f4628a252618899e4d",
+  "git_dirty": true
+ },
+ "corpus": {
+  "repo": "https://github.com/fastapi/fastapi.git",
+  "ref": "0.165.0",
+  "commit": "05e6df7e906c3decba377c37548019973f40bf15",
+  "fingerprint": "3ec279619717c72441c0b92ad7e7244145ee857b7d070e5b0028cc4b3f364315",
+  "files": 464
+ },
+ "golden": {
+  "path": "golden/v2.yaml",
+  "version": 2,
+  "sha256": "4e8a0f5c03d0ac27b3f64de737efba3f61d8464e597ef939efea1b346adebbc7",
+  "questions": 98
+ },
+ "robustness_inputs": {
+  "v1-agreement.json": "9db58d737ef03802fd0d1431a45021a7a738e06a13b677331f4e9e6a1e373fab",
+  "v1-regrade.json": "4d8ed586d2e66fedb15172911b2365c2b5970526114b0033a9d8b98ff3394767",
+  "v1-unjudged-sample.json": "bfdf997251a1e115ba4b588eabdea84208bc676fb4fcf25452d230de9e3183b7",
+  "v2-blind.json": "981122fc98c66ea7580eb4471000f905db7fe3f9aa16268a670fdd2468274606",
+  "v2-calibration.json": "cb32c67ef9c3eaf9b99c883269e6ec4c5111fad971916de4bb8f6390b731c20d",
+  "v2-judgments.json": "dbfd9eaddab2268c5631a6303950dd1734fe902b30f8d952be2ca1ff9c9b4617",
+  "v2-provenance.json": "44c23d340e878d79841752123d20cc2314997c883c1c111354762ce87082328a",
+  "v2-quote.json": "db90e6dc79e56abb2f88628e3059e25f780038d8e88aedaa97b387d743d73b95",
+  "prompts_sha256": "dd45f9e5f5dc3d309dc4d3cbaad37281e92d9dcd8da600bdd62e95af70097d05",
+  "analysis_sha256": "cf9613da3e74d0ad296476d3cd6feae076905860739aee1216ad6933acda5c19"
+ },
+ "plan": {
+  "path": "Stage 3/PLAN.md",
+  "sha256": "dc76c34e002a06e3a42b30de1de4f625a35155d113bf6a585ccf7e9207d18985"
+ },
+ "models": {
+  "lock_sha256": "27a8abbdc98cd87d83f2e62082e6dfc1720f579ce7d5ce63b44207a3108064fe",
+  "embedder": {
+   "role": "embedder",
+   "repo": "BAAI/bge-small-en-v1.5",
+   "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+   "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+   "device": "cpu",
+   "dtype": "float32",
+   "threads": 4,
+   "batch_size": 1,
+   "max_tokens": 512,
+   "platform": "Darwin arm64",
+   "torch": "2.15.0",
+   "transformers": "5.22.1",
+   "sentence-transformers": "6.2.0",
+   "tokenizers": "0.23.3",
+   "safetensors": "0.8.0",
+   "pooling": "the model's own (CLS)",
+   "normalized": true
+  },
+  "reranker": {
+   "role": "reranker",
+   "repo": "cross-encoder/ms-marco-MiniLM-L6-v2",
+   "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+   "fingerprint": "0e2c45aeb296729b1ef9964f8b7dc072c5508101671d9125a4bb3ceb98a044bc",
+   "device": "cpu",
+   "dtype": "float32",
+   "threads": 4,
+   "batch_size": 1,
+   "max_tokens": 512,
+   "platform": "Darwin arm64",
+   "torch": "2.15.0",
+   "transformers": "5.22.1",
+   "sentence-transformers": "6.2.0",
+   "tokenizers": "0.23.3",
+   "safetensors": "0.8.0",
+   "activation": "none (raw logits)",
+   "truncation": "the passage's end, never the question"
+  }
+ },
+ "numerics": {
+  "threads": 4,
+  "platform": "Darwin arm64",
+  "chip": "Apple M5 Max",
+  "requirements_lock_sha256": "1ae5a3d2b03861cb7b0bc428f5ad2bef09a2b8ead964086caacc830e32e3d43e",
+  "torch": "2.15.0",
+  "transformers": "5.22.1",
+  "sentence-transformers": "6.2.0",
+  "tokenizers": "0.23.3",
+  "safetensors": "0.8.0"
+ },
+ "confirmatory_plan": {
+  "primary_metric": "mrr@10",
+  "alpha": 0.05,
+  "chain": [
+   [
+    "heading+bm25",
+    "heading+hybrid+rerank",
+    1
+   ],
+   [
+    "heading+bm25",
+    "heading+hybrid",
+    1
+   ],
+   [
+    "heading+bm25",
+    "heading+dense",
+    0
+   ],
+   [
+    "heading+hybrid",
+    "heading+hybrid+rerank",
+    1
+   ],
+   [
+    "heading+bm25+rerank",
+    "heading+hybrid+rerank",
+    1
+   ]
+  ],
+  "supporting_metrics": [
+   "success@5",
+   "ndcg_answers@10",
+   "ndcg@10",
+   "recall@5",
+   "coverage@4800",
+   "budget_recall@4800"
+  ],
+  "exploratory_pairs": [
+   [
+    "heading+dense",
+    "heading+hybrid"
+   ],
+   [
+    "heading+bm25",
+    "heading+bm25+rerank"
+   ]
+  ],
+  "procedure": "chain tested in order on the primary metric, each link only if all earlier links were significant; supporting metrics Holm-adjusted, claimed only if the headline is significant"
+ },
+ "configs": [
+  {
+   "name": "baseline (RAG Mini Chat)",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "paragraph+bm25",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "paragraph+bm25 (no breadcrumb)",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "paragraph+tfidf",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "paragraph+dense",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "dense",
+    "model": {
+     "role": "embedder",
+     "repo": "BAAI/bge-small-en-v1.5",
+     "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+     "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "pooling": "the model's own (CLS)",
+     "normalized": true
+    },
+    "query_instruction": "Represent this sentence for searching relevant passages: ",
+    "document_instruction": "",
+    "similarity": "cosine (float64 dot product of unit float32 vectors)",
+    "ranks": "every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "paragraph+dense (no breadcrumb)",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "dense",
+    "model": {
+     "role": "embedder",
+     "repo": "BAAI/bge-small-en-v1.5",
+     "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+     "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "pooling": "the model's own (CLS)",
+     "normalized": true
+    },
+    "query_instruction": "Represent this sentence for searching relevant passages: ",
+    "document_instruction": "",
+    "similarity": "cosine (float64 dot product of unit float32 vectors)",
+    "ranks": "every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "paragraph+hybrid",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "hybrid",
+    "fusion": "reciprocal rank",
+    "k": 60,
+    "inputs": [
+     "bm25",
+     "dense"
+    ],
+    "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+    "ranks": "every chunk",
+    "dense": {
+     "model": {
+      "role": "embedder",
+      "repo": "BAAI/bge-small-en-v1.5",
+      "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+      "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "batch_size": 1,
+      "max_tokens": 512,
+      "platform": "Darwin arm64",
+      "torch": "2.15.0",
+      "transformers": "5.22.1",
+      "sentence-transformers": "6.2.0",
+      "tokenizers": "0.23.3",
+      "safetensors": "0.8.0",
+      "pooling": "the model's own (CLS)",
+      "normalized": true
+     },
+     "query_instruction": "Represent this sentence for searching relevant passages: ",
+     "document_instruction": "",
+     "similarity": "cosine (float64 dot product of unit float32 vectors)",
+     "ranks": "every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+    }
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "paragraph+hybrid (no breadcrumb)",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "hybrid",
+    "fusion": "reciprocal rank",
+    "k": 60,
+    "inputs": [
+     "bm25",
+     "dense"
+    ],
+    "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+    "ranks": "every chunk",
+    "dense": {
+     "model": {
+      "role": "embedder",
+      "repo": "BAAI/bge-small-en-v1.5",
+      "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+      "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "batch_size": 1,
+      "max_tokens": 512,
+      "platform": "Darwin arm64",
+      "torch": "2.15.0",
+      "transformers": "5.22.1",
+      "sentence-transformers": "6.2.0",
+      "tokenizers": "0.23.3",
+      "safetensors": "0.8.0",
+      "pooling": "the model's own (CLS)",
+      "normalized": true
+     },
+     "query_instruction": "Represent this sentence for searching relevant passages: ",
+     "document_instruction": "",
+     "similarity": "cosine (float64 dot product of unit float32 vectors)",
+     "ranks": "every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+    }
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "paragraph+hybrid+rerank",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "hybrid+rerank",
+    "first_stage": "hybrid",
+    "model": {
+     "role": "reranker",
+     "repo": "cross-encoder/ms-marco-MiniLM-L6-v2",
+     "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+     "fingerprint": "0e2c45aeb296729b1ef9964f8b7dc072c5508101671d9125a4bb3ceb98a044bc",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "activation": "none (raw logits)",
+     "truncation": "the passage's end, never the question"
+    },
+    "depth": 100,
+    "input": "(question, chunk text as indexed)",
+    "order": "cross-encoder score; ties keep first-stage order; chunks below the depth keep first-stage order",
+    "hybrid": {
+     "fusion": "reciprocal rank",
+     "k": 60,
+     "inputs": [
+      "bm25",
+      "dense"
+     ],
+     "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+     "ranks": "every chunk",
+     "dense": {
+      "model": {
+       "role": "embedder",
+       "repo": "BAAI/bge-small-en-v1.5",
+       "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+       "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+       "device": "cpu",
+       "dtype": "float32",
+       "threads": 4,
+       "batch_size": 1,
+       "max_tokens": 512,
+       "platform": "Darwin arm64",
+       "torch": "2.15.0",
+       "transformers": "5.22.1",
+       "sentence-transformers": "6.2.0",
+       "tokenizers": "0.23.3",
+       "safetensors": "0.8.0",
+       "pooling": "the model's own (CLS)",
+       "normalized": true
+      },
+      "query_instruction": "Represent this sentence for searching relevant passages: ",
+      "document_instruction": "",
+      "similarity": "cosine (float64 dot product of unit float32 vectors)",
+      "ranks": "every chunk",
+      "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+     }
+    },
+    "ranks": "every chunk"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "paragraph+hybrid+rerank (no breadcrumb)",
+   "chunker": {
+    "name": "paragraph"
+   },
+   "retriever": {
+    "name": "hybrid+rerank",
+    "first_stage": "hybrid",
+    "model": {
+     "role": "reranker",
+     "repo": "cross-encoder/ms-marco-MiniLM-L6-v2",
+     "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+     "fingerprint": "0e2c45aeb296729b1ef9964f8b7dc072c5508101671d9125a4bb3ceb98a044bc",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "activation": "none (raw logits)",
+     "truncation": "the passage's end, never the question"
+    },
+    "depth": 100,
+    "input": "(question, chunk text as indexed)",
+    "order": "cross-encoder score; ties keep first-stage order; chunks below the depth keep first-stage order",
+    "hybrid": {
+     "fusion": "reciprocal rank",
+     "k": 60,
+     "inputs": [
+      "bm25",
+      "dense"
+     ],
+     "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+     "ranks": "every chunk",
+     "dense": {
+      "model": {
+       "role": "embedder",
+       "repo": "BAAI/bge-small-en-v1.5",
+       "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+       "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+       "device": "cpu",
+       "dtype": "float32",
+       "threads": 4,
+       "batch_size": 1,
+       "max_tokens": 512,
+       "platform": "Darwin arm64",
+       "torch": "2.15.0",
+       "transformers": "5.22.1",
+       "sentence-transformers": "6.2.0",
+       "tokenizers": "0.23.3",
+       "safetensors": "0.8.0",
+       "pooling": "the model's own (CLS)",
+       "normalized": true
+      },
+      "query_instruction": "Represent this sentence for searching relevant passages: ",
+      "document_instruction": "",
+      "similarity": "cosine (float64 dot product of unit float32 vectors)",
+      "ranks": "every chunk",
+      "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+     }
+    },
+    "ranks": "every chunk"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "fixed+bm25",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "fixed+bm25 (no breadcrumb)",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "fixed+tfidf",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "fixed+tfidf (no breadcrumb)",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "fixed+dense",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "dense",
+    "model": {
+     "role": "embedder",
+     "repo": "BAAI/bge-small-en-v1.5",
+     "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+     "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "pooling": "the model's own (CLS)",
+     "normalized": true
+    },
+    "query_instruction": "Represent this sentence for searching relevant passages: ",
+    "document_instruction": "",
+    "similarity": "cosine (float64 dot product of unit float32 vectors)",
+    "ranks": "every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "fixed+dense (no breadcrumb)",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "dense",
+    "model": {
+     "role": "embedder",
+     "repo": "BAAI/bge-small-en-v1.5",
+     "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+     "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "pooling": "the model's own (CLS)",
+     "normalized": true
+    },
+    "query_instruction": "Represent this sentence for searching relevant passages: ",
+    "document_instruction": "",
+    "similarity": "cosine (float64 dot product of unit float32 vectors)",
+    "ranks": "every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "fixed+hybrid",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "hybrid",
+    "fusion": "reciprocal rank",
+    "k": 60,
+    "inputs": [
+     "bm25",
+     "dense"
+    ],
+    "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+    "ranks": "every chunk",
+    "dense": {
+     "model": {
+      "role": "embedder",
+      "repo": "BAAI/bge-small-en-v1.5",
+      "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+      "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "batch_size": 1,
+      "max_tokens": 512,
+      "platform": "Darwin arm64",
+      "torch": "2.15.0",
+      "transformers": "5.22.1",
+      "sentence-transformers": "6.2.0",
+      "tokenizers": "0.23.3",
+      "safetensors": "0.8.0",
+      "pooling": "the model's own (CLS)",
+      "normalized": true
+     },
+     "query_instruction": "Represent this sentence for searching relevant passages: ",
+     "document_instruction": "",
+     "similarity": "cosine (float64 dot product of unit float32 vectors)",
+     "ranks": "every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+    }
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "fixed+hybrid (no breadcrumb)",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "hybrid",
+    "fusion": "reciprocal rank",
+    "k": 60,
+    "inputs": [
+     "bm25",
+     "dense"
+    ],
+    "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+    "ranks": "every chunk",
+    "dense": {
+     "model": {
+      "role": "embedder",
+      "repo": "BAAI/bge-small-en-v1.5",
+      "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+      "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "batch_size": 1,
+      "max_tokens": 512,
+      "platform": "Darwin arm64",
+      "torch": "2.15.0",
+      "transformers": "5.22.1",
+      "sentence-transformers": "6.2.0",
+      "tokenizers": "0.23.3",
+      "safetensors": "0.8.0",
+      "pooling": "the model's own (CLS)",
+      "normalized": true
+     },
+     "query_instruction": "Represent this sentence for searching relevant passages: ",
+     "document_instruction": "",
+     "similarity": "cosine (float64 dot product of unit float32 vectors)",
+     "ranks": "every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+    }
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "fixed+hybrid+rerank",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "hybrid+rerank",
+    "first_stage": "hybrid",
+    "model": {
+     "role": "reranker",
+     "repo": "cross-encoder/ms-marco-MiniLM-L6-v2",
+     "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+     "fingerprint": "0e2c45aeb296729b1ef9964f8b7dc072c5508101671d9125a4bb3ceb98a044bc",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "activation": "none (raw logits)",
+     "truncation": "the passage's end, never the question"
+    },
+    "depth": 100,
+    "input": "(question, chunk text as indexed)",
+    "order": "cross-encoder score; ties keep first-stage order; chunks below the depth keep first-stage order",
+    "hybrid": {
+     "fusion": "reciprocal rank",
+     "k": 60,
+     "inputs": [
+      "bm25",
+      "dense"
+     ],
+     "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+     "ranks": "every chunk",
+     "dense": {
+      "model": {
+       "role": "embedder",
+       "repo": "BAAI/bge-small-en-v1.5",
+       "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+       "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+       "device": "cpu",
+       "dtype": "float32",
+       "threads": 4,
+       "batch_size": 1,
+       "max_tokens": 512,
+       "platform": "Darwin arm64",
+       "torch": "2.15.0",
+       "transformers": "5.22.1",
+       "sentence-transformers": "6.2.0",
+       "tokenizers": "0.23.3",
+       "safetensors": "0.8.0",
+       "pooling": "the model's own (CLS)",
+       "normalized": true
+      },
+      "query_instruction": "Represent this sentence for searching relevant passages: ",
+      "document_instruction": "",
+      "similarity": "cosine (float64 dot product of unit float32 vectors)",
+      "ranks": "every chunk",
+      "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+     }
+    },
+    "ranks": "every chunk"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "fixed+hybrid+rerank (no breadcrumb)",
+   "chunker": {
+    "name": "fixed",
+    "size": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "hybrid+rerank",
+    "first_stage": "hybrid",
+    "model": {
+     "role": "reranker",
+     "repo": "cross-encoder/ms-marco-MiniLM-L6-v2",
+     "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+     "fingerprint": "0e2c45aeb296729b1ef9964f8b7dc072c5508101671d9125a4bb3ceb98a044bc",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "activation": "none (raw logits)",
+     "truncation": "the passage's end, never the question"
+    },
+    "depth": 100,
+    "input": "(question, chunk text as indexed)",
+    "order": "cross-encoder score; ties keep first-stage order; chunks below the depth keep first-stage order",
+    "hybrid": {
+     "fusion": "reciprocal rank",
+     "k": 60,
+     "inputs": [
+      "bm25",
+      "dense"
+     ],
+     "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+     "ranks": "every chunk",
+     "dense": {
+      "model": {
+       "role": "embedder",
+       "repo": "BAAI/bge-small-en-v1.5",
+       "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+       "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+       "device": "cpu",
+       "dtype": "float32",
+       "threads": 4,
+       "batch_size": 1,
+       "max_tokens": 512,
+       "platform": "Darwin arm64",
+       "torch": "2.15.0",
+       "transformers": "5.22.1",
+       "sentence-transformers": "6.2.0",
+       "tokenizers": "0.23.3",
+       "safetensors": "0.8.0",
+       "pooling": "the model's own (CLS)",
+       "normalized": true
+      },
+      "query_instruction": "Represent this sentence for searching relevant passages: ",
+      "document_instruction": "",
+      "similarity": "cosine (float64 dot product of unit float32 vectors)",
+      "ranks": "every chunk",
+      "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+     }
+    },
+    "ranks": "every chunk"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "heading+bm25",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "heading+bm25 (no breadcrumb)",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf_floor": 0.01,
+    "analyzer": "scikit-learn word, english stop words"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "heading+tfidf",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "heading+tfidf (no breadcrumb)",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "tfidf",
+    "ngram_range": [
+     1,
+     2
+    ],
+    "stop_words": "english",
+    "similarity": "cosine"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "heading+dense",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "dense",
+    "model": {
+     "role": "embedder",
+     "repo": "BAAI/bge-small-en-v1.5",
+     "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+     "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "pooling": "the model's own (CLS)",
+     "normalized": true
+    },
+    "query_instruction": "Represent this sentence for searching relevant passages: ",
+    "document_instruction": "",
+    "similarity": "cosine (float64 dot product of unit float32 vectors)",
+    "ranks": "every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "heading+dense (no breadcrumb)",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "dense",
+    "model": {
+     "role": "embedder",
+     "repo": "BAAI/bge-small-en-v1.5",
+     "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+     "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "pooling": "the model's own (CLS)",
+     "normalized": true
+    },
+    "query_instruction": "Represent this sentence for searching relevant passages: ",
+    "document_instruction": "",
+    "similarity": "cosine (float64 dot product of unit float32 vectors)",
+    "ranks": "every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "heading+hybrid",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "hybrid",
+    "fusion": "reciprocal rank",
+    "k": 60,
+    "inputs": [
+     "bm25",
+     "dense"
+    ],
+    "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+    "ranks": "every chunk",
+    "dense": {
+     "model": {
+      "role": "embedder",
+      "repo": "BAAI/bge-small-en-v1.5",
+      "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+      "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "batch_size": 1,
+      "max_tokens": 512,
+      "platform": "Darwin arm64",
+      "torch": "2.15.0",
+      "transformers": "5.22.1",
+      "sentence-transformers": "6.2.0",
+      "tokenizers": "0.23.3",
+      "safetensors": "0.8.0",
+      "pooling": "the model's own (CLS)",
+      "normalized": true
+     },
+     "query_instruction": "Represent this sentence for searching relevant passages: ",
+     "document_instruction": "",
+     "similarity": "cosine (float64 dot product of unit float32 vectors)",
+     "ranks": "every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+    }
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "heading+hybrid (no breadcrumb)",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "hybrid",
+    "fusion": "reciprocal rank",
+    "k": 60,
+    "inputs": [
+     "bm25",
+     "dense"
+    ],
+    "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+    "ranks": "every chunk",
+    "dense": {
+     "model": {
+      "role": "embedder",
+      "repo": "BAAI/bge-small-en-v1.5",
+      "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+      "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+      "device": "cpu",
+      "dtype": "float32",
+      "threads": 4,
+      "batch_size": 1,
+      "max_tokens": 512,
+      "platform": "Darwin arm64",
+      "torch": "2.15.0",
+      "transformers": "5.22.1",
+      "sentence-transformers": "6.2.0",
+      "tokenizers": "0.23.3",
+      "safetensors": "0.8.0",
+      "pooling": "the model's own (CLS)",
+      "normalized": true
+     },
+     "query_instruction": "Represent this sentence for searching relevant passages: ",
+     "document_instruction": "",
+     "similarity": "cosine (float64 dot product of unit float32 vectors)",
+     "ranks": "every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+    }
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "heading+hybrid+rerank",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "hybrid+rerank",
+    "first_stage": "hybrid",
+    "model": {
+     "role": "reranker",
+     "repo": "cross-encoder/ms-marco-MiniLM-L6-v2",
+     "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+     "fingerprint": "0e2c45aeb296729b1ef9964f8b7dc072c5508101671d9125a4bb3ceb98a044bc",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "activation": "none (raw logits)",
+     "truncation": "the passage's end, never the question"
+    },
+    "depth": 100,
+    "input": "(question, chunk text as indexed)",
+    "order": "cross-encoder score; ties keep first-stage order; chunks below the depth keep first-stage order",
+    "hybrid": {
+     "fusion": "reciprocal rank",
+     "k": 60,
+     "inputs": [
+      "bm25",
+      "dense"
+     ],
+     "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+     "ranks": "every chunk",
+     "dense": {
+      "model": {
+       "role": "embedder",
+       "repo": "BAAI/bge-small-en-v1.5",
+       "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+       "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+       "device": "cpu",
+       "dtype": "float32",
+       "threads": 4,
+       "batch_size": 1,
+       "max_tokens": 512,
+       "platform": "Darwin arm64",
+       "torch": "2.15.0",
+       "transformers": "5.22.1",
+       "sentence-transformers": "6.2.0",
+       "tokenizers": "0.23.3",
+       "safetensors": "0.8.0",
+       "pooling": "the model's own (CLS)",
+       "normalized": true
+      },
+      "query_instruction": "Represent this sentence for searching relevant passages: ",
+      "document_instruction": "",
+      "similarity": "cosine (float64 dot product of unit float32 vectors)",
+      "ranks": "every chunk",
+      "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+     }
+    },
+    "ranks": "every chunk"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "heading+hybrid+rerank (no breadcrumb)",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "hybrid+rerank",
+    "first_stage": "hybrid",
+    "model": {
+     "role": "reranker",
+     "repo": "cross-encoder/ms-marco-MiniLM-L6-v2",
+     "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+     "fingerprint": "0e2c45aeb296729b1ef9964f8b7dc072c5508101671d9125a4bb3ceb98a044bc",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "activation": "none (raw logits)",
+     "truncation": "the passage's end, never the question"
+    },
+    "depth": 100,
+    "input": "(question, chunk text as indexed)",
+    "order": "cross-encoder score; ties keep first-stage order; chunks below the depth keep first-stage order",
+    "hybrid": {
+     "fusion": "reciprocal rank",
+     "k": 60,
+     "inputs": [
+      "bm25",
+      "dense"
+     ],
+     "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+     "ranks": "every chunk",
+     "dense": {
+      "model": {
+       "role": "embedder",
+       "repo": "BAAI/bge-small-en-v1.5",
+       "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+       "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+       "device": "cpu",
+       "dtype": "float32",
+       "threads": 4,
+       "batch_size": 1,
+       "max_tokens": 512,
+       "platform": "Darwin arm64",
+       "torch": "2.15.0",
+       "transformers": "5.22.1",
+       "sentence-transformers": "6.2.0",
+       "tokenizers": "0.23.3",
+       "safetensors": "0.8.0",
+       "pooling": "the model's own (CLS)",
+       "normalized": true
+      },
+      "query_instruction": "Represent this sentence for searching relevant passages: ",
+      "document_instruction": "",
+      "similarity": "cosine (float64 dot product of unit float32 vectors)",
+      "ranks": "every chunk",
+      "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+     }
+    },
+    "ranks": "every chunk"
+   },
+   "breadcrumb": false,
+   "variant": null
+  },
+  {
+   "name": "heading+bm25+rerank",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "bm25+rerank",
+    "first_stage": "bm25",
+    "model": {
+     "role": "reranker",
+     "repo": "cross-encoder/ms-marco-MiniLM-L6-v2",
+     "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+     "fingerprint": "0e2c45aeb296729b1ef9964f8b7dc072c5508101671d9125a4bb3ceb98a044bc",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "activation": "none (raw logits)",
+     "truncation": "the passage's end, never the question"
+    },
+    "depth": 100,
+    "input": "(question, chunk text as indexed)",
+    "order": "cross-encoder score; ties keep first-stage order; chunks below the depth keep first-stage order",
+    "ranks": "every chunk BM25 scores above 0"
+   },
+   "breadcrumb": true,
+   "variant": null
+  },
+  {
+   "name": "heading+dense [no instruction]",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "dense",
+    "model": {
+     "role": "embedder",
+     "repo": "BAAI/bge-small-en-v1.5",
+     "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+     "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "pooling": "the model's own (CLS)",
+     "normalized": true
+    },
+    "query_instruction": "",
+    "document_instruction": "",
+    "similarity": "cosine (float64 dot product of unit float32 vectors)",
+    "ranks": "every chunk",
+    "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+   },
+   "breadcrumb": true,
+   "variant": "no instruction"
+  },
+  {
+   "name": "heading+hybrid+rerank [depth 10]",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "hybrid+rerank",
+    "first_stage": "hybrid",
+    "model": {
+     "role": "reranker",
+     "repo": "cross-encoder/ms-marco-MiniLM-L6-v2",
+     "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+     "fingerprint": "0e2c45aeb296729b1ef9964f8b7dc072c5508101671d9125a4bb3ceb98a044bc",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "activation": "none (raw logits)",
+     "truncation": "the passage's end, never the question"
+    },
+    "depth": 10,
+    "input": "(question, chunk text as indexed)",
+    "order": "cross-encoder score; ties keep first-stage order; chunks below the depth keep first-stage order",
+    "hybrid": {
+     "fusion": "reciprocal rank",
+     "k": 60,
+     "inputs": [
+      "bm25",
+      "dense"
+     ],
+     "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+     "ranks": "every chunk",
+     "dense": {
+      "model": {
+       "role": "embedder",
+       "repo": "BAAI/bge-small-en-v1.5",
+       "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+       "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+       "device": "cpu",
+       "dtype": "float32",
+       "threads": 4,
+       "batch_size": 1,
+       "max_tokens": 512,
+       "platform": "Darwin arm64",
+       "torch": "2.15.0",
+       "transformers": "5.22.1",
+       "sentence-transformers": "6.2.0",
+       "tokenizers": "0.23.3",
+       "safetensors": "0.8.0",
+       "pooling": "the model's own (CLS)",
+       "normalized": true
+      },
+      "query_instruction": "Represent this sentence for searching relevant passages: ",
+      "document_instruction": "",
+      "similarity": "cosine (float64 dot product of unit float32 vectors)",
+      "ranks": "every chunk",
+      "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+     }
+    },
+    "ranks": "every chunk"
+   },
+   "breadcrumb": true,
+   "variant": "depth 10"
+  },
+  {
+   "name": "heading+hybrid+rerank [depth 20]",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "hybrid+rerank",
+    "first_stage": "hybrid",
+    "model": {
+     "role": "reranker",
+     "repo": "cross-encoder/ms-marco-MiniLM-L6-v2",
+     "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+     "fingerprint": "0e2c45aeb296729b1ef9964f8b7dc072c5508101671d9125a4bb3ceb98a044bc",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "activation": "none (raw logits)",
+     "truncation": "the passage's end, never the question"
+    },
+    "depth": 20,
+    "input": "(question, chunk text as indexed)",
+    "order": "cross-encoder score; ties keep first-stage order; chunks below the depth keep first-stage order",
+    "hybrid": {
+     "fusion": "reciprocal rank",
+     "k": 60,
+     "inputs": [
+      "bm25",
+      "dense"
+     ],
+     "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+     "ranks": "every chunk",
+     "dense": {
+      "model": {
+       "role": "embedder",
+       "repo": "BAAI/bge-small-en-v1.5",
+       "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+       "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+       "device": "cpu",
+       "dtype": "float32",
+       "threads": 4,
+       "batch_size": 1,
+       "max_tokens": 512,
+       "platform": "Darwin arm64",
+       "torch": "2.15.0",
+       "transformers": "5.22.1",
+       "sentence-transformers": "6.2.0",
+       "tokenizers": "0.23.3",
+       "safetensors": "0.8.0",
+       "pooling": "the model's own (CLS)",
+       "normalized": true
+      },
+      "query_instruction": "Represent this sentence for searching relevant passages: ",
+      "document_instruction": "",
+      "similarity": "cosine (float64 dot product of unit float32 vectors)",
+      "ranks": "every chunk",
+      "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+     }
+    },
+    "ranks": "every chunk"
+   },
+   "breadcrumb": true,
+   "variant": "depth 20"
+  },
+  {
+   "name": "heading+hybrid+rerank [depth 50]",
+   "chunker": {
+    "name": "heading",
+    "max_chars": 1200,
+    "overlap": 200
+   },
+   "retriever": {
+    "name": "hybrid+rerank",
+    "first_stage": "hybrid",
+    "model": {
+     "role": "reranker",
+     "repo": "cross-encoder/ms-marco-MiniLM-L6-v2",
+     "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+     "fingerprint": "0e2c45aeb296729b1ef9964f8b7dc072c5508101671d9125a4bb3ceb98a044bc",
+     "device": "cpu",
+     "dtype": "float32",
+     "threads": 4,
+     "batch_size": 1,
+     "max_tokens": 512,
+     "platform": "Darwin arm64",
+     "torch": "2.15.0",
+     "transformers": "5.22.1",
+     "sentence-transformers": "6.2.0",
+     "tokenizers": "0.23.3",
+     "safetensors": "0.8.0",
+     "activation": "none (raw logits)",
+     "truncation": "the passage's end, never the question"
+    },
+    "depth": 50,
+    "input": "(question, chunk text as indexed)",
+    "order": "cross-encoder score; ties keep first-stage order; chunks below the depth keep first-stage order",
+    "hybrid": {
+     "fusion": "reciprocal rank",
+     "k": 60,
+     "inputs": [
+      "bm25",
+      "dense"
+     ],
+     "input_ranks": "competition ranking (tied scores share the best rank); BM25 lists only chunks it scores above 0, dense lists every chunk",
+     "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')",
+     "ranks": "every chunk",
+     "dense": {
+      "model": {
+       "role": "embedder",
+       "repo": "BAAI/bge-small-en-v1.5",
+       "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+       "fingerprint": "ee93f59ff25c7be464578015dfec8cbeee404a8a26f75808723fd2352eab1da8",
+       "device": "cpu",
+       "dtype": "float32",
+       "threads": 4,
+       "batch_size": 1,
+       "max_tokens": 512,
+       "platform": "Darwin arm64",
+       "torch": "2.15.0",
+       "transformers": "5.22.1",
+       "sentence-transformers": "6.2.0",
+       "tokenizers": "0.23.3",
+       "safetensors": "0.8.0",
+       "pooling": "the model's own (CLS)",
+       "normalized": true
+      },
+      "query_instruction": "Represent this sentence for searching relevant passages: ",
+      "document_instruction": "",
+      "similarity": "cosine (float64 dot product of unit float32 vectors)",
+      "ranks": "every chunk",
+      "ties": "exact ties ordered by sha256('20261120:<question>:<chunk id>')"
+     }
+    },
+    "ranks": "every chunk"
+   },
+   "breadcrumb": true,
+   "variant": "depth 50"
+  }
+ ],
+ "baseline": "baseline (RAG Mini Chat)",
+ "scoring": {
+  "unit": "section (doc_id#anchor); a chunk retrieves a section when it holds at least min(min_overlap_chars, the section's body, all the section-body text the chunk holds) characters of that section's body",
+  "min_overlap_chars": 100,
+  "chunks_ranked": "lexical retrievers and bm25+rerank: every chunk with a positive score; dense, hybrid and hybrid+rerank: every chunk",
+  "rank_depth_sections": 10,
+  "k": [
+   1,
+   3,
+   5,
+   10
+  ],
+  "budgets_chars": [
+   1200,
+   2400,
+   4800,
+   9600
+  ],
+  "headline_budget_chars": 4800,
+  "gain": {
+   "1": 1.0,
+   "2": 3.0
+  }
+ },
+ "statistics": {
+  "bootstrap_resamples": 10000,
+  "confidence": 0.95,
+  "seed": 20261120,
+  "interval": "percentile bootstrap over questions; Wilson score interval for yes/no metrics",
+  "test": "paired sign-flip randomisation, two-sided; Holm-adjusted across configurations, per metric"
+ },
+ "environment": {
+  "python": "3.14.7",
+  "numpy": "2.5.5",
+  "scikit-learn": "1.9.1",
+  "pyyaml": "6.0.3",
+  "os": "Darwin arm64"
+ }
+}

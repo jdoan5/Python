@@ -36,7 +36,7 @@ from raglab.golden import (
 )
 from raglab.metrics import BUDGETS, HEADLINE_METRICS, LABELS
 from raglab.models import ROLES, ModelError, ModelLock, default_models_lock_path, fetch, local_dir, problems
-from raglab.report import budget_chart_svg, markdown_report
+from raglab.report import budget_chart_svg, cost_table, markdown_report, quality_cost_svg
 from raglab.retrieval import RETRIEVER_NAMES, RetrievalError, build_retriever
 from raglab.sections import SectionIndex
 from raglab.stats import RESAMPLES, SEED
@@ -438,7 +438,7 @@ def golden_agreement(
     file: Optional[Path] = typer.Option(None, help="Agreement file (default: golden/v1-agreement.json)."),
 ) -> None:
     """How often a second, blind judge agreed with the labels (exact agreement and Cohen's kappa)."""
-    path = file or default_golden_path().with_name(default_golden_path().stem + "-agreement.json")
+    path = file or default_golden_path(1).with_name("v1-agreement.json")  # v1's study; v2's blind round is v2-blind.json
     try:
         data = strict_json(path.read_text(encoding="utf-8"))
         r = agreement_report(data["items"], data.get("population"))
@@ -563,6 +563,7 @@ def eval_report(
     run_dir: Path = typer.Argument(..., help="A directory written by `eval run`."),
     markdown: bool = typer.Option(False, help="Print README-ready Markdown tables instead."),
     full: bool = typer.Option(False, help="With --markdown: every table for every configuration (TABLES.md)."),
+    cost: Optional[Path] = typer.Option(None, help="With --markdown: add the cost table from `raglab bench`'s output."),
 ) -> None:
     """Print a saved run's tables again."""
     try:
@@ -572,8 +573,13 @@ def eval_report(
     try:
         if markdown:
             print(markdown_report(summary, manifest, full=full), end="")  # plain print: no Rich wrapping in tables
+            if cost is not None:
+                timings = json.loads(cost.read_text(encoding="utf-8"))
+                print(f"\n### What each pipeline costs\n\n{cost_table(timings)}")
             return
         _print_summary(summary, manifest)
+    except OSError as e:
+        _fail(str(e))
     except (KeyError, TypeError, ValueError, RecursionError, ArithmeticError) as e:
         _fail(f"{run_dir} looks damaged ({type(e).__name__}: {e}); re-run `eval run` to regenerate it")
 
@@ -601,4 +607,31 @@ def eval_chart(
         _fail(str(e))
     except (ValueError, KeyError, TypeError, RecursionError, ArithmeticError) as e:
         _fail(f"{run_dir} looks damaged ({type(e).__name__}: {e}); re-run `eval run` to regenerate it")
+    console.print(f"Wrote {escape(str(out))}")
+
+
+@eval_app.command("cost-chart")
+def eval_cost_chart(
+    run_dir: Path = typer.Argument(..., help="A directory written by `eval run`."),
+    cost: Path = typer.Option(Path("results/cost.json"), help="Timings written by `raglab bench`."),
+    out: Path = typer.Option(Path("quality_cost.svg"), help="Where to write the SVG."),
+) -> None:
+    """Ranking quality against median time per question, for the heading-chunk pipelines (added after freeze point 2)."""
+    try:
+        _, summary = load_run(run_dir)
+        timings = json.loads(cost.read_text(encoding="utf-8"))
+        machine, ms = timings["machine"], timings["configurations"]
+        times = [ms[n]["p50_ms"] / ms["heading+hybrid"]["p50_ms"] for n in ms if n.startswith("heading+hybrid+rerank")]
+        svg = quality_cost_svg(
+            summary, timings,
+            # Exploratory (link 4 was never reached): analysis/extras.py finds no depth measurably above the hybrid.
+            f"Reranking the hybrid took {min(times):.0f}–{max(times):.0f}× its time, for no measurable gain over it",
+            f"Exploratory · {summary['questions']} questions · heading chunks with the breadcrumb · "
+            f"{machine['chip']}, {timings['threads']} threads, batch 1",
+        )
+        out.write_text(svg, encoding="utf-8", newline="\n")
+    except OSError as e:
+        _fail(str(e))
+    except (ValueError, KeyError, TypeError, RecursionError, ArithmeticError) as e:
+        _fail(f"{run_dir} or {cost} looks damaged ({type(e).__name__}: {e})")
     console.print(f"Wrote {escape(str(out))}")

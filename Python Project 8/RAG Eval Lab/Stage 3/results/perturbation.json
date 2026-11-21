@@ -1,0 +1,15 @@
+{
+ "runs": 20,
+ "questions": 98,
+ "top10_changed_share": {
+  "heading+bm25": 0.0,
+  "heading+hybrid+rerank": 0.0,
+  "heading+hybrid": 0.0,
+  "heading+dense": 0.0,
+  "heading+bm25+rerank": 0.0
+ },
+ "link1_mrr@10_difference": {
+  "unperturbed": 0.08996193715581458,
+  "largest_change": 0.0
+ }
+}

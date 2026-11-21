@@ -438,8 +438,10 @@ def test_a_fresh_run_reproduces_the_committed_results(real_docs, real_models, tm
     lock = CorpusLock.load(default_lock_path())
     index = SectionIndex(real_docs)
     run = run_configs(real_docs, golden.questions, EVALUATED, index)
-    save_run(tmp_path, build_manifest(golden, lock, EVALUATED), summarize(golden.questions, EVALUATED, run),
-             golden.questions, run)
+    # As `eval run` does: the blind round's grades feed the label check (without them it would be null).
+    blind = json.loads(golden.path.with_name(f"{golden.path.stem}-blind.json").read_text(encoding="utf-8"))["items"]
+    save_run(tmp_path, build_manifest(golden, lock, EVALUATED),
+             summarize(golden.questions, EVALUATED, run, blind=blind), golden.questions, run)
     for name in ("summary.json", "questions.jsonl"):
         assert (tmp_path / name).read_bytes() == (results / name).read_bytes(), name
     fresh, committed = (json.loads((d / "manifest.json").read_text()) for d in (tmp_path, results))
@@ -463,6 +465,24 @@ def test_every_table_in_the_readme_is_the_generated_one():
     assert len(tables) >= 8
     for table in tables:
         assert table in readme, table.splitlines()[0]
+
+
+@needs_results
+def test_the_readmes_cost_table_is_the_generated_one():
+    from raglab.report import cost_table
+
+    stage = Path(__file__).resolve().parents[1]
+    cost = json.loads((stage / "results" / "cost.json").read_text(encoding="utf-8"))
+    assert cost_table(cost) in (stage / "README.md").read_text(encoding="utf-8")
+
+
+@needs_results
+def test_tables_md_is_the_generated_full_report():
+    from raglab.report import markdown_report
+
+    stage = Path(__file__).resolve().parents[1]
+    manifest, summary = load_run(stage / "results")
+    assert markdown_report(summary, manifest, full=True) in (stage / "TABLES.md").read_text(encoding="utf-8")
 
 
 # --- Stage 3: the confirmatory chain, on synthetic results with known answers --------------------

@@ -152,7 +152,9 @@ def confirmatory_table(summary: Mapping) -> str:
         lines += ["", "Label check, link 1 on the blind round's grades:", "", *head,
                   _test_row(LABELS[check["metric"]], check["on_blind_labels"]), "",
                   f"Answer-versus-not agreement with the new labels: κ = {check['kappa_answer_vs_not']:.2f} "
-                  f"over {check['kappa_items']} labels. Verdict: **{check['verdict']}**. "
+                  f"over {check['kappa_items']} labels. Verdict: **{check['verdict']}**"
+                  # PLAN.md: a fragile Supported is called fragile wherever it is stated.
+                  f"{', its blind-round confirmation fragile per page' if check['on_blind_labels'].get('fragile') else ''}. "
                   f"Stage 4 inherits {check['stage4_inherits']}."]
     return "\n".join(lines)
 
@@ -295,3 +297,135 @@ def budget_chart_svg(
                        f'{value:.2f}</text>')
     out.append("</svg>")
     return "\n".join(out) + "\n"
+
+
+# --- Stage 3's chart: ranking quality beside what a question costs (added after freeze point 2) -------
+
+# The heading-chunk pipelines with the breadcrumb, grouped by family: (configuration, label, palette slot).
+COST_CHART_ROWS = (
+    (("heading+tfidf", "TF-IDF", 2), ("heading+bm25", "BM25", 2)),
+    (("heading+dense", "dense", 1), ("heading+hybrid", "hybrid (BM25 + dense)", 1)),
+    (("heading+hybrid+rerank [depth 10]", "hybrid, top 10 reranked", 3),
+     ("heading+hybrid+rerank [depth 20]", "hybrid, top 20 reranked", 3),
+     ("heading+hybrid+rerank [depth 50]", "hybrid, top 50 reranked", 3),
+     ("heading+hybrid+rerank", "hybrid, top 100 reranked", 3),
+     ("heading+bm25+rerank", "BM25, top 100 reranked", 3)),
+)
+_FAMILIES = ((2, "lexical"), (1, "embeddings"), (3, "reranked by the cross-encoder"))
+
+
+def quality_cost_svg(summary: Mapping, cost: Mapping, title: str, subtitle: str, metric: str = "mrr@10") -> str:
+    """Two panels sharing one row per pipeline: a metric's mean with its 95% interval, and the median time
+    per question on a log scale. One axis per panel; rows in design order, grouped by family, never by score."""
+    import math
+
+    groups = [[r for r in g if r[0] in summary["summary"] and r[0] in cost["configurations"]] for g in COST_CHART_ROWS]
+    groups = [g for g in groups if g]
+    rows = [r for g in groups for r in g]
+    if not rows:
+        raise ValueError("none of the chart's pipelines is in both the run and the timings")
+    cells = {n: summary["summary"][n][metric] for n, _, _ in rows}
+    ms = {n: cost["configurations"][n]["p50_ms"] for n, _, _ in rows}
+    row_h, gap, top = 28, 14, 150
+    height = top + len(rows) * row_h + (len(groups) - 1) * gap + 64
+    width = 760
+    a0, a1 = 222, 452  # the metric panel
+    b0, b1 = 512, 686  # the time panel
+    v_lo = math.floor(min(c["lo"] for c in cells.values()) * 10) / 10
+    v_hi = math.ceil(max(c["hi"] for c in cells.values()) * 10) / 10
+    t_lo = 10 ** math.floor(math.log10(max(min(ms.values()), 1e-3)))
+    t_hi = 10 ** math.ceil(math.log10(max(ms.values())))
+
+    def xa(v: float) -> float:
+        return a0 + (v - v_lo) / (v_hi - v_lo) * (a1 - a0)
+
+    def xb(t: float) -> float:
+        return b0 + (math.log10(t) - math.log10(t_lo)) / (math.log10(t_hi) - math.log10(t_lo)) * (b1 - b0)
+
+    def css(mode: str) -> str:
+        return "".join(f"--{k}:{v};" for k, v in _THEME[mode].items())
+
+    def fmt_ms(t: float) -> str:
+        return f"{t:,.0f} ms" if t >= 10 else f"{t:.1f} ms" if t >= 0.1 else f"{t:.2f} ms"
+
+    desc = "; ".join(f"{label}: {LABELS[metric]} {cells[n]['mean']:.2f} (95% interval {cells[n]['lo']:.2f} to "
+                     f"{cells[n]['hi']:.2f}), median {fmt_ms(ms[n])} per question" for n, label, _ in rows)
+    out = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" '
+        f'role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, Segoe UI, sans-serif">',
+        f'<title id="t">{_esc(title)}</title>', f'<desc id="d">{_esc(desc)}</desc>',
+        f"<style>svg{{{css('light')}}}@media (prefers-color-scheme: dark){{svg{{{css('dark')}}}}}</style>",
+        f'<rect width="{width}" height="{height}" rx="8" fill="var(--surface)"/>',
+        f'<text x="24" y="34" font-size="17" font-weight="600" fill="var(--text)">{_esc(title)}</text>',
+        f'<text x="24" y="56" font-size="13" fill="var(--text2)">{_esc(subtitle)}</text>',
+    ]
+    lx = 24.0
+    for slot, label in _FAMILIES:
+        out.append(f'<circle cx="{lx + 5}" cy="84" r="5" fill="var(--s{slot})"/>')
+        out.append(f'<text x="{lx + 15}" y="88" font-size="12.5" fill="var(--text2)">{_esc(label)}</text>')
+        lx += 15 + 6.7 * len(label) + 22
+    bottom = height - 64
+    out.append(f'<text x="{a0}" y="{top - 22}" font-size="13.5" font-weight="600" fill="var(--text)">'
+               f'{_esc(LABELS[metric])}, mean and 95% interval</text>')
+    out.append(f'<text x="{b0}" y="{top - 22}" font-size="13.5" font-weight="600" fill="var(--text)">'
+               'Median time per question</text>')
+    steps = round((v_hi - v_lo) / 0.1)
+    for i in range(steps + 1):
+        v = v_lo + i * 0.1
+        out.append(f'<line x1="{xa(v):.1f}" y1="{top - 8}" x2="{xa(v):.1f}" y2="{bottom}" stroke="var(--grid)" stroke-width="1"/>')
+        out.append(f'<text x="{xa(v):.1f}" y="{bottom + 20}" font-size="12" text-anchor="middle" fill="var(--muted)">{v:.1f}</text>')
+    t = t_lo
+    while t <= t_hi * 1.0001:
+        out.append(f'<line x1="{xb(t):.1f}" y1="{top - 8}" x2="{xb(t):.1f}" y2="{bottom}" stroke="var(--grid)" stroke-width="1"/>')
+        label = f"{t:,.0f}" if t >= 1 else f"{t:g}"
+        out.append(f'<text x="{xb(t):.1f}" y="{bottom + 20}" font-size="12" text-anchor="middle" fill="var(--muted)">{label}</text>')
+        t *= 10
+    out.append(f'<text x="{(b0 + b1) / 2:.1f}" y="{bottom + 40}" font-size="12" text-anchor="middle" fill="var(--muted)">'
+               'milliseconds, log scale, caches off</text>')
+    if "heading+bm25" in cells:  # the incumbent, as a reference for every row
+        ref = xa(cells["heading+bm25"]["mean"])
+        out.append(f'<line x1="{ref:.1f}" y1="{top - 8}" x2="{ref:.1f}" y2="{bottom}" stroke="var(--axis)" '
+                   'stroke-width="1.5" stroke-dasharray="4 3"/>')
+        out.append(f'<text x="{ref:.1f}" y="{bottom + 40}" font-size="12" text-anchor="middle" fill="var(--muted)">'
+                   f'BM25&#8217;s mean</text>')
+    y = float(top)
+    for g, group in enumerate(groups):
+        if g:
+            y += gap
+        for n, label, slot in group:
+            cy = y + row_h / 2
+            c = cells[n]
+            out.append(f'<text x="24" y="{cy + 4:.1f}" font-size="12.5" fill="var(--text)">{_esc(label)}</text>')
+            out.append(f'<line x1="{xa(c["lo"]):.1f}" y1="{cy:.1f}" x2="{xa(c["hi"]):.1f}" y2="{cy:.1f}" '
+                       f'stroke="var(--s{slot})" stroke-width="2" stroke-linecap="round"/>')
+            out.append(f'<circle cx="{xa(c["mean"]):.1f}" cy="{cy:.1f}" r="5" fill="var(--s{slot})" '
+                       'stroke="var(--surface)" stroke-width="2"/>')
+            out.append(f'<text x="{xa(c["hi"]) + 8:.1f}" y="{cy + 4:.1f}" font-size="12" paint-order="stroke" stroke="var(--surface)" stroke-width="4" stroke-linejoin="round" fill="var(--text2)">'
+                       f'{c["mean"]:.2f}</text>')
+            out.append(f'<circle cx="{xb(ms[n]):.1f}" cy="{cy:.1f}" r="5" fill="var(--s{slot})" '
+                       'stroke="var(--surface)" stroke-width="2"/>')
+            out.append(f'<text x="{xb(ms[n]) + 9:.1f}" y="{cy + 4:.1f}" font-size="12" paint-order="stroke" stroke="var(--surface)" stroke-width="4" stroke-linejoin="round" fill="var(--text2)">'
+                       f'{_esc(fmt_ms(ms[n]))}</text>')
+            y += row_h
+    out.append("</svg>")
+    return "\n".join(out) + "\n"
+
+
+def _amount(x: float) -> str:
+    return f"{x:,.0f}" if x >= 10 else f"{x:.1f}" if x >= 0.1 else f"{x:.2f}"
+
+
+def cost_table(cost: Mapping) -> str:
+    """What each heading-chunk pipeline costs per question, from `raglab bench` (results/cost.json; added after
+    freeze point 2). Measured on one machine, outside the reproducible results; nothing in the evaluation reads it."""
+    lines = ["| configuration | median ms per question | 95th percentile ms | reranking, mean ms "
+             "| CPU-seconds per 1,000 questions |", "|---|---:|---:|---:|---:|"]
+    for group in COST_CHART_ROWS:
+        for name, _, _ in group:
+            c = cost["configurations"].get(name)
+            if c is None:
+                continue
+            rerank = c["steps_mean_ms"]["reranking"]
+            lines.append(f"| {name} | {_amount(c['p50_ms'])} | {_amount(c['p95_ms'])} "
+                         f"| {_amount(rerank) if rerank else '–'} | {_amount(c['cpu_seconds_per_1000_questions'])} |")
+    return "\n".join(lines)
