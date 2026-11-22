@@ -1,4 +1,4 @@
-# RAG Eval Lab
+#  RAG Eval Lab
 
 Question answering over the FastAPI documentation — built so that every choice
 in the pipeline is **measured** rather than assumed.
