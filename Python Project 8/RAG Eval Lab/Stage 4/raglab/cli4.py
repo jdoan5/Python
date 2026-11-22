@@ -135,17 +135,21 @@ def budget_acknowledge(us_inference_phase: str = typer.Option("", "--us-inferenc
     """Accept flagged settlements so sending can go on. Run it yourself, in your own terminal.
 
     Without --us-inference it accepts every flag shown. With it, it accepts
-    US-only inference (billed at 1.1x) for one phase, past and future; the
-    scope rule then projects at 1.1x. Other flags (a cost above its bound,
-    another model, another tier) are always accepted one by one.
+    US-only inference (billed at 1.1x) for one phase, past and future, so it
+    stops nothing more there; accepted for judging, the scope rule projects at
+    1.1x. Other flags (a cost above its bound, another model, another tier)
+    are always accepted one by one.
     """
     try:
         with open_ledger() as ledger:
             if us_inference_phase:
-                typed_by_developer(f"accept us inference for {us_inference_phase}",
-                                   f"Every {us_inference_phase} call will cost 1.1x. To accept, type exactly:")
-                ledger.accept_for_phase(us_inference_phase, "us_inference", reason)
-                console.print(f"US-only inference accepted for {us_inference_phase}")
+                if us_inference_phase not in LEDGER_PHASE:
+                    raise LedgerError(f"--us-inference takes a phase: {', '.join(PHASES)}")
+                booked = LEDGER_PHASE[us_inference_phase]  # pilot-judging's calls are booked under pilot
+                typed_by_developer(f"accept us inference for {booked}",
+                                   f"Every {booked} call will cost 1.1x. To accept, type exactly:")
+                ledger.accept_for_phase(booked, "us_inference", reason)
+                console.print(f"US-only inference accepted for {booked}")
                 return
             flagged = ledger.state.unacknowledged()
             if not flagged:
@@ -347,9 +351,8 @@ def _live(auth_phase: str, requests_path: Path, planned_ids: frozenset[str]):
 def gen_submit(which: str = typer.Option("pilot", "--set", help="pilot or golden"),
                limit: int = typer.Option(0, help="submit at most this many batches now (0: as many as the caps allow)")) -> None:
     """Count, reserve and submit the set's requests not yet answered, in batches. Billed: needs the authorization."""
-    from raglab.ledger import CapExceeded
     from raglab.plan4 import as_request, count_all, read_plan
-    from raglab.runner import RunStopped, submit_batch
+    from raglab.runner import RunStopped, submit_wave
 
     auth_phase = _auth_phase(which)
     phase = LEDGER_PHASE[auth_phase]
@@ -367,8 +370,14 @@ def gen_submit(which: str = typer.Option("pilot", "--set", help="pilot or golden
             given_up = [line for line in planned if failed.get(line.custom_id, 0) > RESUBMITS]
             if given_up:
                 console.print(f"{len(given_up)} request(s) failed twice at the API and are left as status error")
+            lost = [line for line in planned if line.custom_id in ledger.state.answered_ids()
+                    and line.custom_id not in store]
+            if lost:
+                console.print(f"{len(lost)} request(s) were answered and paid for, but their responses aren't in "
+                              "the store: restore them with `gen collect --refetch <group>`, never by paying again")
             todo = [line for line in planned if line.mode == "batch" and line.custom_id not in store
-                    and not ledger.state.blocking(line.custom_id) and failed.get(line.custom_id, 0) <= RESUBMITS]
+                    and not ledger.state.blocking(line.custom_id) and failed.get(line.custom_id, 0) <= RESUBMITS
+                    and line.custom_id not in ledger.state.answered_ids()]
             if not todo:
                 console.print("nothing to submit: every planned request is answered or in a batch")
                 return
@@ -379,19 +388,7 @@ def gen_submit(which: str = typer.Option("pilot", "--set", help="pilot or golden
                                                                   ledger.pricing)}
             reqs = sorted((as_request(counted[l.custom_id], bodies[l.custom_id]) for l in todo),
                           key=lambda r: interleave_key(r.custom_id))
-            size = params.BATCH_MAX[params.GENERATOR]
-            sent = 0
-            for start in range(0, len(reqs), size):
-                if limit and sent >= limit:
-                    break
-                try:
-                    group = submit_batch(ledger, store, transport, phase, reqs[start:start + size], gate)
-                except CapExceeded as e:
-                    console.print(f"[yellow]stopping for now:[/yellow] {escape(str(e))}. Collect results, then submit "
-                                  "again: settled batches free their reservations.")
-                    break
-                sent += 1
-                console.print(f"submitted {group}: {len(reqs[start:start + size])} requests")
+            submit_wave(ledger, store, transport, phase, reqs, gate, limit=limit, report=console.print)
     except (RunStopped, LedgerError, AuthorizationError, ValueError, OSError) as e:
         _fail(str(e))
     except Exception as e:  # noqa: BLE001 - FreezeError, LlmError: all stop with their message
@@ -473,6 +470,7 @@ def collect_groups(phase: str, planned: dict, bodies: dict, only: set[str]) -> N
         groups = sorted({g for (g, _), item in ledger.state.items.items()
                          if item.status == "sent" and ledger.state.groups[g]["phase"] == phase
                          and (ledger.state.groups[g]["sent"] or {}).get("batch_id")})
+        problems = []
         for group in groups:
             ids = [cid for (g, cid) in ledger.state.items if g == group]
             if not set(ids) <= only:
@@ -482,8 +480,16 @@ def collect_groups(phase: str, planned: dict, bodies: dict, only: set[str]) -> N
                     raise ValueError(f"{cid}: the rebuilt body differs from the planned one")
             # Only the identity of each request matters here: its tokens were reserved when it was sent.
             reqs = requests_by_id(Request(planned[cid].condition, bodies[cid], planned[cid].sample, 0) for cid in ids)
-            counts = collect_batch(ledger, store, transport, group, reqs)
+            try:  # one batch that can't be collected never blocks the others; collecting spends nothing
+                counts = collect_batch(ledger, store, transport, group, reqs)
+            except Exception as e:  # noqa: BLE001 - RunStopped (flags, after booking), ApiError, OSError
+                hint = ("the API no longer has it: if that's right, close it with `batch abandon`" if results_gone(e)
+                        else "run collect again")
+                problems.append(f"{group}: {type(e).__name__}: {e} ({hint})")
+                continue
             console.print(f"{group}: " + ", ".join(f"{k} {v}" for k, v in counts.items() if v))
+        if problems:
+            raise LedgerError("some batches weren't collected:\n  " + "\n  ".join(problems))
 
 
 SMOKE_REPORT = STAGE / "pilot" / "SMOKE.json"
@@ -573,6 +579,8 @@ def gen_timing() -> None:
     """The pilot's timing probe: 48 streamed standard calls, one at a time. Billed (pilot). Never scored."""
     from raglab.runner import RunStopped
 
+    if not smoke_passed():
+        _fail("the smoke test hasn't passed: run `gen smoke` first (PLAN.md, 'Smoke test')")
     try:
         results, costs = _send_pilot_lines("timing", stream=True)
     except (RunStopped, LedgerError, AuthorizationError, ValueError, OSError) as e:
@@ -682,6 +690,81 @@ def batch_orphan(group: str = typer.Argument(..., help="a standard-API group who
     except LedgerError as e:
         _fail(str(e))
     console.print(f"{group}: marked unknown; it still counts at its bound")
+
+
+GONE = (404, 410)  # a batch, or its results, the API no longer has
+
+
+def results_gone(e: Exception) -> bool:
+    from raglab.llm import ApiError
+
+    return isinstance(e, ApiError) and e.kind == "client" and e.status in GONE
+
+
+@batch_app.command("abandon")
+def batch_abandon(group: str = typer.Argument(..., help="a sent batch whose results can't be fetched any more"),
+                  reason: str = typer.Option(..., help="what you checked, e.g. the batch is past the API's 29 days")
+                  ) -> None:
+    """Close a sent batch whose results are gone (deleted, or past the API's retention): its open items are
+    marked unknown, stay counted at their bounds, and may be sent again. Run it yourself, in your own terminal.
+
+    It refuses while any of the batch's responses is in the store, and unless the
+    API (asked for free) says the batch has ended and its results can't be read.
+    Run again after an interruption, it finishes what it started.
+    """
+    from raglab.llm import AnthropicTransport, keychain_key
+    from raglab.store import Store
+
+    try:
+        with open_ledger() as ledger:
+            info = ledger.state.groups.get(group)
+            if info is None or info["mode"] != "batch" or not (info["sent"] or {}).get("batch_id"):
+                raise LedgerError(f"{group} isn't a sent batch")
+            batch_id = info["sent"]["batch_id"]
+            state = ledger.state
+            still = [i for (g, _), i in state.items.items() if g == group and i.status == "sent"]
+            abandoned = {e["custom_id"] for e in ledger.events() if e["event"] == "unknown" and e["group"] == group
+                         and str(e.get("reason", "")).startswith("abandoned:")}
+            halfway = [i for (g, c), i in state.items.items() if g == group and i.status == "unknown"
+                       and (g, c) not in state.cleared and c in abandoned]
+            if not still and not halfway:
+                raise LedgerError(f"{group} has nothing still open")
+            store = Store(api_dir() / "store" / f"{info['phase']}.jsonl")
+            stored = [i.custom_id for i in still if i.custom_id in store]
+            if stored:
+                raise LedgerError(f"{len(stored)} of {group}'s responses are in the store: run `gen collect` or "
+                                  "`judge collect`, which settles them from it")
+            if still:
+                transport = AnthropicTransport(keychain_key())
+                try:
+                    status = transport.batch_retrieve(batch_id)["processing_status"]
+                except Exception as e:  # noqa: BLE001
+                    if not results_gone(e):
+                        raise LedgerError(f"couldn't check {batch_id} ({e}): abandon only a batch the API says is "
+                                          "gone") from None
+                    status = None
+                if status is not None:
+                    if status != "ended":
+                        raise LedgerError(f"{batch_id} is {status}: let it end, then collect it")
+                    try:
+                        next(iter(transport.batch_results(batch_id)), None)
+                    except Exception as e:  # noqa: BLE001
+                        if not results_gone(e):
+                            raise LedgerError(f"couldn't read {batch_id}'s results ({e}): run collect again "
+                                              "later") from None
+                    else:
+                        raise LedgerError(f"{batch_id}'s results can still be fetched: run collect, not abandon")
+            closing = still + halfway
+            total = sum((i.bound for i in closing), Decimal(0))
+            typed_by_developer(f"abandon {group}", f"{len(closing)} request(s) of {group} stay counted at "
+                               f"{_usd(total)} and may be sent again. To close the batch, type exactly:")
+            for i in still:  # every item unknown first, then every one cleared: a rerun finishes either pass
+                ledger.mark_unknown(group, i.custom_id, f"abandoned: {reason}")
+            for i in closing:
+                ledger.resend(group, i.custom_id, f"abandoned: {reason}")
+    except (LedgerError, AuthorizationError) as e:
+        _fail(str(e))
+    console.print(f"{group}: {len(closing)} request(s) closed; they still count at their bounds")
 
 
 @batch_app.command("resend")

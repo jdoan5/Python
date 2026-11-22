@@ -161,10 +161,12 @@ def assemble(*, stored, questions, graded, judgments, gated, generation_ids, jud
     gen = {cid: stored[cid] for cid in generation_ids if cid in stored}
     haiku = defaultdict(list)
     by_condition = defaultdict(list)
+    labels = defaultdict(list)
     for s in gen.values():
         haiku[effort_key(s.line.condition)].append(int((settled_usage.get(s.line.custom_id) or {})
                                                         .get("output_tokens") or 0))
         by_condition[s.line.condition].append(s.answer)
+        labels[s.line.condition].append(f"{s.line.question} run {s.line.sample + 1}")
     judges = defaultdict(list)
     kinds = defaultdict(list)
     for cid, kind in judge_kinds.items():
@@ -174,7 +176,7 @@ def assemble(*, stored, questions, graded, judgments, gated, generation_ids, jud
             kinds[kind].append(settled_usage[cid])
     rule1 = max_tokens_rule(dict(haiku), dict(judges))
 
-    rule2 = prompt_fix_needed(dict(by_condition))
+    rule2 = prompt_fix_needed(dict(by_condition), labels=dict(labels))
     units_by_arm = {}
     for arm, (condition, sample) in ARMS.items():
         pairs = []
@@ -269,7 +271,9 @@ def render(report: Mapping) -> str:
     lines += ["", "## Rule 2: the answer prompt", "",
               f"Prompt for golden generation: `{report['answer_prompt']}`.",
               f"Fix needed: {'yes' if r2['needed'] else 'no'}" + (f" ({'; '.join(r2['reasons'])})" if r2["reasons"] else "")
-              + f". Format failures: {len(r2['format_failures'])}; truncated: {r2['truncated']}.",
+              + f". Answers failing a format check: {r2['failing_answers']} (one is allowed); truncated: "
+              f"{r2['truncated']}.",
+              *(["", *[f"- {line}" for line in r2["format_failures"]], ""] if r2["format_failures"] else []),
               f"Cited share of 40+ character units: hhr {_pct(r2['prose_citation_share']['hhr'])}, baseline "
               f"{_pct(r2['prose_citation_share']['baseline'])}; code units {_pct(r2['code_citation_share'])}.",
               f"Uncited units F labels claims: hhr {_pct(r2['uncited_claim_share'].get('hhr'))}, baseline "

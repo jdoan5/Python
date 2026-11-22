@@ -149,3 +149,43 @@ def test_the_key_fallback_trims_from_the_end_of_the_priority_order_never_the_tar
     assert removed == [{"location": "tutorial/errors#errors", "trimmed": True}]  # undelivered: lowest priority
     with pytest.raises(v3.AnnotationError, match="besides the target"):
         v3.reference_for(labels, "tutorial/errors#raise-one", delivered, by_id, index, trim=3)
+
+
+def test_a_merge_never_rewrites_a_file_once_its_phase_is_authorized() -> None:
+    import json
+
+    from raglab import cli4
+
+    record = cli4.api_dir() / "authorization.json"  # a temp folder in tests
+    record.write_text(json.dumps([{"phase": "pilot-judging", "commit": "c" * 40}]))
+    v3.refuse_if_frozen("pilot", "pilot/labels.json")  # a draft, even if pushed: allowed
+    record.write_text(json.dumps([{"phase": "pilot", "commit": "b" * 40}]))
+    with pytest.raises(v3.AnnotationError, match="frozen: phase 'pilot' was authorized at commit bbbbbbbb"):
+        v3.refuse_if_frozen("pilot", "pilot/labels.json", "pilot/keys.json")
+    record.unlink()
+
+
+def test_the_swap_merge_records_each_confirmed_passages_sha256(tmp_path, monkeypatch) -> None:
+    import hashlib
+    import json
+
+    from raglab.planted import Candidate
+
+    def cand(kind, unit):
+        return Candidate(kind, "hhr-4.8k-med", "p01", "r" + "a" * 56 + "s00", unit, f"claim {unit}",
+                         (f"passage {unit}",), (("d", 0, 1),), None, unit)
+
+    entries, key_of = v3.swap_entries([cand("swap-lexical", "U1"), cand("plant-cross", "U2")])
+    sheet = tmp_path / "swaps-01" / "worksheet.json"
+    info = v3.write_worksheet(sheet.parent, entries)
+    manifest = tmp_path / "swaps-manifest.json"
+    manifest.write_text(json.dumps({"swaps": info, "key_of": key_of}))
+    answers = tmp_path / "answers.json"
+    answers.write_text(json.dumps([{"id": e["id"], "states": "no", "quote": "", "others": "no"} for e in entries]))
+    monkeypatch.setattr(v3, "PILOT", tmp_path)
+    monkeypatch.setattr(v3, "refuse_if_frozen", lambda phase, *rels: None)
+    v3.cmd_pilot_merge_swaps(manifest, answers)
+    checks = json.loads((tmp_path / "checks.json").read_text())
+    key = f"{'r' + 'a' * 56 + 's00'}:swap-lexical:U1"
+    assert checks["confirmed"][key] is True and checks["confirmed"][f"{'r' + 'a' * 56 + 's00'}:plant-cross:U2"] is False
+    assert checks["passage_sha256"][key] == hashlib.sha256("passage U1".encode()).hexdigest()

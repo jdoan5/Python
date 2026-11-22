@@ -41,18 +41,20 @@ def max_tokens_rule(haiku_outputs: Mapping[str, Sequence[int]], judge_outputs: M
     return {"haiku": haiku, "judge": judges}
 
 
-def format_failures(answers: Sequence[Answer]) -> list[str]:
-    """Rule 2's format checks, one line per failing answer."""
+def format_failures(answers: Sequence[Answer], labels: Sequence[str] | None = None) -> list[str]:
+    """Rule 2's format checks, one line per failed check, each named by its answer's label (condition, question
+    and run in the pilot report; its index otherwise). One answer can fail two checks."""
     out = []
     for n, a in enumerate(answers):
+        name = labels[n] if labels is not None else f"answer {n}"
         if a.status != "ok":
             continue
         if not a.abstained and looks_like_abstention(a.text) and not any(u.citations for u in a.units):
-            out.append(f"answer {n}: an abstention not in the prescribed words")
+            out.append(f"{name}: an abstention not in the prescribed words")
         elif not a.abstained and not any(u.citations for u in a.units):
-            out.append(f"answer {n}: answers without citing anything")
+            out.append(f"{name}: answers without citing anything")
         if len(a.text.split()) > 300:
-            out.append(f"answer {n}: {len(a.text.split())} words")
+            out.append(f"{name}: {len(a.text.split())} words")
     return out
 
 
@@ -70,7 +72,8 @@ def prose_citation_share(answers: Sequence[Answer]) -> float | None:
 
 
 def prompt_fix_needed(by_condition: Mapping[str, Sequence[Answer]], hhr: Sequence[str] = ("hhr-4.8k-med",),
-                      baseline: Sequence[str] = ("base-4.8k-med",)) -> dict:
+                      baseline: Sequence[str] = ("base-4.8k-med",),
+                      labels: Mapping[str, Sequence[str]] | None = None) -> dict:
     """Rule 2: the answer prompt may be fixed once, and only on these four grounds.
 
     `by_condition` holds the answer-v1 answers by condition, closed-book left
@@ -79,8 +82,13 @@ def prompt_fix_needed(by_condition: Mapping[str, Sequence[Answer]], hhr: Sequenc
     answers, each arm on its own.
     """
     answers = [a for name, group in by_condition.items() if name != "closed-med" for a in group]
-    failures = format_failures(answers)
-    failing = {line.split(":", 1)[0] for line in failures}  # "answer N": one answer may fail two checks
+    failures = []
+    for name, group in by_condition.items():
+        if name == "closed-med":
+            continue
+        names = [f"{name} {x}" for x in labels[name]] if labels else [f"{name} answer {n}" for n in range(len(group))]
+        failures += format_failures(group, names)
+    failing = {line.split(":", 1)[0] for line in failures}  # one answer may fail two checks
     code = code_citation_share(answers)
     shares = {"hhr": prose_citation_share([a for c in hhr for a in by_condition.get(c, ())]),
               "baseline": prose_citation_share([a for c in baseline for a in by_condition.get(c, ())])}

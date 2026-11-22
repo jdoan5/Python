@@ -201,14 +201,24 @@ def test_rate_limits_and_server_errors_are_retried_at_no_cost(ledger, store) -> 
     assert ledger.state.settled() == Decimal("0.0002")
 
 
-def test_repeated_server_errors_stop_the_run(ledger, store) -> None:
+def test_repeated_overload_errors_stop_the_run_at_no_cost(ledger, store) -> None:
     def down(body):
-        raise ApiError("server", 500)
+        raise ApiError("server", 529)
 
     with pytest.raises(RunStopped):
         send_standard(ledger, store, FakeTransport(down), "pilot", req(), OPEN, sleep=lambda s: None)
     assert ledger.state.committed() == 0
     assert sum(1 for e in ledger.events() if e["event"] == "reserve") == 6
+
+
+def test_a_500_may_follow_work_that_was_billed_so_it_stops_and_stays_counted(ledger, store) -> None:
+    for status in (500, 502, 504, 524):
+        r = req(20 + status)
+        with pytest.raises(RunStopped, match="may have been billed"):
+            send_standard(ledger, store, FakeTransport(lambda body, s=status: (_ for _ in ()).throw(
+                ApiError("server", s))), "pilot", r, OPEN, sleep=lambda s: None)
+        assert ledger.state.blocking(r.custom_id)  # unknown, counted at its bound, until a person resends it
+    assert ledger.summary()["unknown"] == 4
 
 
 def test_a_dropped_connection_stops_the_run_and_a_second_process_cant_resend_it(ledger, store) -> None:
@@ -355,10 +365,9 @@ def test_a_second_paid_attempt_at_an_answered_request_is_refused_before_it_is_se
     # Even with the store lost (iCloud, say), the ledger knows the request was answered and paid for.
     empty = Store(store.path.with_name("lost.jsonl"))
     calls = len(api.calls)
+    assert submit_batch(ledger, empty, api, "main", reqs, OPEN) is None  # skipped: answered and paid for
     with pytest.raises(LedgerError, match="already answered"):
-        submit_batch(ledger, empty, api, "main", reqs, OPEN)
-    with pytest.raises(LedgerError, match="already answered"):
-        send_standard(ledger, empty, api, "main", reqs[0], OPEN)
+        send_standard(ledger, empty, api, "main", reqs[0], OPEN)  # the ledger refuses it in any case
     assert len(api.calls) == calls  # nothing went out
 
 
@@ -443,21 +452,68 @@ def test_a_response_from_a_model_with_no_price_settles_at_its_bound(ledger, stor
     assert item.status == "settled" and item.cost == item.bound  # never left open, never undercounted
 
 
-def test_a_reservation_interrupted_before_sending_is_released(ledger, store, monkeypatch) -> None:
-    calls = {"n": 0}
-    real = ledger.mark_sent
+@pytest.mark.parametrize("failing_fsync, healed", [(3, True), (4, False)])
+def test_a_failed_mark_sent_writes_nothing_more_and_reopening_heals_it(tmp_path, store, monkeypatch, failing_fsync,
+                                                                      healed) -> None:
+    """An interrupt after the 'sent' line reached the ledger file: this process writes nothing more, and the next
+    open reads what reached disk (healing a mirror one event behind). Before this rule, a 'release' written after
+    'sent' left a ledger no command could open. Fsync 3 is the ledger file's for 'sent' (the mirror never gets
+    the line); fsync 4 is the mirror's (both copies have it)."""
+    import os as os_module
 
+    caps = Caps(total=Decimal("1.00"), phases={"pilot": Decimal("0.50")})
+    pricing = Pricing.load(STAGE / "pricing.json")
+    path, mirror = tmp_path / "ledger.jsonl", tmp_path / "mirror" / "ledger.jsonl"
+    real_fsync = os_module.fsync
+    calls = {"n": 0}
+    with Ledger(path, pricing, caps, mirror=mirror) as ledger:
+        def flaky_fsync(fd):
+            calls["n"] += 1
+            if calls["n"] == failing_fsync:
+                raise KeyboardInterrupt
+            return real_fsync(fd)
+
+        monkeypatch.setattr(os_module, "fsync", flaky_fsync)
+        with pytest.raises(KeyboardInterrupt):
+            send_standard(ledger, store, FakeTransport(answer), "pilot", req(13), OPEN)
+        monkeypatch.setattr(os_module, "fsync", real_fsync)
+        with pytest.raises(LedgerError, match="interrupted"):
+            ledger.mark_unknown("pilot-00001", req(13).custom_id, "anything")  # refused: disk may be ahead
+    with Ledger(path, pricing, caps, mirror=mirror) as reopened:
+        (item,) = reopened.state.items.values()
+        assert item.status == "sent" and bool(reopened.repairs) is healed
+        reopened.mark_unknown(item.group, item.custom_id, "orphaned")  # what `batch orphan` does
+        assert reopened.state.blocking(item.custom_id)
+
+
+def test_a_failed_mark_sent_before_any_write_leaves_a_reservation_orphan_can_release(ledger, store,
+                                                                                    monkeypatch) -> None:
     def boom(group, **kw):
-        calls["n"] += 1
         raise KeyboardInterrupt
 
     monkeypatch.setattr(ledger, "mark_sent", boom)
     with pytest.raises(KeyboardInterrupt):
         send_standard(ledger, store, FakeTransport(answer), "pilot", req(11), OPEN)
     (item,) = ledger.state.items.values()
-    assert item.status == "released" and not ledger.state.blocking(req(11).custom_id)
-    monkeypatch.setattr(ledger, "mark_sent", real)
-    assert send_standard(ledger, store, FakeTransport(answer), "pilot", req(11), OPEN).outcome == "succeeded"
+    assert item.status == "reserved" and [e["event"] for e in ledger.events()] == ["reserve"]
+
+
+def test_a_500_on_batch_create_keeps_the_reservation_for_reconcile(ledger, store) -> None:
+    reqs = [req(30), req(31)]
+    api = FakeTransport(answer)
+    api.batch_create = lambda requests: (_ for _ in ()).throw(ApiError("server", 502))
+    with pytest.raises(RunStopped, match="batch reconcile"):
+        submit_batch(ledger, store, api, "main", reqs, OPEN)
+    assert all(i.status == "reserved" for i in ledger.state.items.values())  # never released: it may exist
+    api2 = FakeTransport(answer)
+    with pytest.raises(RunStopped, match="reconcile"):
+        submit_batch(ledger, store, api2, "main", reqs, OPEN)  # no new batch while that create is unresolved
+    api.batch_create = lambda requests: (_ for _ in ()).throw(ApiError("server", 529))
+    other = [req(32)]
+    ledger.release(next(iter(ledger.state.groups)), "reconcile found no batch")
+    with pytest.raises(RunStopped, match="was refused"):
+        submit_batch(ledger, store, api, "main", other, OPEN)  # overloaded: refused before any work
+    assert not ledger.state.blocking(other[0].custom_id)
 
 
 def test_a_retried_server_error_is_settled_with_its_kind(ledger, store) -> None:
@@ -472,3 +528,20 @@ def test_a_retried_server_error_is_settled_with_its_kind(ledger, store) -> None:
     send_standard(ledger, store, FakeTransport(flaky), "pilot", req(12), OPEN, sleep=lambda s: None)
     details = sorted((i.outcome, i.detail) for i in ledger.state.items.values())
     assert details == [("errored", "server"), ("succeeded", None)]
+
+
+def test_a_wave_cuts_its_last_batch_to_what_the_caps_leave(tmp_path, store) -> None:
+    from raglab.runner import submit_wave
+
+    pricing = Pricing.load(STAGE / "pricing.json")
+    reqs = [req(100 + n, max_tokens=4000) for n in range(10)]
+    one = pricing.bound("claude-haiku-5-5", 1100, 4000, False, "batch")
+    caps = Caps(total=Decimal("1.00"), phases={"main": one * Decimal("3.5")})  # room for 3 of the 10, not a batch
+    api = FakeTransport(answer)
+    lines = []
+    with Ledger(tmp_path / "wave.jsonl", pricing, caps) as led:
+        assert submit_wave(led, store, api, "main", reqs, OPEN, report=lines.append) == 1
+        (created,) = [c for c in api.calls if c[0] == "batch_create"]
+        assert len(created[1]) == 3 and "room for 3 of 10" in lines[-1]
+        assert submit_wave(led, store, api, "main", reqs[3:], OPEN, report=lines.append) == 0  # nothing fits now
+        assert lines[-1].startswith("stopping for now")

@@ -203,3 +203,13 @@ def test_a_list_number_after_a_bullet_or_emphasis_never_ends_a_unit(setup) -> No
 
     assert units("- 1. Install FastAPI first.") == ["- 1. Install FastAPI first."]
     assert units("**2.** Then run the server.") == ["**2.** Then run the server."]
+
+
+def test_a_list_number_after_a_sentence_on_the_same_line_numbers_what_follows(setup) -> None:
+    _, _, docs = setup
+
+    def units(text):
+        return [u.text for u in parse_reply(message([{"type": "text", "text": text, "citations": None}]), docs).units]
+
+    assert units("1. First. 2. Second.") == ["1. First.", "2. Second."]
+    assert units("Do this. 3. Then that.") == ["Do this.", "3. Then that."]

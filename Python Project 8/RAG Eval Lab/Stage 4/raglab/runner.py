@@ -3,7 +3,8 @@
 Before each reservation the gate runs again: the authorization must still hold
 (PLAN.md, "Phases"), and the request must be on the authorized request list (or
 be one of the retries listed with it). Then:
-- a crash before sending leaves an unsent reservation, which `reconcile` releases;
+- a crash before sending leaves an unsent reservation: `batch reconcile` releases a
+  batch's once no batch on the API matches it, and `batch orphan` a standard one's;
 - a crash after sending but before the response is stored leaves the request
   counted at its bound (the money may be spent, so the cap still sees it);
 - a crash after storing but before settling leaves a stored response whose
@@ -12,10 +13,10 @@ be one of the retries listed with it). Then:
   refuses a second attempt while an earlier one is open or unknown, or once
   one has succeeded (even if the store lost its response).
 
-Standard requests retry rate limits and server errors (never billed) a fixed
-number of times. A dropped connection stops the run: the request may have been
-billed, so sending it again could pay twice, and only an explicit resend in the
-ledger lets it go out again. Creating a batch is never retried for the same
+Standard requests retry rate limits, 503s and 529s (refused before any work,
+never billed) a fixed number of times. A dropped connection or any other 5xx
+stops the run: the request may have been billed, so sending it again could pay
+twice, and only an explicit resend in the ledger lets it go out again. Creating a batch is never retried for the same
 reason, and no batch is created while an earlier create is unresolved. Any
 pricing flag on a settlement (a cost above its bound, another model, US-only
 inference, a priority tier) stops the run once the batch is booked.
@@ -26,6 +27,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 from typing import Callable, Iterable, Mapping, Sequence
 
 from raglab import params
@@ -161,17 +163,16 @@ def _send_one(ledger: Ledger, store: Store, phase: str, req: Request, gate: Gate
     server_errors = rate_limits = 0
     while True:
         group = ledger.reserve(phase, "standard", [req.planned()], gate.admit([req]))
-        try:
-            ledger.mark_sent(group)
-        except BaseException:  # never sent, so never billed: free the reservation rather than strand it
-            ledger.release(group, "interrupted before it was sent")
-            raise
+        # If mark_sent fails, its event may or may not be on disk, so nothing is written from here: the next
+        # open reads what reached disk, and `batch orphan` releases a reservation never sent or marks a sent one
+        # unknown.
+        ledger.mark_sent(group)
         try:
             message, timing = call(req.body)
         except ApiError as e:
             if e.billed_possibly:
                 ledger.mark_unknown(group, req.custom_id, str(e))
-                raise RunStopped(f"{req.custom_id}: no response ({e}). It may have been billed, so it was not "
+                raise RunStopped(f"{req.custom_id}: no clear answer ({e}). It may have been billed, so it was not "
                                  "sent again; it stays counted at its bound until a person resends it.") from None
             ledger.settle(group, req.custom_id, "errored", None, None, detail=e.kind)
             if e.kind == "rate_limited" and rate_limits < MAX_RATE_LIMIT_WAITS:
@@ -195,13 +196,63 @@ def _send_one(ledger: Ledger, store: Store, phase: str, req: Request, gate: Gate
         return store.get(req.custom_id) or record
 
 
+def fitting(ledger: Ledger, phase: str, reqs: Sequence[Request], mode: str = "batch") -> list[Request]:
+    """The longest prefix of `reqs` whose worst cases fit what the caps leave in this phase (PLAN.md, "Waves":
+    the last batches are split smaller to fit). Requests already stored or in flight cost nothing here."""
+    room = ledger.headroom(phase)
+    out, total = [], Decimal(0)
+    for r in reqs:
+        if r.custom_id in ledger.state.answered_ids() or ledger.state.blocking(r.custom_id):
+            out.append(r)  # submit_batch skips it; it reserves nothing
+            continue
+        bound = ledger.pricing.bound(r.model, r.input_tokens, r.max_tokens, r.cache_marked, mode)
+        if total + bound > room:
+            break
+        out.append(r)
+        total += bound
+    return out
+
+
+def submit_wave(ledger: Ledger, store: Store, transport: Transport, phase: str, reqs: Sequence[Request], gate: Gate,
+                limit: int = 0, report: Callable[[str], None] = print) -> int:
+    """Submit `reqs` in batches of the model's maximum, each cut to what the caps leave; stop when not even one
+    request fits (collecting results frees reservations) or after `limit` batches. Returns how many were sent."""
+    if not reqs:
+        return 0
+    size = params.BATCH_MAX[reqs[0].model]
+    sent = 0
+    start = 0
+    while start < len(reqs) and not (limit and sent >= limit):
+        chunk = list(reqs[start:start + size])
+        fit = fitting(ledger, phase, chunk)
+        if not any(r.custom_id not in store and not ledger.state.blocking(r.custom_id)
+                   and r.custom_id not in ledger.state.answered_ids() for r in fit):  # nothing here to send
+            if fit:
+                start += len(fit)  # nothing in this prefix needs sending
+                continue
+            report("stopping for now: not even one more request fits what the caps leave. Collect results, then "
+                   "submit again: settled batches free their reservations.")
+            break
+        group = submit_batch(ledger, store, transport, phase, fit, gate)
+        sent += 1
+        n = sum(1 for (g, _) in ledger.state.items if g == group)
+        report(f"submitted {group}: {n} requests" + ("" if len(fit) == len(chunk) else
+                                                    f" (the caps left room for {len(fit)} of {len(chunk)})"))
+        if len(fit) < len(chunk):
+            break  # the rest waits until settled batches free their reservations
+        start += size
+    return sent
+
+
 def submit_batch(ledger: Ledger, store: Store, transport: Transport, phase: str, reqs: Sequence[Request],
                  gate: Gate) -> str | None:
     """Reserve and create one batch of the requests not stored and not already in flight. Returns its group."""
     pending = unsent_batches(ledger)
     if pending:
         raise RunStopped(f"batch create(s) {', '.join(pending)} got no answer; run `batch reconcile` first")
-    todo = [r for r in reqs if r.custom_id not in store and not ledger.state.blocking(r.custom_id)]
+    answered = ledger.state.answered_ids()  # paid for already: its response belongs in the store (--refetch)
+    todo = [r for r in reqs if r.custom_id not in store and not ledger.state.blocking(r.custom_id)
+            and r.custom_id not in answered]
     ids = [r.custom_id for r in todo]
     if len(set(ids)) != len(ids):
         raise LedgerError("a batch can't hold the same custom_id twice")
@@ -217,9 +268,9 @@ def submit_batch(ledger: Ledger, store: Store, transport: Transport, phase: str,
     try:
         batch = transport.batch_create([{"custom_id": r.custom_id, "params": dict(r.body)} for r in todo])
     except ApiError as e:
-        if e.billed_possibly:
-            raise RunStopped(f"batch create for {group} got no response ({e}); it may exist. Run `batch reconcile` "
-                             "before submitting again.") from None
+        if e.billed_possibly:  # no response, or a 5xx that can follow a created batch: it may exist
+            raise RunStopped(f"batch create for {group} got no clear answer ({e}); the batch may exist. Run "
+                             "`batch reconcile` before submitting again.") from None
         ledger.release(group, f"batch create refused: {e}")
         raise RunStopped(f"batch create for {group} was refused: {e}") from None
     ledger.mark_sent(group, batch_id=batch["id"])

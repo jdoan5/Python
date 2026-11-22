@@ -92,16 +92,18 @@ def pilot_windows(qs, docs, index) -> dict[tuple[str, str], list]:
     return {(q["id"], c): w.window(CONDITIONS[c], q["question"]) for q in qs for c in PILOT_WINDOWS}
 
 
-def refuse_if_frozen(*rels: str) -> None:
-    """A merge never rewrites a file already on origin/main: once pushed, it is frozen (PLAN.md, "Freeze points").
-    Asks GitHub first, as every freeze check does."""
-    from raglab import freeze
+def refuse_if_frozen(phase: str, *rels: str) -> None:
+    """A merge never rewrites a file once the phase it decides has been authorized: from then on the file is
+    frozen (PLAN.md, "Freeze points": freeze point 1 is the commit the pilot's first authorization is given at).
+    Before that, a pushed file is a draft and may be merged again. Authorization records are append-only, so
+    this never reopens."""
+    from raglab import cli4
+    from raglab.authorize import _load
 
-    freeze.check_remote(STAGE)
-    frozen = [rel for rel in rels if freeze.origin_sha256(STAGE, rel) is not None]
-    if frozen:
-        raise AnnotationError(f"{', '.join(frozen)} is already on origin/main, so it is frozen: a change now is a "
-                              "deviation, logged in the README first")
+    given = [r for r in _load(cli4.api_dir() / "authorization.json") if r["phase"] == phase]
+    if given:
+        raise AnnotationError(f"{', '.join(rels)} is frozen: phase {phase!r} was authorized at commit "
+                              f"{given[0]['commit'][:8]}. A change now is a deviation, logged in the README first")
 
 
 def write_worksheet(folder: Path, entries: list) -> dict:
@@ -230,7 +232,7 @@ def cmd_pilot_merge(manifest_path: Path, pool_path: Path, s_path: Path) -> None:
                                                                                 "quote": a.get("quote", "")}
     if problems:
         raise AnnotationError("not merged; judge these batches again:\n  " + "\n  ".join(problems))
-    refuse_if_frozen("pilot/labels.json", "pilot/sufficiency.json")
+    refuse_if_frozen("pilot", "pilot/labels.json", "pilot/sufficiency.json")
     data = load_pilot()
     for q in data["questions"]:
         if q.get("target"):
@@ -385,7 +387,7 @@ def cmd_pilot_merge_keys(manifest_path: Path, keys_path: Path) -> None:
     problems += [f"unexpected key {qid}" for qid in by_id if qid not in expected]
     if problems:
         raise AnnotationError("not merged; write these keys again:\n  " + "\n  ".join(problems))
-    refuse_if_frozen("pilot/keys.json")
+    refuse_if_frozen("pilot", "pilot/keys.json")
     provenance = {"judge_model": JUDGE_MODEL, "prompt": sha256_of(PROMPTS / "v3-keys.md"),
                   "worksheet": manifest["keys"]["sha256"], "plan_sha256": sha256_of(STAGE / "PLAN.md"),
                   "trims": manifest.get("trims", {})}
@@ -457,7 +459,7 @@ def cmd_pilot_merge_swaps(manifest_path: Path, answers_path: Path) -> None:
     problems = check_swaps(entries, answers)
     if problems:
         raise AnnotationError("not merged; judge this worksheet again:\n  " + "\n  ".join(problems))
-    refuse_if_frozen("pilot/checks.json", "pilot/judge-requests.jsonl")
+    refuse_if_frozen("pilot-judging", "pilot/checks.json")
     import hashlib
 
     passage = {e["id"]: e["passage"] for e in entries}

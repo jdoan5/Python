@@ -10,7 +10,8 @@ plan's token assumptions, so the plan's tables are this rule's output.
   over the items judged, of 1.15 x each item's expected cost;
 - an item's expected cost = the sum over its calls of (count_tokens input x
   the batch input rate + the pilot's mean output tokens for that call kind x
-  the batch output rate), x 1.1 if US-only inference was accepted;
+  the batch output rate), x 1.1 if US-only inference was accepted for the
+  judging phase (a pilot acceptance never carries over);
 - every comparison is with the $24.50 planning ceiling, the core's too.
 
 **The order.** The core (link 1 run 1 in both arms, and the swaps and plants)

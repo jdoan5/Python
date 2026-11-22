@@ -227,3 +227,17 @@ def test_a_lost_judge_record_is_restored_from_its_batch(env) -> None:
     r = run("judge", "collect", "--set", "pilot", "--refetch", group)
     assert r.exit_code == 0 and f"{lost} lost record(s) restored" in r.output
     assert len(Store(path)) == before
+
+
+def test_judge_batches_interleave_in_sha256_order_of_custom_id(env) -> None:
+    import hashlib
+
+    assert run("judge", "plan", "--set", "pilot").exit_code == 0
+    assert run("judge", "submit", "--set", "pilot", "--item", "smoke").exit_code == 0
+    assert run("judge", "submit", "--set", "pilot", "--item", "pilot-medium").exit_code == 0
+    (created, *_) = [c for c in env["api"].calls if c[0] == "batch_create"]
+    ids = created[1]
+    assert len(ids) >= 3 and ids == sorted(ids, key=lambda c: hashlib.sha256(c.encode()).hexdigest())
+    planned = [jl.line.custom_id for jl in read_judge_list(env["lists"]["pilot-judging"])
+               if jl.item == "pilot-medium" and jl.role == "primary"]
+    assert [c for c in planned if c in ids] != ids  # the list's own order is not the batch order

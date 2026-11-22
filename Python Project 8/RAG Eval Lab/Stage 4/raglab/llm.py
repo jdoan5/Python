@@ -8,9 +8,11 @@ admitted the spend.
 The SDK's own retries are switched off (`max_retries=0`) so that every attempt
 passes through the ledger. What a failure means for the money:
 
-- an HTTP error response (4xx, 5xx) was not billed: the attempt settles at $0;
-- a dropped connection or a timeout may have been billed: the attempt stays
-  spent at its bound ("unknown").
+- a 4xx, a 429, a 503 or a 529 was refused before any work, so it was never
+  billed: the attempt settles at $0;
+- no response (a dropped connection, a timeout), or any other 5xx (a 500, or a
+  gateway's 502, 504 or 524), may have been billed: the attempt stays spent at
+  its bound ("unknown").
 
 The key lives in the macOS Keychain (service `raglab-stage4`), never in the
 environment: a key exported in a shell can be picked up and billed by other
@@ -45,8 +47,11 @@ class LlmError(RuntimeError):
 class ApiError(Exception):
     """A failed attempt, classified by what it means for the bill.
 
-    kind: "client" (4xx other than 429), "rate_limited" (429), "server" (5xx) are HTTP
-    responses, never billed; "connection" (no response) may have been billed.
+    kind: "client" (4xx other than 429), "rate_limited" (429) and "server" (5xx) are
+    HTTP responses; "connection" is no response at all. A 4xx, a 429, a 503 or a 529
+    (unavailable, overloaded) refuses the request before any work, so it is never
+    billed. No response, or any other 5xx (a 500, or a gateway's 502, 504 or 524),
+    can follow work that was done, so it may have been billed.
     """
 
     kind: str
@@ -60,9 +65,11 @@ class ApiError(Exception):
         rid = f" [{self.request_id}]" if self.request_id else ""
         return f"{self.kind}{where}{rid}: {self.message}"
 
+    REFUSED_UNWORKED = (503, 529)
+
     @property
     def billed_possibly(self) -> bool:
-        return self.kind == "connection"
+        return self.kind == "connection" or (self.kind == "server" and self.status not in self.REFUSED_UNWORKED)
 
 
 KEYCHAIN_SERVICE = "raglab-stage4"

@@ -191,9 +191,9 @@ def judge_submit(which: str = typer.Option("pilot", "--set"),
     resubmission its results call for. Billed: needs the pilot-judging authorization."""
     from raglab.judgeplan import PILOT_ITEMS
     from raglab.judging import read_judge_list
-    from raglab.ledger import CapExceeded, LedgerError
+    from raglab.ledger import LedgerError
     from raglab.plan4 import as_request, count_all
-    from raglab.runner import RunStopped, send_standard, submit_batch
+    from raglab.runner import RunStopped, send_standard, submit_wave
     from raglab.verdicts import failures_from
 
     _pilot_only(which)
@@ -234,14 +234,7 @@ def judge_submit(which: str = typer.Option("pilot", "--set"),
                     rec = send_standard(ledger, store, transport, "pilot", r, gate)
                     cli4.console.print(f"{r.condition[:40]}: {rec.outcome}")
                 return
-            size = params.BATCH_MAX[params.JUDGE]
-            for start in range(0, len(reqs), size):
-                try:
-                    group = submit_batch(ledger, store, transport, "pilot", reqs[start:start + size], gate)
-                except CapExceeded as e:
-                    cli4.console.print(f"[yellow]stopping for now:[/yellow] {escape(str(e))}")
-                    break
-                cli4.console.print(f"submitted {group}: {len(reqs[start:start + size])} judge requests")
+            submit_wave(ledger, store, transport, "pilot", reqs, gate, report=cli4.console.print)
     except (RunStopped, LedgerError, ValueError, OSError, KeyError) as e:
         cli4._fail(str(e))
     except Exception as e:  # noqa: BLE001 - FreezeError, AuthorizationError, LlmError: all stop with their message

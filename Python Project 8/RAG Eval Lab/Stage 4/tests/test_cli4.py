@@ -153,6 +153,8 @@ def test_after_the_smoke_test_only_batch_lines_are_batched_and_collected(stage4)
 
 def test_the_timing_probe_streams_and_keeps_its_timings(stage4) -> None:
     assert run("gen", "plan", "--set", "pilot").exit_code == 0
+    assert run("gen", "smoke").exit_code == 0
+    stage4["api"].calls.clear()
     r = run("gen", "timing")
     assert r.exit_code == 0, r.output
     assert kinds(stage4["api"]) == ["stream"]
@@ -357,3 +359,148 @@ def test_a_us_only_workspace_passes_the_smoke_test_once_the_developer_accepts_it
     assert len([c for c in stage4["api"].calls if c[0] == "create"]) == 3  # the stored answer was never re-sent
     report = json.loads((stage4["tmp"] / "pilot" / "SMOKE.json").read_text())
     assert report["verdict"]["passed"] and report["verdict"]["notes"] and report["verdict"]["inference_geo"] == ["us"]
+
+
+def test_us_acceptance_names_the_ledger_phase_and_refuses_a_typo(stage4, monkeypatch) -> None:
+    monkeypatch.setattr(cli4, "typed_by_developer", lambda expected, prompt: None)
+    r = run("budget", "acknowledge", "--us-inference", "pilot-judging", "--reason", "US workspace")
+    assert r.exit_code == 0 and "accepted for pilot" in r.output  # pilot-judging's calls are booked under pilot
+    with stage4["ledger"]() as ledger:
+        assert ("pilot", "us_inference") in ledger.state.accepted
+    assert run("budget", "acknowledge", "--us-inference", "pilt", "--reason", "typo").exit_code == 1
+
+
+def test_the_timing_probe_waits_for_the_smoke_test(stage4) -> None:
+    (stage4["tmp"] / "pilot").mkdir(exist_ok=True)
+    assert run("gen", "plan", "--set", "pilot").exit_code == 0
+    stage4["tmp"].joinpath("pilot", "SMOKE.json").unlink(missing_ok=True)
+    r = run("gen", "timing")
+    assert r.exit_code == 1 and "smoke test" in r.output and stage4["api"].calls == []
+
+
+def test_a_batch_whose_results_are_gone_is_abandoned_by_the_developer(stage4, monkeypatch) -> None:
+    assert run("gen", "plan", "--set", "pilot").exit_code == 0
+    assert run("gen", "smoke").exit_code == 0
+    assert run("gen", "submit", "--set", "pilot").exit_code == 0
+    with stage4["ledger"]() as ledger:
+        group = next(g for g, info in ledger.state.groups.items() if info["mode"] == "batch")
+    stage4["api"].batch_retrieve = lambda batch_id: (_ for _ in ()).throw(llm.ApiError("client", 404))
+    r = run("gen", "collect", "--set", "pilot")
+    assert r.exit_code == 1 and "batch abandon" in r.output  # reported, never silently skipped
+    monkeypatch.setenv("CLAUDECODE", "1")
+    assert run("batch", "abandon", group, "--reason", "deleted in the Console").exit_code == 1  # typed only
+    monkeypatch.setattr(cli4, "typed_by_developer", lambda expected, prompt: None)
+    r = run("batch", "abandon", group, "--reason", "deleted in the Console")
+    assert r.exit_code == 0, r.output
+    with stage4["ledger"]() as ledger:
+        items = [i for (g, _), i in ledger.state.items.items() if g == group]
+        assert all(i.status == "unknown" and not ledger.state.blocking(i.custom_id) for i in items)
+        assert cli4.phase_cap("judging", ledger) < Decimal("25.00")  # counted at their bounds, not blocking
+
+
+def test_batches_interleave_in_sha256_order_of_custom_id(stage4, monkeypatch) -> None:
+    import hashlib
+
+    real = cli4.generation_requests
+
+    def more(which):  # six answer lines, so the order is a real test
+        out = real(which)
+        extra = []
+        for n in range(4):
+            line, body, docs = out[0]
+            body = {**body, "messages": [{"role": "user", "content": body["messages"][0]["content"][:-1]
+                                          + [{"type": "text", "text": f"extra question {n}?"}]}]}
+            extra.append((line_for(line.condition, f"x{n}", 0, body), body, docs))
+        return out + extra
+
+    monkeypatch.setattr(cli4, "generation_requests", more)
+    assert run("gen", "plan", "--set", "pilot").exit_code == 0
+    assert run("gen", "smoke").exit_code == 0
+    planned = [l.custom_id for l in read_plan(stage4["tmp"] / "pilot" / "requests.jsonl") if l.mode == "batch"]
+    by_sha = sorted(planned, key=lambda c: hashlib.sha256(c.encode()).hexdigest())
+    assert planned != by_sha  # the plan's order is not already the batch order
+    assert run("gen", "submit", "--set", "pilot").exit_code == 0
+    (created,) = [c for c in stage4["api"].calls if c[0] == "batch_create"]
+    assert created[1] == by_sha
+
+
+def _one_open_batch(stage4):
+    assert run("gen", "plan", "--set", "pilot").exit_code == 0
+    assert run("gen", "smoke").exit_code == 0
+    assert run("gen", "submit", "--set", "pilot").exit_code == 0
+    with stage4["ledger"]() as ledger:
+        return next(g for g, info in ledger.state.groups.items() if info["mode"] == "batch")
+
+
+def test_abandon_refuses_a_batch_that_is_running_or_whose_results_can_still_be_read(stage4, monkeypatch) -> None:
+    group = _one_open_batch(stage4)
+    monkeypatch.setattr(cli4, "typed_by_developer", lambda expected, prompt: None)
+    stage4["api"].polls_until_ended = 99  # still in progress
+    r = run("batch", "abandon", group, "--reason", "impatient")
+    assert r.exit_code == 1 and "let it end" in r.output
+    stage4["api"].polls_until_ended = 1
+    r = run("batch", "abandon", group, "--reason", "wrong group")
+    assert r.exit_code == 1 and "can still be fetched" in r.output  # collect it instead: never paid twice
+    stage4["api"].batch_retrieve = lambda batch_id: (_ for _ in ()).throw(llm.ApiError("server", 502))
+    r = run("gen", "collect", "--set", "pilot")
+    assert r.exit_code == 1 and "run collect again" in r.output and "abandon" not in r.output  # transient
+
+
+def test_abandon_refuses_while_a_response_is_in_the_store_and_finishes_when_interrupted(stage4, monkeypatch) -> None:
+    group = _one_open_batch(stage4)
+    stage4["api"].batch_retrieve = lambda batch_id: (_ for _ in ()).throw(llm.ApiError("client", 404))
+    with stage4["ledger"]() as ledger:
+        ids = [c for (g, c) in ledger.state.items if g == group]
+    monkeypatch.setattr(cli4, "typed_by_developer", lambda expected, prompt: None)
+    # A response stored before a crash stopped its settlement: abandoning would lose it, so it is refused.
+    from raglab.store import Record
+
+    planned = {l.custom_id: l for l in read_plan(stage4["tmp"] / "pilot" / "requests.jsonl")}
+    line = planned[ids[0]]
+    Store(stage4["store"].path).add(Record(line.custom_id, line.request_key, line.condition, line.body_sha256,
+                                           "pilot", "succeeded", fake_message("x"), None, "msgbatch_x", None, "t",
+                                           group))
+    r = run("batch", "abandon", group, "--reason", "deleted in the Console")
+    assert r.exit_code == 1 and "in the store" in r.output
+    path = stage4["store"].path
+    path.write_text("".join(l + "\n" for l in path.read_text().splitlines() if ids[0] not in l))
+    from raglab.ledger import Ledger
+
+    real_resend = Ledger.resend
+    calls = {"n": 0}
+
+    def flaky(self, g, cid, reason):
+        calls["n"] += 1
+        if calls["n"] == 2:
+            raise KeyboardInterrupt
+        return real_resend(self, g, cid, reason)
+
+    monkeypatch.setattr(Ledger, "resend", flaky)
+    r = run("batch", "abandon", group, "--reason", "deleted in the Console")
+    assert r.exit_code != 0  # interrupted between the two passes
+    monkeypatch.setattr(Ledger, "resend", real_resend)
+    r = run("batch", "abandon", group, "--reason", "deleted in the Console")
+    assert r.exit_code == 0, r.output
+    with stage4["ledger"]() as ledger:
+        assert all(ledger.state.items[(group, c)].status == "unknown" and not ledger.state.blocking(c) for c in ids)
+
+
+def test_a_lost_response_is_reported_with_its_remedy_never_sent_again(stage4) -> None:
+    group = _one_open_batch(stage4)
+    assert run("gen", "collect", "--set", "pilot").exit_code == 0
+    path = stage4["store"].path
+    path.write_text("".join(l + "\n" for l in path.read_text().splitlines() if '"batch_id":null' in l))
+    before = len([c for c in stage4["api"].calls if c[0] == "batch_create"])
+    r = run("gen", "submit", "--set", "pilot")
+    assert r.exit_code == 0 and "--refetch" in r.output
+    assert len([c for c in stage4["api"].calls if c[0] == "batch_create"]) == before  # never paid twice
+
+
+def test_an_interrupted_standard_send_names_batch_orphan(stage4) -> None:
+    from raglab.ledger import Planned
+
+    cid = "r" + "8" * 56 + "s00"
+    with stage4["ledger"]() as ledger:
+        ledger.reserve("pilot", "standard", [Planned(cid, "claude-haiku-5-5", 10, 10, False)], "a" * 64)
+        with pytest.raises(cli4.LedgerError, match="batch orphan"):
+            ledger.reserve("pilot", "standard", [Planned(cid, "claude-haiku-5-5", 10, 10, False)], "a" * 64)

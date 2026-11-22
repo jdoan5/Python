@@ -1,7 +1,7 @@
 {
  "provenance": {
   "judge_model": "claude-opus-5-5",
-  "plan_sha256": "54090ec56532006245a8fd9c1e9e314c4c66db7a2cc52581e96af09049c4deb0",
+  "plan_sha256": "aa878f021efac03842e654f34f9789c49e4431accf572157e001a868fcbb51cf",
   "prompts": {
    "v2-pool-judge.md": "bc982321f3dd89e8c465341273de51454c1f789841c464b3cf312fe64e2d1e73",
    "v3-sufficiency.md": "d8b7e6e4c2bf16b706dfcf0498ef91bfe4e61f454cfe55947a9aa792bbf0c386"

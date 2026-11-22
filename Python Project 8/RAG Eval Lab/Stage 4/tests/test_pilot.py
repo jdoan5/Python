@@ -142,3 +142,11 @@ def test_rule_4_reads_the_frozen_power_grid_never_a_new_simulation() -> None:
     plan_row = next(r for r in grid if (r["m1"], r["e"], r["gamma"], r["R"]) == (0.65, 0.03, 0.5, 1))
     assert next(r for r in rows if (r["e"], r["gamma"], r["runs"]) == (0.03, 0.5, 1))["power"] == plan_row["power"]
     assert round(plan_row["power"], 2) == 0.72  # the row PLAN.md quotes
+
+
+def test_a_format_failure_names_its_answer_by_condition_question_and_run() -> None:
+    bad = answer("Use a middleware.", cited=False)
+    out = prompt_fix_needed({"hhr-4.8k-off": [bad], "hhr-4.8k-med": FINE[:1], "base-4.8k-med": FINE[:1]},
+                            labels={"hhr-4.8k-off": ["p04 run 1"], "hhr-4.8k-med": ["p01 run 1"],
+                                    "base-4.8k-med": ["p01 run 1"]})
+    assert out["format_failures"] == ["hhr-4.8k-off p04 run 1: answers without citing anything"]

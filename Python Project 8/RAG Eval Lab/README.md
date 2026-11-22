@@ -48,4 +48,6 @@ dependencies.
 The FastAPI documentation, English edition, pinned at release `0.165.0`.
 FastAPI and its documentation are © Sebastián Ramírez, used under the MIT
 License. The docs are fetched at build time and never committed to this
-repository.
+repository as such; the annotations (the golden set's and Stage 4's) and
+Stage 4's answers quote short passages from them, under that license and with
+this attribution.

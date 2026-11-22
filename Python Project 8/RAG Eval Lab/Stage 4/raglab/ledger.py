@@ -250,6 +250,9 @@ class State:
         return [i for (g, c), i in self.items.items() if c == custom_id
                 and (i.status in ("reserved", "sent") or (i.status == "unknown" and (g, c) not in self.cleared))]
 
+    def answered_ids(self) -> set[str]:
+        return {c for (_, c), i in self.items.items() if i.status == "settled" and i.outcome == "succeeded"}
+
     def answered(self, custom_id: str) -> list[Item]:
         """Attempts of this request that succeeded: a request is paid for once (a new sample is a new custom_id)."""
         return [i for (_, c), i in self.items.items() if c == custom_id and i.status == "settled"
@@ -295,8 +298,15 @@ def _check(state: State, event: Mapping, line: int) -> None:
             open_attempts = state.blocking(cid)
             if open_attempts:
                 a = open_attempts[0]
+                if a.mode == "standard" and a.status in ("reserved", "sent"):
+                    remedy = ("its process ended mid-call: `batch orphan` releases it if it was never sent, or "
+                              "marks it unknown if it was")
+                elif a.status == "unknown":
+                    remedy = "it may have been billed: `batch resend`, typed by the developer, lets it go again"
+                else:
+                    remedy = "collect it, or `batch reconcile` if its batch create got no answer"
                 raise LedgerError(f"line {line}: {cid} already has an attempt that is {a.status} in group {a.group}; "
-                                  "collect or reconcile it first (an unknown one needs an explicit resend)")
+                                  f"{remedy}")
             answered = state.answered(cid)
             if answered:
                 raise LedgerError(f"line {line}: {cid} was already answered (group {answered[0].group}), so its "
@@ -461,6 +471,7 @@ class Ledger:
         self.repair = repair
         self.repairs: list[str] = []
         self._lock_file = None
+        self._broken = False  # an append that failed part-way: refuse every later write in this process
         self._events: list[dict] = []
         self.state = State()
 
@@ -535,14 +546,23 @@ class Ledger:
     def _append(self, event: dict) -> None:
         if self._lock_file is None:
             raise LedgerError("open the ledger with `with Ledger(...) as ledger:` before writing")
+        if self._broken:
+            raise LedgerError("an earlier ledger write was interrupted, so what is on disk may be ahead of this "
+                              "process: close it and open the ledger again (`budget repair` heals the copies)")
         _check(self.state, event, len(self._events) + 1)  # refused events never reach the file
         line = json.dumps(event, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n"
-        for copy in [self.path] + ([self.mirror] if self.mirror else []):  # the ledger first, then its mirror
-            copy.parent.mkdir(parents=True, exist_ok=True)
-            with open(copy, "a", encoding="utf-8") as f:
-                f.write(line)
-                f.flush()
-                os.fsync(f.fileno())
+        try:
+            for copy in [self.path] + ([self.mirror] if self.mirror else []):  # the ledger first, then its mirror
+                copy.parent.mkdir(parents=True, exist_ok=True)
+                with open(copy, "a", encoding="utf-8") as f:
+                    f.write(line)
+                    f.flush()
+                    os.fsync(f.fileno())
+        except BaseException:
+            # The event may be on disk in one copy or both, but not in memory: nothing more may be written from
+            # this state. Reopening reads what reached disk and heals the one safe difference.
+            self._broken = True
+            raise
         self._events.append(event)
         _apply(self.state, event, len(self._events))
 
@@ -643,6 +663,7 @@ class Ledger:
 
     def accept_for_phase(self, phase: str, kind: str, reason: str) -> None:
         """Accept one kind of flag (US-only inference) for every settlement of a phase, past and future."""
+        self.caps.phase(phase)  # a ledger phase, or refused: a typo would accept nothing and stop the next call
         self._append({"event": "acknowledge", "phase": phase, "kind": kind, "reason": reason, "at": _now()})
 
     def release(self, group: str, reason: str) -> None:

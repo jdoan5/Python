@@ -116,8 +116,8 @@ def _sentences(text: str, start: int, end: int) -> list[tuple[int, int]]:
         for m in _BOUNDARY.finditer(masked, l_start, l_end):
             before = masked[cut:m.start()].rstrip()
             word = before.split()[-1].lower().rstrip(".").lstrip("([{\"'*_") if before.split() else ""
-            if word in _ABBREVIATIONS or _LIST_NUMBER.match(masked[l_start:m.start()]):
-                continue
+            if word in _ABBREVIATIONS or _LIST_NUMBER.match(masked[cut:m.start()]):
+                continue  # "1." on its own, at the line's start or after the last cut, numbers what follows
             out.append((cut, m.end(1)))  # the sentence keeps its closing quotes and brackets
             cut = m.end()
         out.append((cut, l_end))

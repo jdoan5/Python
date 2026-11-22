@@ -151,3 +151,23 @@ def test_the_smoke_judge_falls_back_and_refuses_when_nothing_can_be_judged(world
     no_smoke = {cid: s for cid, s in stored.items() if not s.line.condition.startswith("smoke")}
     with pytest.raises(ValueError, match="no smoke-test answer can be judged"):
         pilot_judge_list(no_smoke, questions, graded, [], {})
+
+
+def test_the_smoke_judge_falls_back_to_the_baseline_answer_when_hhr_abstains(world) -> None:
+    from raglab.judgeplan import pilot_judge_list
+    from raglab.units import parse_reply
+
+    doc, index, by_id, docs, questions, keys = world
+    stored = build(world)
+    graded = graded_questions(questions, keys, by_id, index)
+    hhr_cid = next(cid for cid, s in stored.items() if s.line.condition == "smoke:hhr-4.8k-med")
+    abstains = parse_reply(fake_message("The provided documentation does not answer this question."), docs)
+    stored[hhr_cid] = Stored(stored[hhr_cid].line, abstains, stored[hhr_cid].docs)
+    # A baseline smoke answer, judged in its place.
+    base = next(s for s in stored.values() if s.line.condition == "base-4.8k-med")
+    body = generation_body(CONDITIONS["base-4.8k-med"], questions[0].text, docs, 1000, "answer", "closed")
+    line = line_for("smoke:base-4.8k-med", "p01", 0, body)
+    stored[line.custom_id] = Stored(line, base.answer, base.docs)
+    lines = [jl for jl, _ in pilot_judge_list(stored, questions, graded, [], {})]
+    smoke = {jl.answered for jl in lines if jl.item == "smoke"}
+    assert smoke == {line.custom_id}  # the baseline's smoke answer, never the abstaining hhr one

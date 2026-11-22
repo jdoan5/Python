@@ -50,13 +50,14 @@ unsupported.
 
 ## What ran before this plan
 
-All on 2026-11-21 (EST). This section is brought up to date just before freeze
-point 1, from file times and the session log.
+On 2026-11-21 and the early hours of 2026-11-22 (EST). This section is
+brought up to date just before freeze point 1, from file times and the session
+log.
 
 - **Stage 3 closed.** Freeze point 3 (711f8b40) was pushed at 11:31. A
   follow-up commit (759ac71b, 14:45) carries Stage 3's README, tables and
   manifest from a clean re-run.
-- **Design and review, from about 13:04 to 17:14.**
+- **Design and review, from about 13:04 to 17:14, and from 22:31 to 00:50.**
   - Four designers worked from different angles (confirmatory design,
     measurement validity, engineering, portfolio value), a synthesizer merged
     their proposals, and three adversarial reviewers checked the synthesis for
@@ -71,9 +72,19 @@ point 1, from file times and the session log.
     them from 22:31, after the developer's answers.
   - A read-only re-check by three more reviewers, from 22:57 to 23:26 (the
     earlier findings, the new code, the plan against its code): 42 problems,
-    6 major (none needing new design), among them a smoke test that could
-    never pass under US-only inference, a re-projection that counted the
-    settled core twice, and rule 2 counting failure lines instead of answers.
+    9 marked major (6 distinct; none needing new design), among them a smoke
+    test that could never pass under US-only inference, a re-projection that
+    counted the settled core twice, and rule 2 counting failure lines instead
+    of answers.
+  - A last read-only check by two reviewers, from 23:38 to 00:08 (each
+    finding against the files, and an adversarial attack on the money paths):
+    16 problems, 2 of them blockers. A release written after an interrupted
+    "sent" line could leave a ledger no command could open, and batches were
+    never cut to fit what the cap leaves. A 5xx on a batch create could also
+    free a batch that existed.
+  - A narrow read-only check of the code changed after it, from 00:15 to 00:36:
+    no blocker; 12 problems, the major one a `batch abandon` that checked
+    nothing, so following its hint after a transient error could pay twice.
     This plan, its code and its tests are revised for every one.
 
   The reviewers read Stage 3's code, cached rankings, committed results and
@@ -123,6 +134,13 @@ point 1, from file times and the session log.
   - 23:01–23:11: one key worksheet for the 10 questions with a reference
     (none cut by the cap); merged at 23:11 on the first pass into
     `pilot/keys.json`, with no trim.
+  - 23:40: the developer pushed the work so far (commit 2241591d, 118 files),
+    a draft: freeze point 1 is the commit the pilot's first authorization is
+    given at, and the practice files freeze then, not when first pushed.
+  - After this plan's last edit, the three merges were run again from the same
+    saved worksheet outputs, so the provenance in `pilot/labels.json`,
+    `sufficiency.json` and `keys.json` names this plan; nothing else in them
+    changed.
   - 23:01: `pilot/requests.jsonl` written: 185 requests (132 answers, the
     smoke test's 5, the 48 timing-probe calls).
 - **Read-only checks on the corpus:** which pages no golden question uses; how
@@ -254,8 +272,9 @@ judge requests. Sample numbers mark repeats:
     after "e.g", "i.e", "etc", "vs", "cf", "approx", "incl" or "esp", whichever
     of `.`, `?` or `!` follows (in any case, with any opening bracket, quote,
     `*` or `_` before it), never inside inline code (a sentence that starts with
-    inline code does start a new unit), and a list number such as "1.", alone or
-    after a bullet or emphasis ("- 1.", "**2.**"), doesn't end one;
+    inline code does start a new unit), and a bare list number such as "1.",
+    alone or after a bullet or emphasis ("- 1.", "**2.**"), at a line's start
+    or right after a sentence, numbers what follows and never ends one;
   - a unit with no letter or digit is dropped;
   - a heading line (starting with `#`) is framing, never a claim.
 
@@ -642,7 +661,9 @@ passes about 89% of the time for a leniency of 0.10 that touches hhr alone
 
 It passes when all four hold:
 1. **Near-miss swaps (leniency, both arms).** F calls at least 18 of the 20
-   swaps not supported, and at least 8 of the 10 in each arm.
+   swapped units claims and doesn't support them, and at least 8 of the 10 in
+   each arm. A swap F relabels "not a claim" is reported apart and never
+   counts as caught.
 2. **True-support plants (strictness, both evidence shapes).** F keeps at
    least 18 of the 20 plants supported, and at least 8 of the 10 of each kind.
 
@@ -772,7 +793,8 @@ verdict, confirmed by blind worksheet (`golden/prompts/v3-swap-check.md`), and
 listed in `plan/judge-requests.jsonl` at freeze point 4. Each confirmation keeps
 the SHA-256 of the passage the worksheet showed, and `judge plan` and `judge
 submit` refuse a candidate whose rebuilt passage differs. No merge rewrites a
-file already on origin/main.
+file once the phase it decides has been authorized (the authorization records
+are append-only, so this never reopens).
 
 **Candidates** (`raglab/planted.py`). Units of link 1's run-1 answers that cite
 into a grade-2 section: prose claims (not code, not a heading line) for swaps
@@ -918,32 +940,40 @@ costs 1.1×.
   lost where the usage matches the ledger; a lost standard-call response can't
   be fetched again, and its request is then decided by the developer as a
   logged deviation). An unknown attempt goes out again only after an explicit
-  `batch resend`, typed by the developer, and stays counted at its bound.
+  `batch resend`, or `batch abandon` for a batch whose results are gone, each
+  typed by the developer, and stays counted at its bound.
 - **Interrupted calls.** A standard or streamed call interrupted by anything
-  (Ctrl-C, an SDK error) is marked unknown at once; one interrupted before it
-  was sent is released, since it was never billed. `batch orphan` closes what a
-  killed process left: a reservation never sent is released, and a call left
-  "sent" with no stored response is marked unknown.
+  (Ctrl-C, an SDK error) once it was sent is marked unknown at once. One
+  interrupted before it was sent stays reserved until `batch orphan` releases
+  it (never billed); `batch orphan` also marks unknown a call a killed process
+  left "sent" with no stored response. A resend is refused with the remedy
+  named.
 - **Settlement.** Each result is settled from its usage, at 1.1× where the
   response reports US-only inference. Errored, canceled and expired batch items
   settle at $0. A response from a model `pricing.json` can't price settles at
-  its bound. A standard call whose connection dropped stays spent at its bound
-  and stops the run. Any flag on a settlement stops the run once its batch is
+  its bound. A standard call whose connection dropped, or that got a 5xx other
+  than 503 or 529 (which can follow work that was billed), stays spent at its
+  bound and stops the run. Any flag on a settlement stops the run once its batch is
   booked, and stops every later reservation, in any process, until the
   developer accepts it with `budget acknowledge` in their own terminal:
   - a cost above its bound;
   - another model;
-  - US-only inference (which may be accepted once for a whole phase; the scope
-    rule then projects at 1.1×);
+  - US-only inference (which may be accepted once for a whole phase, and then
+    stops nothing more in it; accepted for judging, the scope rule projects at
+    1.1×);
   - a priority service tier or another speed;
   - more than one iteration in a response.
 - **Retries.** The SDK's own retries are off (`max_retries=0`), so every attempt
-  passes through the ledger. Creating a batch is never retried. While a batch
-  create has no answer, no new batch is created; `batch reconcile` matches it
+  passes through the ledger. Creating a batch is never retried. A batch create
+  that got no response or a 5xx other than 503 or 529 keeps its reservation,
+  since the batch may exist. While a batch create has no clear answer, no new
+  batch is created; `batch reconcile` matches it
   by its custom_ids, paging back through every batch since the reservation.
 - **The ledger** is append-only JSONL, one fsynced line per event.
   - It is written twice, under `data/api/` and outside the repository.
-  - One process holds it at a time.
+  - One process holds it at a time, and a write interrupted part-way stops
+    that process from writing anything more: the next open reads what reached
+    disk.
   - A torn last line, a missing copy or any disagreement is refused until
     `budget repair`. An empty ledger is refused once responses are stored, so
     losing both copies can't reset spend.
@@ -1068,7 +1098,8 @@ The hard cap is $25.00.
   for each item judged, 1.15 × its expected cost. An item's expected cost is
   the sum over its calls of `count_tokens` input at the batch input rate plus
   the pilot's mean output tokens for that call kind at the batch output rate,
-  × 1.1 if US-only inference was accepted. Every comparison is with the $24.50
+  × 1.1 if US-only inference was accepted for the judging phase (a pilot
+  acceptance never carries over). Every comparison is with the $24.50
   planning ceiling, the core's too.
 - **The core is always judged** (link 1 run 1 in both arms, and the swaps and
   plants). If it doesn't fit at medium, both judges run at low if low passed
@@ -1101,16 +1132,24 @@ The hard cap is $25.00.
 
 **Waves.** Worst-case reservations mean a phase runs in several sequential
 rounds, each up to 24 hours (most finish within one):
-- the pilot needs about 6–7 rounds in all: generation, then the judging in its
-  order, the medium judgments alone taking two, since at max_tokens 8,000
-  their worst case is about $8.30 against the $6.50 cap;
+- the pilot needs about 7 rounds in all (9 at the pessimistic figures):
+  generation, then the judging in its order, the medium judgments alone taking
+  two, since at max_tokens 8,000 their worst case is about $8.30 against the
+  $6.50 cap;
 - golden generation about 4 rounds: its worst case at the pilot's max_tokens
   ceilings is about $8.80 against its $3.00 cap;
 - golden judging about 8–13 rounds, depending on the judges' max_tokens that
   rule 1 sets (about 8 at 6,000, 13 at 12,000), the last ones split into
   smaller batches to fit what the cap leaves.
 
-Haiku batches hold at most 100 requests and Opus batches at most 50.
+Haiku batches hold at most 100 requests and Opus batches at most 50. A
+submit cuts its last batch to what the caps leave and stops only when not even
+one request fits. A collect carries on past a batch it can't fetch and reports
+it; a batch whose results are gone (deleted, or past the API's 29 days) is
+closed by the developer with `batch abandon` (refused unless the API says the
+batch has ended and its results can't be read, and while any of its responses
+is in the store), its requests still counted at their bounds and free to be
+sent again.
 
 ## The pilot
 
@@ -1185,7 +1224,8 @@ xhigh, max, and hhr-9.6k-med: 132 answers.
 5. F and C at low on hhr run 1 and on the baseline (24; C on 20);
 6. C on the 10 closed-book answers whose question has a key.
 
-**Timing probe.** 48 standard streaming calls, one at a time (`gen timing`):
+**Timing probe.** 48 standard streaming calls, one at a time (`gen timing`,
+which waits for the smoke test to pass):
 thinking off and efforts low, medium and high at hhr 4.8k, on the 12
 questions.
 
@@ -1205,8 +1245,9 @@ pilot result changes a test, a metric or a decision rule.
      nothing, it abstains in other words than the prescribed sentence, or it
      runs over 300 words;
    - fewer than 90% of code units carry a citation;
-   - fewer than 90% of units of 40 or more non-whitespace characters carry a
-     citation, in the hhr or the baseline answers;
+   - fewer than 90% of units of 40 or more non-whitespace characters, other
+     than a heading line, in answers that don't abstain, carry a citation, in
+     the hhr or the baseline answers;
    - the hhr and baseline answers differ on that last share by more than 10
      points.
 
