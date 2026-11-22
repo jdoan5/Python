@@ -1,0 +1,193 @@
+{
+ "provenance": {
+  "judge_model": "claude-opus-5-5",
+  "plan_sha256": "54090ec56532006245a8fd9c1e9e314c4c66db7a2cc52581e96af09049c4deb0",
+  "prompts": {
+   "v2-pool-judge.md": "bc982321f3dd89e8c465341273de51454c1f789841c464b3cf312fe64e2d1e73",
+   "v3-sufficiency.md": "d8b7e6e4c2bf16b706dfcf0498ef91bfe4e61f454cfe55947a9aa792bbf0c386"
+  },
+  "worksheets": {
+   "pool-01": "a145905ca4d206b662156914d3b236b91066b2a62d173c5ff4575e7aa1bff2ae",
+   "pool-02": "7bcfb83b2e4ab27318485bf1c7d2c60993ba6afc7ddb8e6f3fc019dbfc9a5426",
+   "pool-03": "31042e1bcce206ee9b424375028eb2619c3f85ba16211de05a44be156b37fbf1",
+   "pool-04": "5714f5695d2247bded169726d1ce889c46791d84556b869d7b415f99c68a74c6",
+   "pool-05": "ade7cdf37d0e6173ee649c1b19af69eb42059ab90e2eee3c96d61d0812ec408f",
+   "pool-06": "726eaaafc39e306304c8826439234d59364670812e17cbdcbcf26ba13f20fb00",
+   "sufficiency-01": "ebbb181f97371957310bdd7d2d8e8cc3bdf8482be89b81b638012a5df4ece867",
+   "sufficiency-02": "5885e420bab7e7f30f804b4778467681300df63375a7307ac2b03ba21290832c",
+   "sufficiency-03": "f5e7425c1b8fec934b16c94798bd6846586d5268bd568bcb6b7214384ef112dd",
+   "sufficiency-04": "978caea97902e96251eb9b3b0c3173959703b4b4246c724d29f3540736faab2a",
+   "sufficiency-05": "3f1391b3f6b8695438f118ce3d157e26d56c227196e02dd37c9a0f9c8ead61cc"
+  }
+ },
+ "windows": {
+  "p01": {
+   "base-4.8k-med": {
+    "answers": "yes",
+    "quote": "As this is a WebSocket it doesn't really make sense to raise an `HTTPException`, instead we raise a `WebSocketException`."
+   },
+   "hhr-4.8k-med": {
+    "answers": "yes",
+    "quote": "As this is a WebSocket it doesn't really make sense to raise an `HTTPException`, instead we raise a `WebSocketException`."
+   },
+   "hhr-9.6k-med": {
+    "answers": "yes",
+    "quote": "As this is a WebSocket it doesn't really make sense to raise an `HTTPException`, instead we raise a `WebSocketException`."
+   }
+  },
+  "p02": {
+   "base-4.8k-med": {
+    "answers": "yes",
+    "quote": "Notice that with webhooks you are actually not declaring a *path* (like `/items/`), the text you pass there is just an **identifier** of the webhook (the name of the event), for example in `@app.webhooks.post(\"new-subscription\")`, the webhook name is `new-subscription`."
+   },
+   "hhr-4.8k-med": {
+    "answers": "yes",
+    "quote": "Notice that with webhooks you are actually not declaring a *path* (like `/items/`), the text you pass there is just an **identifier** of the webhook (the name of the event), for example in `@app.webhooks.post(\"new-subscription\")`, the webhook name is `new-subscription`."
+   },
+   "hhr-9.6k-med": {
+    "answers": "yes",
+    "quote": "Notice that with webhooks you are actually not declaring a *path* (like `/items/`), the text you pass there is just an **identifier** of the webhook (the name of the event), for example in `@app.webhooks.post(\"new-subscription\")`, the webhook name is `new-subscription`."
+   }
+  },
+  "p03": {
+   "base-4.8k-med": {
+    "answers": "yes",
+    "quote": "@app.get(\"/keyword-weights/\", response_model=dict[str, float])"
+   },
+   "hhr-4.8k-med": {
+    "answers": "yes",
+    "quote": "@app.get(\"/keyword-weights/\", response_model=dict[str, float])"
+   },
+   "hhr-9.6k-med": {
+    "answers": "yes",
+    "quote": "@app.get(\"/keyword-weights/\", response_model=dict[str, float])"
+   }
+  },
+  "p04": {
+   "base-4.8k-med": {
+    "answers": "no",
+    "quote": ""
+   },
+   "hhr-4.8k-med": {
+    "answers": "no",
+    "quote": ""
+   },
+   "hhr-9.6k-med": {
+    "answers": "partly",
+    "quote": "client_host = request.client.host"
+   }
+  },
+  "p05": {
+   "base-4.8k-med": {
+    "answers": "no",
+    "quote": ""
+   },
+   "hhr-4.8k-med": {
+    "answers": "no",
+    "quote": ""
+   },
+   "hhr-9.6k-med": {
+    "answers": "partly",
+    "quote": "By default, **FastAPI** will create a `server` in the OpenAPI schema with the URL for the `root_path`."
+   }
+  },
+  "p06": {
+   "base-4.8k-med": {
+    "answers": "no",
+    "quote": ""
+   },
+   "hhr-4.8k-med": {
+    "answers": "yes",
+    "quote": "But if you want it to expect a JSON with a key `item` and inside of it the model contents, as it does when you declare extra body parameters, you can use the special `Body` parameter `embed`:"
+   },
+   "hhr-9.6k-med": {
+    "answers": "yes",
+    "quote": "But if you want it to expect a JSON with a key `item` and inside of it the model contents, as it does when you declare extra body parameters, you can use the special `Body` parameter `embed`:"
+   }
+  },
+  "p07": {
+   "base-4.8k-med": {
+    "answers": "partly",
+    "quote": "Values such as `0`, `false`, `off`, and `no` (including case variations) are converted to `False`."
+   },
+   "hhr-4.8k-med": {
+    "answers": "partly",
+    "quote": "Values such as `0`, `false`, `off`, and `no` (including case variations) are converted to `False`."
+   },
+   "hhr-9.6k-med": {
+    "answers": "partly",
+    "quote": "Values such as `0`, `false`, `off`, and `no` (including case variations) are converted to `False`."
+   }
+  },
+  "p08": {
+   "base-4.8k-med": {
+    "answers": "no",
+    "quote": ""
+   },
+   "hhr-4.8k-med": {
+    "answers": "yes",
+    "quote": "**FastAPI** will use that *temporary* response to extract the status code (also cookies and headers), and will put them in the final response that contains the value you returned, filtered by any `response_model`."
+   },
+   "hhr-9.6k-med": {
+    "answers": "yes",
+    "quote": "**FastAPI** will use that *temporary* response to extract the status code (also cookies and headers), and will put them in the final response that contains the value you returned, filtered by any `response_model`."
+   }
+  },
+  "p09": {
+   "base-4.8k-med": {
+    "answers": "partly",
+    "quote": "For example, you can create a subclass of `HTTPBearer` that returns a `403 Forbidden` error instead of the default `401 Unauthorized` error:"
+   },
+   "hhr-4.8k-med": {
+    "answers": "yes",
+    "quote": "But if for some reason your clients depend on the old behavior, you can revert to it by overriding the method `make_not_authenticated_error` in your security classes."
+   },
+   "hhr-9.6k-med": {
+    "answers": "yes",
+    "quote": "But if for some reason your clients depend on the old behavior, you can revert to it by overriding the method `make_not_authenticated_error` in your security classes."
+   }
+  },
+  "p10": {
+   "base-4.8k-med": {
+    "answers": "yes",
+    "quote": "The limit applies to the **whole request body**. If you upload two files in the same request, both files, any form fields, and the bytes used to encode the multipart form all count toward that one limit."
+   },
+   "hhr-4.8k-med": {
+    "answers": "yes",
+    "quote": "The limit applies to the **whole request body**. If you upload two files in the same request, both files, any form fields, and the bytes used to encode the multipart form all count toward that one limit."
+   },
+   "hhr-9.6k-med": {
+    "answers": "yes",
+    "quote": "The limit applies to the **whole request body**. If you upload two files in the same request, both files, any form fields, and the bytes used to encode the multipart form all count toward that one limit."
+   }
+  },
+  "p11": {
+   "base-4.8k-med": {
+    "answers": "partly",
+    "quote": "`@lru_cache` modifies the function it decorates to return the same value that was returned the first time, instead of computing it again, executing the code of the function every time."
+   },
+   "hhr-4.8k-med": {
+    "answers": "yes",
+    "quote": "You can use the property `.openapi_schema` as a \"cache\", to store your generated schema."
+   },
+   "hhr-9.6k-med": {
+    "answers": "yes",
+    "quote": "You can use the property `.openapi_schema` as a \"cache\", to store your generated schema."
+   }
+  },
+  "p12": {
+   "base-4.8k-med": {
+    "answers": "no",
+    "quote": ""
+   },
+   "hhr-4.8k-med": {
+    "answers": "no",
+    "quote": ""
+   },
+   "hhr-9.6k-med": {
+    "answers": "no",
+    "quote": ""
+   }
+  }
+ }
+}

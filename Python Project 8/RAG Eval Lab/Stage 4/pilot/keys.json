@@ -1,0 +1,673 @@
+{
+ "keys": {
+  "p01": {
+   "nuggets": [
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N1",
+     "quotes": [
+      {
+       "quote": "In WebSocket endpoints you can import from `fastapi` and use:\n\n* `Depends`\n* `Security`\n* `Cookie`\n* `Header`\n* `Path`\n* `Query`\n\nThey work the same way as for other FastAPI endpoints/*path operations*:",
+       "section": "R1"
+      }
+     ],
+     "text": "Yes: Depends, Cookie and Query (as well as Security, Header and Path) can be imported from fastapi and used in WebSocket endpoints, and they work the same way as in other path operations."
+    },
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N2",
+     "quotes": [
+      {
+       "quote": "As this is a WebSocket it doesn't really make sense to raise an `HTTPException`, instead we raise a `WebSocketException`.",
+       "section": "R1"
+      }
+     ],
+     "text": "To reject the connection, raise a WebSocketException instead of an HTTPException."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N3",
+     "quotes": [
+      {
+       "quote": "You can use a closing code from the valid codes defined in the specification.",
+       "section": "R1"
+      }
+     ],
+     "text": "The WebSocketException is given a closing code chosen from the valid codes defined in the WebSocket specification."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N4",
+     "quotes": [
+      {
+       "quote": "if session is None and token is None:\n        raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)",
+       "section": "R1"
+      }
+     ],
+     "text": "In the example, the dependency raises WebSocketException(code=status.WS_1008_POLICY_VIOLATION) when both the session cookie and the token query parameter are missing (None)."
+    }
+   ],
+   "reference": [
+    "advanced/websockets#using-depends-and-others"
+   ],
+   "trimmed": 0
+  },
+  "p02": {
+   "nuggets": [
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N1",
+     "quotes": [
+      {
+       "quote": "When you create a **FastAPI** application, there is a `webhooks` attribute that you can use to define *webhooks*, the same way you would define *path operations*, for example with `@app.webhooks.post()`.",
+       "section": "R1"
+      }
+     ],
+     "text": "Declare webhooks with the app's webhooks attribute the same way as path operations, using a decorator such as @app.webhooks.post(...)."
+    },
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N2",
+     "quotes": [
+      {
+       "quote": "Notice that with webhooks you are actually not declaring a *path* (like `/items/`), the text you pass there is just an **identifier** of the webhook (the name of the event), for example in `@app.webhooks.post(\"new-subscription\")`, the webhook name is `new-subscription`.",
+       "section": "R1"
+      }
+     ],
+     "text": "The string passed is not a URL path: it is only an identifier of the webhook, the name of the event (e.g. new-subscription)."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N3",
+     "quotes": [
+      {
+       "quote": "The webhooks that you define will end up in the **OpenAPI** schema and the automatic **docs UI**.",
+       "section": "R1"
+      }
+     ],
+     "text": "Webhooks defined this way end up in the OpenAPI schema and the automatic docs UI."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N4",
+     "quotes": [
+      {
+       "quote": "This is because it is expected that **your users** would define the actual **URL path** where they want to receive the webhook request in some other way (e.g. a web dashboard).",
+       "section": "R1"
+      }
+     ],
+     "text": "The actual URL path where the webhook request is received is expected to be defined by your users some other way, such as a web dashboard."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N5",
+     "quotes": [
+      {
+       "quote": "The `app.webhooks` object is actually just an `APIRouter`, the same type you would use when structuring your app with multiple files.",
+       "section": "R1"
+      }
+     ],
+     "text": "app.webhooks is just an APIRouter, the same type used when structuring an app with multiple files."
+    }
+   ],
+   "reference": [
+    "advanced/openapi-webhooks#an-app-with-webhooks"
+   ],
+   "trimmed": 0
+  },
+  "p03": {
+   "nuggets": [
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N1",
+     "quotes": [
+      {
+       "quote": "You can also declare a response using a plain arbitrary `dict`, declaring just the type of the keys and values, without using a Pydantic model.",
+       "section": "R1"
+      }
+     ],
+     "text": "A response can be declared as a plain arbitrary dict that gives only the key and value types, without using a Pydantic model."
+    },
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N2",
+     "quotes": [
+      {
+       "quote": "@app.get(\"/keyword-weights/\", response_model=dict[str, float])",
+       "section": "R1"
+      }
+     ],
+     "text": "Pass the dict type as response_model in the path operation decorator, e.g. response_model=dict[str, float]."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N3",
+     "quotes": [
+      {
+       "quote": "This is useful if you don't know the valid field/attribute names (that would be needed for a Pydantic model) beforehand.",
+       "section": "R1"
+      }
+     ],
+     "text": "This is useful when the valid field/attribute names, which a Pydantic model would need, are not known beforehand."
+    }
+   ],
+   "reference": [
+    "tutorial/extra-models#response-with-arbitrary-dict"
+   ],
+   "trimmed": 0
+  },
+  "p05": {
+   "nuggets": [
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N1",
+     "quotes": [
+      {
+       "quote": "In these cases you can configure the server with `fastapi run --root-path`.",
+       "section": "R1"
+      },
+      {
+       "quote": "To achieve this, you can use the command line option `--root-path` like:\n\n```console\n$ uv run fastapi run main.py --forwarded-allow-ips=\"*\" --root-path /api/v1",
+       "section": "R2"
+      }
+     ],
+     "text": "Start the server with the --root-path option set to the prefix the proxy strips (here /billing), e.g. fastapi run main.py --root-path /billing."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N2",
+     "quotes": [
+      {
+       "quote": "But then, when you open the integrated docs UI (the frontend), it would expect to get the OpenAPI schema at `/openapi.json`, instead of `/api/v1/openapi.json`.",
+       "section": "R1"
+      }
+     ],
+     "text": "Without it, the docs UI requests the OpenAPI schema at /openapi.json instead of at the prefixed path (e.g. /billing/openapi.json)."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N3",
+     "quotes": [
+      {
+       "quote": "The docs UI would also need the OpenAPI schema to declare that this API `server` is located at `/api/v1` (behind the proxy).",
+       "section": "R1"
+      }
+     ],
+     "text": "The docs UI also needs the OpenAPI schema to declare that the API server is located at the prefix (a servers entry with url /billing)."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N4",
+     "quotes": [
+      {
+       "quote": "The `root_path` is a mechanism provided by the ASGI specification (that FastAPI is built on, through Starlette).",
+       "section": "R1"
+      },
+      {
+       "quote": "The ASGI specification defines a `root_path` for this use case.\n\nAnd the `--root-path` command line option provides that `root_path`.",
+       "section": "R2"
+      }
+     ],
+     "text": "The --root-path option provides the ASGI root_path, a mechanism the ASGI specification defines for this use case."
+    }
+   ],
+   "reference": [
+    "advanced/behind-a-proxy#proxy-with-a-stripped-path-prefix",
+    "advanced/behind-a-proxy#providing-the-root-path"
+   ],
+   "trimmed": 0
+  },
+  "p06": {
+   "nuggets": [
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N1",
+     "quotes": [
+      {
+       "quote": "But if you want it to expect a JSON with a key `item` and inside of it the model contents, as it does when you declare extra body parameters, you can use the special `Body` parameter `embed`:\n\n```python\nitem: Annotated[Item, Body(embed=True)]",
+       "section": "R1"
+      }
+     ],
+     "text": "Declare the single body parameter with Body(embed=True), e.g. Annotated[Order, Body(embed=True)], so FastAPI expects a JSON object with a key holding the model's contents instead of the bare object."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N2",
+     "quotes": [
+      {
+       "quote": "Let's say you only have a single `item` body parameter from a Pydantic model `Item`.\n\nBy default, **FastAPI** will then expect its body directly.\n\nBut if you want it to expect a JSON with a key `item`",
+       "section": "R1"
+      }
+     ],
+     "text": "The wrapping key is the body parameter's name (a parameter named item expects the key \"item\"), so the parameter should be named order."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N3",
+     "quotes": [
+      {
+       "quote": "By default, **FastAPI** will then expect its body directly.",
+       "section": "R1"
+      }
+     ],
+     "text": "By default, with a single body parameter, FastAPI expects the model's contents directly as the request body."
+    }
+   ],
+   "reference": [
+    "tutorial/body-multiple-params#embed-a-single-body-parameter"
+   ],
+   "trimmed": 0
+  },
+  "p07": {
+   "nuggets": [
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N1",
+     "quotes": [
+      {
+       "quote": "http://127.0.0.1:8000/items/foo?short=1\n```\n\nor\n\n```\nhttp://127.0.0.1:8000/items/foo?short=True\n```\n\nor\n\n```\nhttp://127.0.0.1:8000/items/foo?short=true\n```\n\nor\n\n```\nhttp://127.0.0.1:8000/items/foo?short=on\n```\n\nor\n\n```\nhttp://127.0.0.1:8000/items/foo?short=yes",
+       "section": "R1"
+      }
+     ],
+     "text": "The values 1, True, true, on and yes are converted to True."
+    },
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N2",
+     "quotes": [
+      {
+       "quote": "Values such as `0`, `false`, `off`, and `no` (including case variations) are converted to `False`.",
+       "section": "R1"
+      }
+     ],
+     "text": "The values 0, false, off and no, including case variations, are converted to False."
+    },
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N3",
+     "quotes": [
+      {
+       "quote": "An empty value (`?short=`) or an unrecognized value (for example, `?short=maybe`) produces a `422` validation error.",
+       "section": "R1"
+      }
+     ],
+     "text": "An empty value (e.g. ?short=) or an unrecognized word (e.g. ?short=maybe) produces a 422 validation error."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N4",
+     "quotes": [
+      {
+       "quote": "If `short` is omitted, **FastAPI** uses its default value, which is `False` in this example.",
+       "section": "R1"
+      }
+     ],
+     "text": "If the parameter is omitted, FastAPI uses its default value (False in the example)."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N5",
+     "quotes": [
+      {
+       "quote": "or any other case variation (uppercase, first letter in uppercase, etc), your function will see the parameter `short` with a `bool` value of `True`.",
+       "section": "R1"
+      }
+     ],
+     "text": "Any case variation of the true values (uppercase, first letter uppercase, etc.) is also read as True."
+    }
+   ],
+   "reference": [
+    "tutorial/query-params#query-parameter-type-conversion"
+   ],
+   "trimmed": 0
+  },
+  "p08": {
+   "nuggets": [
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N1",
+     "quotes": [
+      {
+       "quote": "You can declare a parameter of type `Response` in your *path operation function* (as you can do for cookies and headers).",
+       "section": "R1"
+      }
+     ],
+     "text": "Declare a parameter of type Response in the path operation function."
+    },
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N2",
+     "quotes": [
+      {
+       "quote": "if task_id not in tasks:\n        tasks[task_id] = \"This didn't exist before\"\n        response.status_code = status.HTTP_201_CREATED",
+       "section": "R1"
+      }
+     ],
+     "text": "In the branch that creates the item, set status_code on that temporary Response, e.g. response.status_code = status.HTTP_201_CREATED."
+    },
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N3",
+     "quotes": [
+      {
+       "quote": "And if you declared a `response_model`, it will still be used to filter and convert the object you returned.",
+       "section": "R1"
+      }
+     ],
+     "text": "A declared response_model is still used to filter and convert the object the function returns."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N4",
+     "quotes": [
+      {
+       "quote": "@app.put(\"/get-or-create-task/{task_id}\", status_code=200)",
+       "section": "R1"
+      }
+     ],
+     "text": "The normal 200 is kept as the default by setting status_code=200 in the path operation decorator."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N5",
+     "quotes": [
+      {
+       "quote": "You can also declare the `Response` parameter in dependencies, and set the status code in them. But keep in mind that the last one to be set will win.",
+       "section": "R1"
+      }
+     ],
+     "text": "The Response parameter can also be declared in dependencies to set the status code there, and the last value set wins."
+    }
+   ],
+   "reference": [
+    "advanced/response-change-status-code#use-a-response-parameter"
+   ],
+   "trimmed": 0
+  },
+  "p09": {
+   "nuggets": [
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N1",
+     "quotes": [
+      {
+       "quote": "you can revert to it by overriding the method `make_not_authenticated_error` in your security classes.\n\nFor example, you can create a subclass of `HTTPBearer` that returns a `403 Forbidden` error",
+       "section": "R1"
+      }
+     ],
+     "text": "Restore the old behavior by subclassing the security class (here HTTPBearer) and overriding its make_not_authenticated_error method."
+    },
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N2",
+     "quotes": [
+      {
+       "quote": "return HTTPException(\n            status_code=status.HTTP_403_FORBIDDEN, detail=\"Not authenticated\"",
+       "section": "R1"
+      }
+     ],
+     "text": "The overridden method returns an HTTPException with status_code=status.HTTP_403_FORBIDDEN (detail \"Not authenticated\" in the example)."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N3",
+     "quotes": [
+      {
+       "quote": "CredentialsDep = Annotated[HTTPAuthorizationCredentials, Depends(HTTPBearer403())]",
+       "section": "R1"
+      }
+     ],
+     "text": "Use the subclass in the dependency instead of the original class, e.g. Depends(HTTPBearer403())."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N4",
+     "quotes": [
+      {
+       "quote": "Notice that the function returns the exception instance, it doesn't raise it. The raising is done in the rest of the internal code.",
+       "section": "R1"
+      }
+     ],
+     "text": "make_not_authenticated_error returns the exception instance rather than raising it; FastAPI's internal code does the raising."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N5",
+     "quotes": [
+      {
+       "quote": "Starting with FastAPI version `0.122.0`, they use the more appropriate HTTP status code `401 Unauthorized`, and return a sensible `WWW-Authenticate` header in the response, following the HTTP specifications, RFC 7235, RFC 9110.",
+       "section": "R1"
+      }
+     ],
+     "text": "Starting with FastAPI 0.122.0 the security utilities return 401 Unauthorized with a WWW-Authenticate header instead of 403 Forbidden."
+    }
+   ],
+   "reference": [
+    "how-to/authentication-error-status-code#use-old-403-authentication-error-status-codes"
+   ],
+   "trimmed": 0
+  },
+  "p10": {
+   "nuggets": [
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N1",
+     "quotes": [
+      {
+       "quote": "The limit applies to the **whole request body**. If you upload two files in the same request, both files, any form fields, and the bytes used to encode the multipart form all count toward that one limit.",
+       "section": "R1"
+      },
+      {
+       "quote": "Use `max_body_size` to bound the whole request, including uploaded file contents.",
+       "section": "R2"
+      }
+     ],
+     "text": "No, the limit is not per file: it applies to the whole request body, so all the uploaded files in one request count together toward that single limit."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N2",
+     "quotes": [
+      {
+       "quote": "any form fields, and the bytes used to encode the multipart form all count toward that one limit. The URL and request headers are outside the body.",
+       "section": "R1"
+      }
+     ],
+     "text": "Form fields and the bytes used to encode the multipart form also count toward the limit, while the URL and request headers do not."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N3",
+     "quotes": [
+      {
+       "quote": "If a read exceeds the limit, FastAPI stops reading and returns an HTTP **413 Content Too Large** response if the response hasn't started yet.",
+       "section": "R1"
+      }
+     ],
+     "text": "When a read exceeds the limit, FastAPI stops reading and returns HTTP 413 Content Too Large if the response hasn't started yet."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N4",
+     "quotes": [
+      {
+       "quote": "Use `max_body_size` to bound the whole request, including uploaded file contents.",
+       "section": "R2"
+      }
+     ],
+     "text": "The whole-request limit, which includes uploaded file contents, is configured with max_body_size."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N5",
+     "quotes": [
+      {
+       "quote": "Exceeding a parser limit returns HTTP 400.",
+       "section": "R2"
+      }
+     ],
+     "text": "Exceeding one of the form parser limits set in form_limits (max_fields, max_files, max_part_size) returns HTTP 400, not 413."
+    }
+   ],
+   "reference": [
+    "advanced/request-body-limits#what-counts-toward-the-limit",
+    "advanced/request-body-limits#set-limits-for-form-fields-and-files"
+   ],
+   "trimmed": 0
+  },
+  "p11": {
+   "nuggets": [
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N1",
+     "quotes": [
+      {
+       "quote": "if app.openapi_schema:\n        return app.openapi_schema",
+       "section": "R1"
+      },
+      {
+       "quote": "if app.openapi_schema:\n        return app.openapi_schema",
+       "section": "R2"
+      },
+      {
+       "quote": "if app.openapi_schema:\n        return app.openapi_schema",
+       "section": "R3"
+      },
+      {
+       "quote": "if app.openapi_schema:\n        return app.openapi_schema",
+       "section": "R4"
+      },
+      {
+       "quote": "if app.openapi_schema:\n        return app.openapi_schema",
+       "section": "R5"
+      }
+     ],
+     "text": "At the start of custom_openapi(), return app.openapi_schema if it is already set, instead of generating the schema again."
+    },
+    {
+     "alternatives": [],
+     "essential": true,
+     "id": "N2",
+     "quotes": [
+      {
+       "quote": "app.openapi_schema = openapi_schema",
+       "section": "R1"
+      },
+      {
+       "quote": "app.openapi_schema = openapi_schema",
+       "section": "R2"
+      },
+      {
+       "quote": "app.openapi_schema = openapi_schema",
+       "section": "R3"
+      },
+      {
+       "quote": "You can use the property `.openapi_schema` as a \"cache\", to store your generated schema.",
+       "section": "R4"
+      },
+      {
+       "quote": "app.openapi_schema = openapi_schema",
+       "section": "R5"
+      }
+     ],
+     "text": "After generating the schema, store it in app.openapi_schema so that property serves as a cache."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N3",
+     "quotes": [
+      {
+       "quote": "app.openapi = custom_openapi",
+       "section": "R1"
+      },
+      {
+       "quote": "app.openapi = custom_openapi",
+       "section": "R2"
+      },
+      {
+       "quote": "app.openapi = custom_openapi",
+       "section": "R3"
+      },
+      {
+       "quote": "app.openapi = custom_openapi",
+       "section": "R4"
+      },
+      {
+       "quote": "Now you can replace the `.openapi()` method with your new function.",
+       "section": "R5"
+      }
+     ],
+     "text": "The custom function replaces the app's openapi method: app.openapi = custom_openapi."
+    },
+    {
+     "alternatives": [],
+     "essential": false,
+     "id": "N4",
+     "quotes": [
+      {
+       "quote": "That way, your application won't have to generate the schema every time a user opens your API docs.\n\nIt will be generated only once, and then the same cached schema will be used for the next requests.",
+       "section": "R4"
+      }
+     ],
+     "text": "With the cache, the schema is generated only once and the same cached schema is reused when users open the docs again."
+    }
+   ],
+   "reference": [
+    "how-to/extending-openapi#normal-fastapi",
+    "how-to/extending-openapi#generate-the-openapi-schema",
+    "how-to/extending-openapi#modify-the-openapi-schema",
+    "how-to/extending-openapi#cache-the-openapi-schema",
+    "how-to/extending-openapi#override-the-method"
+   ],
+   "trimmed": 0
+  }
+ },
+ "provenance": {
+  "judge_model": "claude-opus-5-5",
+  "plan_sha256": "54090ec56532006245a8fd9c1e9e314c4c66db7a2cc52581e96af09049c4deb0",
+  "prompt": "cdd0de0a387727d85345434e6f6c5977cb1658beefce4f2567749392580ed544",
+  "trims": {},
+  "worksheet": "488da2edee5b6580e511a73c394f78a8df327abadab8d09ed9215b8bfb1be52f"
+ }
+}

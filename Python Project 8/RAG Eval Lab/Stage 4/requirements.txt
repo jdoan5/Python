@@ -1,0 +1,9 @@
+scikit-learn>=1.7
+numpy>=2.1
+typer>=0.15
+rich>=13.9
+pyyaml>=6.0
+torch>=2.15
+sentence-transformers>=6.2
+anthropic>=2.6,<3
+pytest>=8.3

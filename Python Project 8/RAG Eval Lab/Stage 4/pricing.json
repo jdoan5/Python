@@ -1,0 +1,23 @@
+{
+  "as_of": "2026-11-21",
+  "source": "Anthropic list prices for the Claude API, per million tokens: claude-haiku-5-5 for prompts of up to 100K tokens; cache writes at 1.25x (5-minute) and 2x (1-hour) the input price; cache reads at 0.1x (Haiku) and 0.05x (Opus 5.5); the Message Batches API at 50%; US-only inference (inference_geo \"us\") at 1.1x, which every reservation assumes because the workspace default isn't known in advance. Rechecked against the pricing page before freeze point 1.",
+  "batch_multiplier": "0.5",
+  "per_million_tokens": {
+    "claude-haiku-5-5": {
+      "input": "0.10",
+      "output": "0.50",
+      "cache_write_5m": "0.125",
+      "cache_write_1h": "0.20",
+      "cache_read": "0.01",
+      "max_prompt_tokens": 100000
+    },
+    "claude-opus-5-5": {
+      "input": "4.00",
+      "output": "20.00",
+      "cache_write_5m": "5.00",
+      "cache_write_1h": "8.00",
+      "cache_read": "0.20"
+    }
+  },
+  "us_inference_multiplier": "1.1"
+}

@@ -1,0 +1,81 @@
+version: 1
+kind: pilot
+corpus:
+  ref: 0.165.0
+  fingerprint: 3ec279619717c72441c0b92ad7e7244145ee857b7d070e5b0028cc4b3f364315
+status: 'approved by the developer, 2026-11-21 22:31 (PLAN.md, ''The pilot'')'
+note: Made-up questions for Stage 4's pilot. Never golden, never pooled with the 98. Targets are on pages no golden
+  question targets or finds an answer on; target null means no section answers it.
+questions:
+- id: p01
+  question: In a WebSocket endpoint, can I use Depends with Cookie or Query to require a session cookie or token,
+    and what should I raise instead of HTTPException to reject the connection?
+  style: keyword
+  target: advanced/websockets#using-depends-and-others
+  drafted_as: c01
+- id: p02
+  question: How do I declare webhooks with app.webhooks so they show up in the OpenAPI schema, and is the string
+    I pass a URL path?
+  style: keyword
+  target: advanced/openapi-webhooks#an-app-with-webhooks
+  drafted_as: c02
+- id: p03
+  question: How do I declare a response_model that's a plain dict, like dict[str, float], when I don't know the
+    key names ahead of time?
+  style: keyword
+  target: tutorial/extra-models#response-with-arbitrary-dict
+  drafted_as: c04
+- id: p04
+  question: How do I add rate limiting to my FastAPI API, say 100 requests per minute per client IP, returning 429
+    Too Many Requests when exceeded?
+  style: keyword
+  target: null
+  drafted_as: c05
+- id: p05
+  question: A gateway exposes my app under /billing and removes that part of the URL before passing requests on.
+    Endpoints work, but how do I get the interactive API explorer working too?
+  style: paraphrase
+  target: advanced/behind-a-proxy#proxy-with-a-stripped-path-prefix
+  drafted_as: c06
+- id: p06
+  question: My endpoint takes one input model, so it expects the bare JSON object, but clients send it wrapped under
+    an 'order' key. How do I make it accept that wrapped shape?
+  style: paraphrase
+  target: tutorial/body-multiple-params#embed-a-single-body-parameter
+  drafted_as: c07
+- id: p07
+  question: My endpoint reads a true/false flag from the URL. Which values will it accept as true or false, and
+    what happens if a client sends some other word?
+  style: paraphrase
+  target: tutorial/query-params#query-parameter-type-conversion
+  drafted_as: c08
+- id: p08
+  question: My endpoint should answer 200 normally but 201 when it had to create the item, and its output must still
+    be shaped by my declared model. How do I pick between them per call?
+  style: paraphrase
+  target: advanced/response-change-status-code#use-a-response-parameter
+  drafted_as: c09
+- id: p09
+  question: After upgrading FastAPI, requests with no bearer token now get 401 instead of 403, and our old mobile
+    client only handles 403. How do I restore the old status code?
+  style: scenario
+  target: how-to/authentication-error-status-code#use-old-403-authentication-error-status-codes
+  drafted_as: c12
+- id: p10
+  question: My upload endpoint allows 10 MiB, yet sending two 6 MiB files in one request fails with 413 Content
+    Too Large. Isn't the limit per file?
+  style: scenario
+  target: advanced/request-body-limits#what-counts-toward-the-limit
+  drafted_as: c14
+- id: p11
+  question: 'Our /docs page got slow: every time someone opens it, our custom_openapi() function rebuilds the whole
+    schema from scratch. How do we make it build only once?'
+  style: scenario
+  target: how-to/extending-openapi#cache-the-openapi-schema
+  drafted_as: c10
+- id: p12
+  question: We have to deploy our FastAPI service as an AWS Lambda function behind API Gateway, with no long-running
+    server process. What do I wrap the app with so Lambda can call it?
+  style: scenario
+  target: null
+  drafted_as: c16

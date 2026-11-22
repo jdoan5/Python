@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "claim": {"type": "boolean"},
+          "support": {"type": "string", "enum": ["supported", "partial", "unsupported", "contradicted", "uncited", "n/a"]},
+          "quotes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {"excerpt": {"type": "string"}, "quote": {"type": "string"}},
+              "required": ["excerpt", "quote"],
+              "additionalProperties": false
+            }
+          },
+          "reason": {"type": "string"}
+        },
+        "required": ["id", "claim", "support", "quotes", "reason"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["units"],
+  "additionalProperties": false
+}

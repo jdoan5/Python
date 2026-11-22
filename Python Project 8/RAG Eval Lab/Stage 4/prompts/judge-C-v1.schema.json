@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "properties": {
+    "nuggets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "conveyed": {"type": "string", "enum": ["yes", "partly", "no"]},
+          "answer_quote": {"type": "string"}
+        },
+        "required": ["id", "conveyed", "answer_quote"],
+        "additionalProperties": false
+      }
+    },
+    "contradiction": {
+      "type": "object",
+      "properties": {
+        "present": {"type": "boolean"},
+        "reference_quote": {"type": "string"},
+        "answer_quote": {"type": "string"}
+      },
+      "required": ["present", "reference_quote", "answer_quote"],
+      "additionalProperties": false
+    },
+    "abstention": {"type": "string", "enum": ["none", "partial", "full"]},
+    "resolves": {"type": "string", "enum": ["yes", "partly", "no"]},
+    "reason": {"type": "string"}
+  },
+  "required": ["nuggets", "contradiction", "abstention", "resolves", "reason"],
+  "additionalProperties": false
+}
